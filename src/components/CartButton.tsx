@@ -10,13 +10,12 @@ interface CartButtonProps {
 }
 
 const CartButton: React.FC<CartButtonProps> = ({ itemCount, onClick }) => {
-  // Always render the component, but control visibility with CSS
   return (
     <div className={cn(
-      "fixed bottom-0 left-0 right-0 z-50 shadow-lg transform transition-transform duration-200",
-      itemCount === 0 ? "translate-y-full" : "translate-y-0"
+      "fixed bottom-4 left-4 right-4 z-50 shadow-lg transform transition-all duration-300",
+      itemCount === 0 ? "opacity-0 pointer-events-none translate-y-16" : "opacity-100 translate-y-0"
     )}>
-      <div className="bg-[#D9B26A] text-white py-3 px-4">
+      <div className="bg-[#D9B26A] text-white py-3 px-4 rounded-lg">
         <Button
           onClick={onClick}
           className={cn(

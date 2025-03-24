@@ -13,16 +13,24 @@ const Menu: React.FC = () => {
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: "-100px 0px -60% 0px", // Adjust the rootMargin to determine when a section is considered "active"
+      rootMargin: "-100px 0px -80% 0px", // Adjust the rootMargin to determine when a section is considered "active"
       threshold: 0
     };
 
     const observerCallback: IntersectionObserverCallback = (entries) => {
-      entries.forEach(entry => {
-        if (entry.isIntersecting) {
-          setActiveSection(entry.target.id);
-        }
-      });
+      // Find the first section that is intersecting
+      const visibleEntries = entries.filter(entry => entry.isIntersecting);
+      
+      if (visibleEntries.length > 0) {
+        // Sort by Y position to get the topmost visible section
+        const sortedEntries = visibleEntries.sort((a, b) => {
+          const rectA = a.boundingClientRect;
+          const rectB = b.boundingClientRect;
+          return rectA.top - rectB.top;
+        });
+        
+        setActiveSection(sortedEntries[0].target.id);
+      }
     };
 
     const observer = new IntersectionObserver(observerCallback, observerOptions);

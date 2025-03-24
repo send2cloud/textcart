@@ -35,7 +35,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, onAddToCart, quantity }) => {
         className={cn(
           "rounded-md px-4 h-8 shrink-0 font-medium",
           quantity > 0 
-            ? "bg-[#D9B26A] hover:bg-[#D9B26A]/90 text-white" 
+            ? "bg-green-600 hover:bg-green-700 text-white" 
             : "bg-[#D9B26A] hover:bg-[#D9B26A]/90 text-white"
         )}
       >
