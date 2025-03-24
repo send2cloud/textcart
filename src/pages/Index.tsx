@@ -6,6 +6,7 @@ import CartButton from "../components/CartButton";
 import CartSheet from "../components/CartSheet";
 import LocationInfo from "../components/LocationInfo";
 import { restaurantInfo } from "../data/menuData";
+import { Phone } from "lucide-react";
 
 const Index = () => {
   const { cartItems, getTotalItems, removeFromCart, clearCart } = useCart();
@@ -17,14 +18,18 @@ const Index = () => {
   const totalItems = getTotalItems();
 
   return (
-    <div className="min-h-screen bg-[#FCFCFC] pb-24">
-      <header className="sticky top-0 z-40 bg-white/80 backdrop-blur-md shadow-sm">
-        <div className="container mx-auto py-4 px-4">
-          <h1 className="text-3xl font-bold text-center">{restaurantInfo.name}</h1>
+    <div className="min-h-screen bg-[#FAF2E5] pb-24">
+      <header className="sticky top-0 z-40 bg-[#E74C3C] text-white shadow-sm">
+        <div className="px-4 py-3 flex justify-between items-center">
+          <h1 className="text-2xl font-bold">{restaurantInfo.name}</h1>
+          <a href={`tel:${restaurantInfo.phone}`} className="flex items-center text-sm">
+            <Phone className="h-4 w-4 mr-1" />
+            {restaurantInfo.phone}
+          </a>
         </div>
       </header>
       
-      <main className="container mx-auto px-4">
+      <main>
         <Menu />
         <LocationInfo />
       </main>

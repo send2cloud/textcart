@@ -13,17 +13,16 @@ const CartButton: React.FC<CartButtonProps> = ({ itemCount, onClick }) => {
   if (itemCount === 0) return null;
 
   return (
-    <div className="fixed bottom-6 left-1/2 transform -translate-x-1/2 z-50 animate-fade-in">
+    <div className="fixed bottom-0 left-0 right-0 z-50 bg-[#28A99E] text-white py-3 px-4 shadow-lg animate-fade-in">
       <Button
-        size="lg"
         onClick={onClick}
         className={cn(
-          "shadow-lg rounded-full px-6 py-6 h-auto transition-all",
-          "bg-primary hover:bg-primary/90 text-white"
+          "w-full text-white font-medium text-base py-2 h-auto",
+          "bg-transparent hover:bg-white/10 border-none"
         )}
       >
         <ShoppingCart className="h-5 w-5 mr-2" />
-        <span className="font-medium">View Cart ({itemCount})</span>
+        <span>View Cart ({itemCount})</span>
       </Button>
     </div>
   );
