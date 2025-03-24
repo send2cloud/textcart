@@ -39,7 +39,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, onAddToCart, quantity }) => {
             : "bg-[#D9B26A] hover:bg-[#D9B26A]/90 text-white"
         )}
       >
-        Add
+        {quantity > 0 ? `Add (${quantity})` : "Add"}
       </Button>
     </div>
   );

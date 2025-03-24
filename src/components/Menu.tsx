@@ -8,12 +8,13 @@ import { cn } from "@/lib/utils";
 const Menu: React.FC = () => {
   const [activeSection, setActiveSection] = useState<string>(menuData[0].id);
   const sectionRefs = useRef<{ [key: string]: HTMLDivElement | null }>({});
+  const menuRef = useRef<HTMLDivElement>(null);
 
   // Set up intersection observer to track which section is in view
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: "-100px 0px -85% 0px", // Adjusted to better detect the topmost visible section
+      rootMargin: "-100px 0px -65% 0px", // Adjusted to better detect the topmost visible section
       threshold: 0
     };
 
@@ -54,7 +55,7 @@ const Menu: React.FC = () => {
   };
 
   return (
-    <div className="menu-container pb-20">
+    <div className="menu-container pb-28" ref={menuRef}>
       {/* Category Navigation */}
       <div className="sticky top-[60px] z-30 bg-[#F2E8D5] py-2 -mx-4 px-4 shadow-sm border-y border-[#E6D7B8]">
         <NavigationMenu className="max-w-full w-full">
