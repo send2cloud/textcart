@@ -1,3 +1,5 @@
+import { createRoot } from 'react-dom/client'
+import App from './App.tsx'
+import './index.css'
 
-// This file is only here to redirect to index.html
-window.location.href = '/index.html';
+createRoot(document.getElementById("root")!).render(<App />);
