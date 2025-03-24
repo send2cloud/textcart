@@ -1,5 +1,5 @@
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useCart } from "../hooks/useCart";
 import Menu from "../components/Menu";
 import CartButton from "../components/CartButton";
@@ -18,7 +18,7 @@ const Index = () => {
   const totalItems = getTotalItems();
 
   return (
-    <div className="min-h-screen bg-[#F9F3E8] pb-16">
+    <div className="min-h-screen bg-[#F9F3E8]">
       <header className="sticky top-0 z-40 bg-[#D04A35] text-white shadow-md">
         <div className="px-4 py-3 flex justify-between items-center">
           <h1 className="text-2xl font-bold tracking-tight">{restaurantInfo.name}</h1>
@@ -29,11 +29,12 @@ const Index = () => {
         </div>
       </header>
       
-      <main className="bg-[#F9F3E8]">
+      <main className="bg-[#F9F3E8] pb-24">
         <Menu />
         <LocationInfo />
       </main>
       
+      {/* Cart button as sticky footer */}
       <CartButton itemCount={totalItems} onClick={openCart} />
       
       <CartSheet
