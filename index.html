@@ -57,7 +57,7 @@
       margin-right: 4px;
     }
     
-    /* Navigation styles - FIXED */
+    /* Navigation styles - IMPROVED for mobile */
     .menu-nav {
       background-color: #F2E8D5;
       position: sticky;
@@ -65,41 +65,92 @@
       z-index: 40;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
       border-bottom: 1px solid #E6D7B8;
-      padding: 0 10px;
+      padding: 0;
       width: 100%;
+      overflow: hidden;
       box-sizing: border-box;
     }
     
-    .menu-nav-list {
-      display: flex;
-      list-style: none;
-      margin: 0;
-      padding: 8px 0;
+    .menu-nav-container {
+      position: relative;
+      width: 100%;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none; /* Firefox */
       -ms-overflow-style: none; /* IE and Edge */
+      padding: 0 5px;
     }
     
-    .menu-nav-list::-webkit-scrollbar {
+    .menu-nav-container::-webkit-scrollbar {
       display: none; /* Chrome, Safari, Opera */
     }
     
+    .menu-nav-list {
+      display: inline-flex;
+      list-style: none;
+      margin: 0;
+      padding: 8px 0;
+      white-space: nowrap;
+      min-width: max-content;
+    }
+    
     .menu-nav-item {
-      padding: 8px 16px;
-      font-weight: 500;
+      padding: 10px 16px;
+      font-weight: 600;
       cursor: pointer;
       position: relative;
       white-space: nowrap;
       transition: all 0.2s ease;
       color: #555;
-      border-radius: 4px;
+      border-radius: 6px;
+      margin: 0 4px;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
     }
     
     .menu-nav-item.active {
       color: white;
       background-color: #D9B26A;
       font-weight: 600;
+    }
+
+    /* Mobile indicator arrows */
+    .nav-indicators {
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      width: 100%;
+      pointer-events: none;
+      z-index: 41;
+      display: none;
+    }
+    
+    .nav-indicator {
+      position: absolute;
+      top: 0;
+      height: 100%;
+      width: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(90deg, transparent, rgba(242, 232, 213, 0.9));
+      opacity: 0;
+      transition: opacity 0.3s ease;
+    }
+    
+    .nav-indicator.left {
+      left: 0;
+      background: linear-gradient(270deg, transparent, rgba(242, 232, 213, 0.9));
+    }
+    
+    .nav-indicator.right {
+      right: 0;
+    }
+    
+    .nav-indicator-icon {
+      width: 24px;
+      height: 24px;
+      fill: #555;
     }
     
     /* Menu section styles */
@@ -154,8 +205,8 @@
     }
     
     .item-price {
-      font-weight: 300; /* Changed from 600 to 300 - thinner weight */
-      color: #888; /* Changed from #D04A35 to #888 - lighter color */
+      font-weight: 300;
+      color: #888;
       margin-left: 8px;
     }
     
@@ -173,19 +224,25 @@
     }
     
     .add-button {
-      padding: 8px 16px;
+      padding: 10px 18px;
       background-color: #D04A35;
       color: white;
       border: none;
       border-radius: 8px;
-      font-weight: 500;
+      font-weight: 600;
       cursor: pointer;
       transition: background-color 0.2s ease;
       margin-left: 12px;
+      font-size: 1rem;
+      min-width: 65px;
     }
     
     .add-button:hover {
       background-color: #B83A28;
+    }
+    
+    .add-button:active {
+      transform: scale(0.95);
     }
     
     .add-button.in-cart {
@@ -278,10 +335,15 @@
       font-weight: 600;
       cursor: pointer;
       transition: background-color 0.2s ease;
+      font-size: 1.1rem;
     }
     
     .cart-button-inner:hover {
       background-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .cart-button-inner:active {
+      background-color: rgba(0, 0, 0, 0.1);
     }
     
     .cart-icon {
@@ -357,6 +419,10 @@
       background-color: #f1f1f1;
     }
     
+    .close-button:active {
+      background-color: #e0e0e0;
+    }
+    
     .cart-items {
       flex: 1;
       overflow-y: auto;
@@ -400,8 +466,8 @@
     }
     
     .quantity-button {
-      width: 28px;
-      height: 28px;
+      width: 32px;
+      height: 32px;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -416,6 +482,11 @@
     
     .quantity-button:hover {
       background-color: #e0e0e0;
+    }
+    
+    .quantity-button:active {
+      background-color: #d0d0d0;
+      transform: scale(0.95);
     }
     
     .cart-item-quantity span {
@@ -453,6 +524,7 @@
       align-items: center;
       justify-content: center;
       transition: background-color 0.2s ease;
+      font-size: 1.05rem;
     }
     
     .checkout-button {
@@ -464,6 +536,11 @@
       background-color: #047857;
     }
     
+    .checkout-button:active {
+      background-color: #036644;
+      transform: scale(0.98);
+    }
+    
     .whatsapp-button {
       background-color: #25D366;
       color: white;
@@ -471,6 +548,11 @@
     
     .whatsapp-button:hover {
       background-color: #1fb959;
+    }
+    
+    .whatsapp-button:active {
+      background-color: #18a64d;
+      transform: scale(0.98);
     }
     
     .checkout-button svg,
@@ -534,7 +616,7 @@
     .receipt-close {
       position: absolute;
       top: 16px;
-      right: 16;
+      right: 16px;
       background: none;
       border: none;
       cursor: pointer;
@@ -548,6 +630,10 @@
     
     .receipt-close:hover {
       background-color: #f1f1f1;
+    }
+    
+    .receipt-close:active {
+      background-color: #e0e0e0;
     }
     
     .receipt-body {
@@ -632,6 +718,10 @@
       background-color: #047857;
     }
     
+    .receipt-sms:active {
+      background-color: #036644;
+    }
+    
     .receipt-whatsapp {
       background-color: #25D366;
       color: white;
@@ -641,15 +731,19 @@
       background-color: #1fb959;
     }
     
+    .receipt-whatsapp:active {
+      background-color: #18a64d;
+    }
+    
     /* Improved Responsive Design */
     @media (max-width: 480px) {
       .restaurant-name {
-        font-size: 1.25rem;
+        font-size: 1.3rem;
       }
       
       .menu-nav-item {
-        padding: 6px 12px;
-        font-size: 0.9rem;
+        padding: 8px 14px;
+        font-size: 0.95rem;
       }
       
       .section-title {
@@ -657,11 +751,34 @@
       }
       
       .item-name {
-        font-size: 1rem;
+        font-size: 1.05rem;
+      }
+      
+      .item-description {
+        font-size: 0.9rem;
+      }
+      
+      .add-button {
+        font-size: 0.95rem;
+        padding: 8px 15px;
       }
       
       .cart-actions {
         flex-direction: column;
+      }
+      
+      .cart-button-inner {
+        font-size: 1rem;
+        padding: 14px 20px;
+      }
+      
+      .checkout-button, 
+      .whatsapp-button {
+        font-size: 1rem;
+      }
+      
+      .nav-indicators {
+        display: block;
       }
     }
     
@@ -691,6 +808,33 @@
       .whatsapp-button {
         flex: 1;
       }
+      
+      .menu-nav-container {
+        display: flex;
+        justify-content: center;
+      }
+      
+      .menu-nav-list {
+        min-width: unset;
+        width: auto;
+        justify-content: center;
+      }
+    }
+    
+    /* Touch feedback improvements */
+    @media (hover: none) {
+      .menu-item:active {
+        transform: translateY(-1px);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.07);
+      }
+      
+      .menu-nav-item:active {
+        background-color: rgba(217, 178, 106, 0.2);
+      }
+      
+      .menu-nav-item.active:active {
+        background-color: #c9a260;
+      }
     }
   </style>
 </head>
@@ -708,9 +852,23 @@
   </header>
   
   <nav class="menu-nav">
-    <ul class="menu-nav-list" id="menuNavList">
-      <!-- Will be populated by JavaScript -->
-    </ul>
+    <div class="menu-nav-container" id="menuNavContainer">
+      <ul class="menu-nav-list" id="menuNavList">
+        <!-- Will be populated by JavaScript -->
+      </ul>
+    </div>
+    <div class="nav-indicators">
+      <div class="nav-indicator left" id="navLeft">
+        <svg class="nav-indicator-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M15 19L8 12L15 5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+      <div class="nav-indicator right" id="navRight">
+        <svg class="nav-indicator-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <path d="M9 5L16 12L9 19" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
   </nav>
   
   <main>
@@ -1082,6 +1240,7 @@
     let cart = [];
     
     // DOM Elements
+    const menuNavContainer = document.getElementById('menuNavContainer');
     const menuNavList = document.getElementById('menuNavList');
     const menuSections = document.getElementById('menuSections');
     const cartButton = document.getElementById('cartButton');
@@ -1094,6 +1253,8 @@
     const closeCartButton = document.getElementById('closeCartButton');
     const checkoutButton = document.getElementById('checkoutButton');
     const whatsappButton = document.getElementById('whatsappButton');
+    const navLeft = document.getElementById('navLeft');
+    const navRight = document.getElementById('navRight');
     
     // Render menu navigation
     function renderMenuNav() {
@@ -1112,11 +1273,14 @@
           // Scroll to the section
           const targetSection = document.getElementById(section.id);
           if (targetSection) {
-            targetSection.scrollIntoView({ behavior: 'smooth' });
+            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
           }
         });
         menuNavList.appendChild(li);
       });
+      
+      // Update navigation indicators after rendering
+      updateNavIndicators();
     }
     
     // Render menu sections
@@ -1350,6 +1514,85 @@
       closeCart();
     }
     
+    // Update navigation indicators based on scroll position
+    function updateNavIndicators() {
+      const navContainer = document.getElementById('menuNavContainer');
+      const navLeft = document.getElementById('navLeft');
+      const navRight = document.getElementById('navRight');
+      
+      if (!navContainer || !navLeft || !navRight) return;
+      
+      // Show indicators if scrollable
+      if (navContainer.scrollWidth > navContainer.clientWidth) {
+        // Check if scrolled to left edge
+        if (navContainer.scrollLeft <= 10) {
+          navLeft.style.opacity = "0";
+        } else {
+          navLeft.style.opacity = "1";
+        }
+        
+        // Check if scrolled to right edge
+        if (navContainer.scrollLeft >= navContainer.scrollWidth - navContainer.clientWidth - 10) {
+          navRight.style.opacity = "0";
+        } else {
+          navRight.style.opacity = "1";
+        }
+      } else {
+        // Not scrollable, hide both indicators
+        navLeft.style.opacity = "0";
+        navRight.style.opacity = "0";
+      }
+    }
+    
+    // Handle mobile touch scrolling for menu navigation
+    function setupTouchNavigation() {
+      const navContainer = document.getElementById('menuNavContainer');
+      
+      if (!navContainer) return;
+      
+      let startX, startScrollLeft, isDown = false;
+      
+      navContainer.addEventListener('touchstart', (e) => {
+        isDown = true;
+        startX = e.touches[0].pageX - navContainer.offsetLeft;
+        startScrollLeft = navContainer.scrollLeft;
+      });
+      
+      navContainer.addEventListener('touchend', () => {
+        isDown = false;
+      });
+      
+      navContainer.addEventListener('touchcancel', () => {
+        isDown = false;
+      });
+      
+      navContainer.addEventListener('touchmove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.touches[0].pageX - navContainer.offsetLeft;
+        const walk = (x - startX) * 1.5; // Scroll speed multiplier
+        navContainer.scrollLeft = startScrollLeft - walk;
+        updateNavIndicators();
+      });
+      
+      // Add scroll listeners to update indicators
+      navContainer.addEventListener('scroll', () => {
+        updateNavIndicators();
+      });
+      
+      // Manually scroll left/right when indicators are clicked
+      const navLeftBtn = document.getElementById('navLeft');
+      const navRightBtn = document.getElementById('navRight');
+      
+      navLeftBtn.addEventListener('click', () => {
+        navContainer.scrollBy({ left: -150, behavior: 'smooth' });
+      });
+      
+      navRightBtn.addEventListener('click', () => {
+        navContainer.scrollBy({ left: 150, behavior: 'smooth' });
+      });
+    }
+    
     // Event listeners
     cartButton.addEventListener('click', openCart);
     cartOverlay.addEventListener('click', closeCart);
@@ -1361,6 +1604,7 @@
     renderMenuNav();
     renderMenuSections();
     updateUI();
+    setupTouchNavigation();
     
     // Improved scroll handling with IntersectionObserver for better performance
     const observerOptions = {
@@ -1387,6 +1631,24 @@
           document.querySelectorAll('.menu-nav-item').forEach(item => {
             if (item.getAttribute('data-section') === sectionId) {
               item.classList.add('active');
+              
+              // Center the active menu item in the navigation
+              const navContainer = document.getElementById('menuNavContainer');
+              const activeItem = item;
+              if (navContainer && activeItem) {
+                const containerWidth = navContainer.offsetWidth;
+                const itemLeft = activeItem.offsetLeft;
+                const itemWidth = activeItem.offsetWidth;
+                
+                // Calculate the position to center the item
+                const scrollLeft = itemLeft - (containerWidth / 2) + (itemWidth / 2);
+                
+                // Smooth scroll to the position
+                navContainer.scrollTo({
+                  left: scrollLeft,
+                  behavior: 'smooth'
+                });
+              }
             } else {
               item.classList.remove('active');
             }
@@ -1403,7 +1665,19 @@
       document.querySelectorAll('.menu-section').forEach(section => {
         observer.observe(section);
       });
+      
+      updateNavIndicators();
+      
+      // Ensure the navigation is scrollable horizontally on mobile
+      const menuNavContainer = document.getElementById('menuNavContainer');
+      if (menuNavContainer) {
+        menuNavContainer.style.overflowX = 'auto';
+        menuNavContainer.style.WebkitOverflowScrolling = 'touch';
+      }
     });
+    
+    // Update navigation indicators on window resize
+    window.addEventListener('resize', updateNavIndicators);
   </script>
 </body>
 </html>
