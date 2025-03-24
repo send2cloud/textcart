@@ -46,19 +46,19 @@ const Menu: React.FC = () => {
   };
 
   return (
-    <div className="menu-container py-2">
+    <div className="menu-container pb-20">
       {/* Category Navigation */}
-      <div className="sticky top-[72px] z-30 bg-[#F8C291]/95 backdrop-blur-sm py-2 -mx-4 px-4 shadow-sm">
+      <div className="sticky top-[60px] z-30 bg-[#F2E8D5] py-2 -mx-4 px-4 shadow-sm border-y border-[#E6D7B8]">
         <NavigationMenu className="max-w-full w-full">
-          <NavigationMenuList className="flex justify-start overflow-x-auto space-x-1 w-full no-scrollbar">
+          <NavigationMenuList className="flex justify-between overflow-x-auto space-x-1 w-full no-scrollbar">
             {menuData.map((section) => (
               <NavigationMenuItem key={`nav-${section.id}`}>
                 <NavigationMenuLink 
                   className={cn(
-                    "px-4 py-2 text-white rounded-md whitespace-nowrap cursor-pointer text-sm font-medium transition-colors",
+                    "px-4 py-2 text-gray-800 rounded-md whitespace-nowrap cursor-pointer text-sm font-medium transition-colors",
                     activeSection === section.id 
-                      ? "bg-white/20 font-semibold"
-                      : "hover:bg-white/10"
+                      ? "bg-[#D9B26A] text-white font-semibold"
+                      : "hover:bg-[#D9B26A]/10"
                   )}
                   onClick={() => scrollToSection(section.id)}
                 >
@@ -71,7 +71,7 @@ const Menu: React.FC = () => {
       </div>
 
       {/* Menu Sections */}
-      <div className="space-y-6 mt-4">
+      <div className="mt-4">
         {menuData.map((section) => (
           <div 
             key={section.id} 

@@ -18,18 +18,18 @@ const Index = () => {
   const totalItems = getTotalItems();
 
   return (
-    <div className="min-h-screen bg-[#FAF2E5] pb-24">
-      <header className="sticky top-0 z-40 bg-[#E74C3C] text-white shadow-sm">
+    <div className="min-h-screen bg-[#F9F3E8] pb-16">
+      <header className="sticky top-0 z-40 bg-[#D04A35] text-white shadow-md">
         <div className="px-4 py-3 flex justify-between items-center">
-          <h1 className="text-2xl font-bold">{restaurantInfo.name}</h1>
-          <a href={`tel:${restaurantInfo.phone}`} className="flex items-center text-sm">
+          <h1 className="text-2xl font-bold tracking-tight">{restaurantInfo.name}</h1>
+          <a href={`tel:${restaurantInfo.phone}`} className="flex items-center text-sm font-medium">
             <Phone className="h-4 w-4 mr-1" />
             {restaurantInfo.phone}
           </a>
         </div>
       </header>
       
-      <main>
+      <main className="bg-[#F9F3E8]">
         <Menu />
         <LocationInfo />
       </main>

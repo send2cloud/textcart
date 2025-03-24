@@ -51,7 +51,7 @@ const CartSheet: React.FC<CartSheetProps> = ({
         <div className="p-4 border-b flex justify-between items-center sticky top-0 bg-white rounded-t-3xl z-10">
           <div className="flex items-center">
             <ShoppingCart className="h-5 w-5 mr-2 text-gray-700" />
-            <h2 className="text-xl font-semibold text-gray-800">Your Cart</h2>
+            <h2 className="text-xl font-semibold text-gray-800">Your Order</h2>
           </div>
           <Button 
             variant="ghost" 
@@ -79,9 +79,9 @@ const CartSheet: React.FC<CartSheetProps> = ({
                     <p className="font-medium">{item.quantity} x {item.name}</p>
                   </div>
                   <Button 
-                    variant="destructive" 
+                    variant="outline" 
                     size="sm"
-                    className="rounded-md h-8 w-8 p-0"
+                    className="rounded-md h-8 w-8 p-0 border-gray-300"
                     onClick={() => onRemoveItem(item.id)}
                   >
                     <Minus className="h-4 w-4" />

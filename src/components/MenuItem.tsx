@@ -13,26 +13,30 @@ interface MenuItemProps {
 const MenuItem: React.FC<MenuItemProps> = ({ item, onAddToCart, quantity }) => {
   return (
     <div 
-      className="flex justify-between items-center py-3 border-b border-gray-100"
+      className="flex justify-between items-start py-3 border-b border-gray-200"
       data-testid={`menu-item-${item.id}`}
     >
-      <div className="flex-1">
-        <h3 className="font-medium">{item.name}</h3>
+      <div className="flex-1 pr-3">
+        <div className="flex items-center gap-2">
+          <h3 className="font-medium text-gray-900">{item.name}</h3>
+          {quantity > 0 && (
+            <div className="text-sm font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
+              ({quantity})
+            </div>
+          )}
+        </div>
         {item.description && (
-          <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
-        )}
-        {quantity > 0 && (
-          <div className="mt-1 text-sm font-medium text-primary">({quantity})</div>
+          <p className="text-sm text-gray-600 mt-0.5 pr-4">{item.description}</p>
         )}
       </div>
       <Button
         size="sm"
         onClick={() => onAddToCart(item)}
         className={cn(
-          "rounded-md px-4 h-8",
+          "rounded-md px-4 h-8 shrink-0 font-medium",
           quantity > 0 
-            ? "bg-[#F0AD4E] hover:bg-[#F0AD4E]/90 text-white" 
-            : "bg-[#28A99E] hover:bg-[#28A99E]/90 text-white"
+            ? "bg-[#D9B26A] hover:bg-[#D9B26A]/90 text-white" 
+            : "bg-[#D9B26A] hover:bg-[#D9B26A]/90 text-white"
         )}
       >
         Add
