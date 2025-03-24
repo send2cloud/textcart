@@ -10,11 +10,13 @@ interface CartButtonProps {
 }
 
 const CartButton: React.FC<CartButtonProps> = ({ itemCount, onClick }) => {
+  // If there are no items, don't render the button at all
+  if (itemCount === 0) {
+    return null;
+  }
+  
   return (
-    <div className={cn(
-      "fixed bottom-0 left-0 right-0 z-50 shadow-lg transform transition-all duration-300",
-      itemCount === 0 ? "opacity-0 pointer-events-none translate-y-full" : "opacity-100 translate-y-0"
-    )}>
+    <div className="fixed bottom-0 left-0 right-0 z-50 shadow-lg">
       <div className="bg-[#D9B26A] text-white py-4 px-4">
         <Button
           onClick={onClick}

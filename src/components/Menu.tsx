@@ -55,9 +55,9 @@ const Menu: React.FC = () => {
   };
 
   return (
-    <div className="menu-container pb-28" ref={menuRef}>
-      {/* Category Navigation */}
-      <div className="sticky top-[60px] z-30 bg-[#F2E8D5] py-2 -mx-4 px-4 shadow-sm border-y border-[#E6D7B8]">
+    <div className="menu-container" ref={menuRef}>
+      {/* Category Navigation - Remove -mx-4 to fix the gap */}
+      <div className="sticky top-[59px] z-30 bg-[#F2E8D5] py-2 px-4 shadow-sm border-y border-[#E6D7B8]">
         <NavigationMenu className="max-w-full w-full">
           <NavigationMenuList className="flex justify-between overflow-x-auto space-x-1 w-full no-scrollbar">
             {menuData.map((section) => (
@@ -80,7 +80,7 @@ const Menu: React.FC = () => {
       </div>
 
       {/* Menu Sections */}
-      <div className="mt-4">
+      <div className="mt-4 pb-28">
         {menuData.map((section) => (
           <div 
             key={section.id} 
