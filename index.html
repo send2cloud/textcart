@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,486 +6,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bella Cucina - Order Menu</title>
   <style>
-    /* Base styles */
-    :root {
-      --primary: #D04A35;
-      --secondary: #D9B26A;
-      --background: #F9F3E8;
-      --text: #333;
-      --border: #E6D7B8;
-    }
+    /* ... keep existing code (Base styles, Header, Menu navigation, Menu container, Menu sections, Menu items, Location info, Cart button styles) */
     
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-    
-    body {
-      background-color: var(--background);
-      color: var(--text);
-      min-height: 100vh;
-      position: relative;
-      padding-bottom: 60px;
-    }
-    
-    /* Header */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      background-color: var(--primary);
-      color: white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .header-content {
-      padding: 0.75rem 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .restaurant-name {
-      font-size: 1.5rem;
-      font-weight: bold;
-      letter-spacing: -0.025em;
-    }
-    
-    .phone-link {
-      display: flex;
-      align-items: center;
-      color: white;
-      text-decoration: none;
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-    
-    .phone-icon {
-      margin-right: 0.25rem;
-      width: 1rem;
-      height: 1rem;
-    }
-    
-    /* Menu navigation */
-    .menu-nav {
-      position: sticky;
-      top: 58px;
-      z-index: 30;
-      background-color: #F2E8D5;
-      padding: 0.5rem 1rem;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-      overflow-x: auto;
-    }
-    
-    .menu-nav-list {
-      display: flex;
-      list-style: none;
-      gap: 0.25rem;
-      white-space: nowrap;
-    }
-    
-    .menu-nav-item {
-      padding: 0.5rem 1rem;
-      border-radius: 0.375rem;
-      cursor: pointer;
-      font-size: 0.875rem;
-      font-weight: 500;
-      transition: background-color 0.2s;
-    }
-    
-    .menu-nav-item:hover {
-      background-color: rgba(217, 178, 106, 0.1);
-    }
-    
-    .menu-nav-item.active {
-      background-color: var(--secondary);
-      color: white;
-      font-weight: 600;
-    }
-    
-    /* Hide scrollbar but keep functionality */
-    .menu-nav {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    
-    .menu-nav::-webkit-scrollbar {
-      display: none;
-    }
-    
-    /* Menu container */
-    .menu-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.25rem;
-      padding-bottom: 7rem;
-    }
-    
-    /* Menu sections */
-    .menu-section {
-      padding-top: 0.5rem;
-      padding-bottom: 1.5rem;
-      transition: all 0.3s ease;
-    }
-    
-    .section-title {
-      margin-bottom: 0.5rem;
-      padding-bottom: 0.25rem;
-      border-bottom: 2px solid var(--secondary);
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #111827;
-    }
-    
-    /* Menu items */
-    .menu-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 0.75rem 0;
-      border-bottom: 1px solid #E5E7EB;
-    }
-    
-    .item-info {
-      flex: 1;
-      padding-right: 0.75rem;
-    }
-    
-    .item-name-container {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .item-name {
-      font-weight: 500;
-      color: #111827;
-    }
-    
-    .item-quantity {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: #059669;
-    }
-    
-    .item-description {
-      font-size: 0.875rem;
-      color: #6B7280;
-      margin-top: 0.125rem;
-      padding-right: 1rem;
-    }
-    
-    .add-button {
-      background-color: var(--secondary);
-      color: white;
-      border: none;
-      border-radius: 9999px;
-      padding: 0.25rem 1rem;
-      height: 2rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.2s;
-    }
-    
-    .add-button:hover {
-      background-color: rgba(217, 178, 106, 0.9);
-    }
-    
-    .add-button.in-cart {
-      background-color: #059669;
-    }
-    
-    .add-button.in-cart:hover {
-      background-color: #047857;
-    }
-    
-    /* Location info */
-    .location-info {
-      background-color: rgba(240, 240, 240, 0.5);
-      border-radius: 0.75rem;
-      padding: 1.5rem;
-      margin: 2rem 0;
-    }
-    
-    .location-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-    
-    .contact-info {
-      margin-bottom: 1.5rem;
-    }
-    
-    .contact-info a,
-    .contact-info div {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-      text-decoration: none;
-    }
-    
-    .contact-info a {
-      color: #059669;
-    }
-    
-    .contact-info a:hover {
-      text-decoration: underline;
-    }
-    
-    .contact-info div {
-      color: var(--text);
-    }
-    
-    .map-container {
-      aspect-ratio: 16/9;
-      width: 100%;
-      overflow: hidden;
-      border-radius: 0.5rem;
-    }
-    
-    .map-container iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
-    
-    /* Cart button */
-    .cart-button {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 50;
-      background-color: var(--secondary);
-      color: white;
-      padding: 1rem;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
-      transform: translateY(0);
-      transition: transform 0.3s ease, opacity 0.3s ease, visibility 0.3s ease;
-    }
-    
-    .cart-button.empty {
-      transform: translateY(100%);
-      opacity: 0;
-      visibility: hidden;
-    }
-    
-    .cart-button-inner {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.125rem;
-      font-weight: 500;
-      padding: 0.5rem 0;
-      width: 100%;
-      cursor: pointer;
-      background: transparent;
-      border: none;
-      color: inherit;
-    }
-    
-    .cart-icon {
-      margin-right: 0.5rem;
-      width: 1.25rem;
-      height: 1.25rem;
-    }
-    
-    /* Cart sheet */
-    .cart-sheet {
-      position: fixed;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
-      background-color: white;
-      border-top-left-radius: 0.75rem;
-      border-top-right-radius: 0.75rem;
-      box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1);
-      transform: translateY(100%);
-      transition: transform 0.3s ease;
-      padding: 1.5rem;
-      max-height: 80vh;
-      overflow-y: auto;
-    }
-    
-    .cart-sheet.open {
-      transform: translateY(0);
-    }
-    
-    .cart-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 99;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.3s ease, visibility 0.3s ease;
-    }
-    
-    .cart-overlay.open {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .cart-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.5rem;
-    }
-    
-    .cart-title {
-      font-size: 1.25rem;
-      font-weight: 600;
-    }
-    
-    .close-button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #6B7280;
-    }
-    
-    .cart-items {
-      margin-bottom: 1.5rem;
-    }
-    
-    .cart-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0.75rem 0;
-      border-bottom: 1px solid #E5E7EB;
-    }
-    
-    .cart-item-info {
-      flex: 1;
-    }
-    
-    .cart-item-name {
-      font-weight: 500;
-    }
-    
-    .cart-item-price {
-      color: #6B7280;
-      font-size: 0.875rem;
-    }
-    
-    .cart-item-quantity {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .quantity-button {
-      background-color: #F3F4F6;
-      border: none;
-      border-radius: 0.25rem;
-      width: 1.5rem;
-      height: 1.5rem;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-    }
-    
-    .cart-actions {
-      display: flex;
-      flex-direction: column;
-      gap: 0.75rem;
-    }
-    
-    .checkout-button {
-      background-color: #059669;
-      color: white;
-      border: none;
-      border-radius: 0.375rem;
-      padding: 0.75rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-    
-    .checkout-button:hover {
-      background-color: #047857;
-    }
-    
-    .whatsapp-button {
-      background-color: #25D366;
-      color: white;
-      border: none;
-      border-radius: 0.375rem;
-      padding: 0.75rem;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background-color 0.2s;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-    }
-    
-    .whatsapp-button:hover {
-      background-color: rgba(37, 211, 102, 0.9);
-    }
-    
-    .empty-cart-message {
-      text-align: center;
-      color: #6B7280;
-      padding: 2rem 0;
-    }
-    
-    .sheet-overlay {
-      position: fixed;
-      inset: 0;
-      background-color: rgba(0, 0, 0, 0.5);
-      z-index: 40;
-    }
-    
-    .animate-slide-up {
-      animation: slideUp 0.3s ease forwards;
-    }
-    
-    @keyframes slideUp {
-      from {
-        transform: translateY(100%);
-      }
-      to {
-        transform: translateY(0);
-      }
-    }
-    
-    .no-scrollbar {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    
-    .no-scrollbar::-webkit-scrollbar {
-      display: none;
-    }
-
     /* Receipt styles */
     .receipt-overlay {
       position: fixed;
@@ -729,4 +252,576 @@
       <button class="whatsapp-button" id="whatsappButton">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
           <path d="M17.6 6.31999C16.8669 5.58141 15.9943 4.99596 15.033 4.59767C14.0716 4.19938 13.0406 3.99602 12 3.99999C10.6089 4.00277 9.24248 4.36599 8.03271 5.04806C6.82294 5.73013 5.8093 6.70673 5.091 7.89999C4.37271 9.09324 3.97843 10.4549 3.94785 11.8455C3.91728 13.236 4.25165 14.6148 4.92 15.84L4 20L8.2 19.08C9.35975 19.6917 10.6629 20.0028 11.98 20C14.5804 19.9968 17.0732 18.9375 18.9203 17.0771C20.7675 15.2167 21.8093 12.7172 21.8 10.12C21.8 9.06698 21.5959 8.02511 21.1962 7.05223C20.7965 6.07934 20.2092 5.19527 19.47 4.45999C18.7309 3.72471 17.8487 3.13777 16.8775 2.73889C15.9063 2.34002 14.8659 2.1371 13.815 2.13999C12.7641 2.14289 11.7248 2.35146 10.7554 2.75576C9.78592 3.16006 8.90609 3.75209 8.17 4.48999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M14.3517 16.11C14.222 16.2579 14.0271 16.3509 13.8154 16.37C13.6037 16.389 13.3938 16.3326 13.2317 16.21C12.268 15.6581 11.4099 14.9544 10.6917 14.12C9.92814 13.263 9.32328 12.2684 8.90173 11.
+          <path d="M14.3517 16.11C14.222 16.2579 14.0271 16.3509 13.8154 16.37C13.6037 16.389 13.3938 16.3326 13.2317 16.21C12.268 15.6581 11.4099 14.9544 10.6917 14.12C9.92814 13.263 9.32328 12.2684 8.90173 11.19C8.83516 11.0095 8.83764 10.8098 8.90879 10.6312C8.97994 10.4525 9.11448 10.307 9.28673 10.22C9.34369 10.189 9.40547 10.1659 9.47 10.15C9.51685 10.1487 9.56354 10.1552 9.60835 10.1692C9.65316 10.1832 9.69547 10.2045 9.73334 10.2323C9.77122 10.2601 9.80412 10.2939 9.83062 10.3324C9.85712 10.3709 9.87685 10.4134 9.88898 10.459C10.0228 10.856 10.187 11.2405 10.3788 11.6095C10.4447 11.73 10.4736 11.8657 10.4626 12.0005C10.4516 12.1354 10.4012 12.2638 10.3167 12.3707C10.2287 12.4719 10.1255 12.5598 10.0105 12.6319C9.89548 12.704 9.77041 12.7596 9.64084 12.7969C9.65728 12.829 9.67542 12.86 9.69517 12.8898C9.75786 12.9845 9.82569 13.0753 9.89828 13.1617C10.0498 13.3517 10.2188 13.5274 10.4032 13.6871C10.5882 13.8654 10.7897 14.0266 11.0053 14.1692C11.1017 14.23 11.2028 14.29 11.3053 14.3392C11.3278 14.3392 11.3506 14.3485 11.3704 14.3657C11.3901 14.3829 11.4059 14.4072 11.4151 14.4353C11.4244 14.4635 11.4267 14.4942 11.4217 14.5237C11.4168 14.5532 11.4048 14.5801 11.3871 14.6007C11.0399 14.9897 10.6704 15.3581 10.2808 15.7038C10.2392 15.7432 10.2091 15.7932 10.1938 15.8482C10.1786 15.9032 10.1788 15.961 10.1945 16.0158C10.2102 16.0706 10.2407 16.1204 10.2826 16.1593C10.3246 16.1983 10.3763 16.2248 10.432 16.2362C10.6067 16.2717 10.7859 16.2786 10.9632 16.2567C11.5571 16.2098 12.1322 16.0465 12.6588 15.7756C13.1853 15.5047 13.6526 15.1322 14.0317 14.6795C14.2457 14.3994 14.2953 14.2644 14.3742 14.1C14.453 13.9357 14.6069 13.2788 14.6069 13.2788C14.6258 13.1946 14.6657 13.1168 14.723 13.0514C14.7803 12.986 14.8534 12.9348 14.9359 12.9026C15.0184 12.8703 15.1079 12.8577 15.1962 12.8657C15.2845 12.8737 15.3693 12.902 15.4435 12.9483C15.8235 13.1717 16.2292 13.3483 16.6515 13.4744C16.7818 13.5159 16.8945 13.6007 16.9723 13.7159C17.0501 13.8311 17.0887 13.9699 17.082 14.11C17.082 14.19 17.0595 14.3289 16.982 14.6795C16.9044 15.0301 16.6289 15.4208 16.432 15.6295C16.2081 15.8695 16.0304 16.0101 15.7717 16.2C15.373 16.4387 14.916 16.5781 14.442 16.6095L14.3517 16.11Z" fill="currentColor"/>
+        </svg>
+        Checkout with WhatsApp
+      </button>
+    </div>
+  </div>
+  
+  <!-- Receipt Overlay -->
+  <div class="receipt-overlay" id="receiptOverlay">
+    <div class="receipt" id="receipt">
+      <div class="receipt-header">
+        <h3 class="receipt-title">Order Receipt</h3>
+        <p class="receipt-subtitle">Bella Cucina</p>
+        <button class="receipt-close" id="closeReceiptButton">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="receipt-body">
+        <div class="receipt-items" id="receiptItems">
+          <!-- Will be populated by JavaScript -->
+        </div>
+        
+        <div class="receipt-summary">
+          <div class="receipt-row total">
+            <span>Total</span>
+            <span id="receiptTotal">$0.00</span>
+          </div>
+        </div>
+      </div>
+      
+      <div class="receipt-footer">
+        <p>Thank you for your order!</p>
+        <button class="receipt-button receipt-sms" id="reopenSmsButton" style="display: none;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+          </svg>
+          Reopen SMS
+        </button>
+        <button class="receipt-button receipt-whatsapp" id="reopenWhatsappButton" style="display: none;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M17.6 6.31999C16.8669 5.58141 15.9943 4.99596 15.033 4.59767C14.0716 4.19938 13.0406 3.99602 12 3.99999C10.6089 4.00277 9.24248 4.36599 8.03271 5.04806C6.82294 5.73013 5.8093 6.70673 5.091 7.89999C4.37271 9.09324 3.97843 10.4549 3.94785 11.8455C3.91728 13.236 4.25165 14.6148 4.92 15.84L4 20L8.2 19.08C9.35975 19.6917 10.6629 20.0028 11.98 20C14.5804 19.9968 17.0732 18.9375 18.9203 17.0771C20.7675 15.2167 21.8093 12.7172 21.8 10.12C21.8 9.06698 21.5959 8.02511 21.1962 7.05223C20.7965 6.07934 20.2092 5.19527 19.47 4.45999C18.7309 3.72471 17.8487 3.13777 16.8775 2.73889C15.9063 2.34002 14.8659 2.1371 13.815 2.13999C12.7641 2.14289 11.7248 2.35146 10.7554 2.75576C9.78592 3.16006 8.90609 3.75209 8.17 4.48999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M14.3517 16.11C14.222 16.2579 14.0271 16.3509 13.8154 16.37C13.6037 16.389 13.3938 16.3326 13.2317 16.21C12.268 15.6581 11.4099 14.9544 10.6917 14.12C9.92814 13.263 9.32328 12.2684 8.90173 11.19C8.83516 11.0095 8.83764 10.8098 8.90879 10.6312C8.97994 10.4525 9.11448 10.307 9.28673 10.22C9.34369 10.189 9.40547 10.1659 9.47 10.15C9.51685 10.1487 9.56354 10.1552 9.60835 10.1692C9.65316 10.1832 9.69547 10.2045 9.73334 10.2323C9.77122 10.2601 9.80412 10.2939 9.83062 10.3324C9.85712 10.3709 9.87685 10.4134 9.88898 10.459C10.0228 10.856 10.187 11.2405 10.3788 11.6095C10.4447 11.73 10.4736 11.8657 10.4626 12.0005C10.4516 12.1354 10.4012 12.2638 10.3167 12.3707C10.2287 12.4719 10.1255 12.5598 10.0105 12.6319C9.89548 12.704 9.77041 12.7596 9.64084 12.7969C9.65728 12.829 9.67542 12.86 9.69517 12.8898C9.75786 12.9845 9.82569 13.0753 9.89828 13.1617C10.0498 13.3517 10.2188 13.5274 10.4032 13.6871C10.5882 13.8654 10.7897 14.0266 11.0053 14.1692C11.1017 14.23 11.2028 14.29 11.3053 14.3392C11.3278 14.3392 11.3506 14.3485 11.3704 14.3657C11.3901 14.3829 11.4059 14.4072 11.4151 14.4353C11.4244 14.4635 11.4267 14.4942 11.4217 14.5237C11.4168 14.5532 11.4048 14.5801 11.3871 14.6007C11.0399 14.9897 10.6704 15.3581 10.2808 15.7038C10.2392 15.7432 10.2091 15.7932 10.1938 15.8482C10.1786 15.9032 10.1788 15.961 10.1945 16.0158C10.2102 16.0706 10.2407 16.1204 10.2826 16.1593C10.3246 16.1983 10.3763 16.2248 10.432 16.2362C10.6067 16.2717 10.7859 16.2786 10.9632 16.2567C11.5571 16.2098 12.1322 16.0465 12.6588 15.7756C13.1853 15.5047 13.6526 15.1322 14.0317 14.6795C14.2457 14.3994 14.2953 14.2644 14.3742 14.1C14.453 13.9357 14.6069 13.2788 14.6069 13.2788C14.6258 13.1946 14.6657 13.1168 14.723 13.0514C14.7803 12.986 14.8534 12.9348 14.9359 12.9026C15.0184 12.8703 15.1079 12.8577 15.1962 12.8657C15.2845 12.8737 15.3693 12.902 15.4435 12.9483C15.8235 13.1717 16.2292 13.3483 16.6515 13.4744C16.7818 13.5159 16.8945 13.6007 16.9723 13.7159C17.0501 13.8311 17.0887 13.9699 17.082 14.11C17.082 14.19 17.0595 14.3289 16.982 14.6795C16.9044 15.0301 16.6289 15.4208 16.432 15.6295C16.2081 15.8695 16.0304 16.0101 15.7717 16.2C15.373 16.4387 14.916 16.5781 14.442 16.6095L14.3517 16.11Z" fill="currentColor"/>
+          </svg>
+          Reopen WhatsApp
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Menu data
+    const menuData = [
+      {
+        id: "starters",
+        name: "Starters",
+        items: [
+          {
+            id: "s1",
+            name: "Garlic Bread",
+            description: "Freshly baked bread with garlic butter and herbs.",
+            price: "$4.99"
+          },
+          {
+            id: "s2",
+            name: "Bruschetta",
+            description: "Toasted bread topped with tomatoes, garlic, olive oil, and basil.",
+            price: "$6.99"
+          },
+          {
+            id: "s3",
+            name: "Calamari",
+            description: "Lightly fried squid served with marinara sauce.",
+            price: "$8.99"
+          },
+          {
+            id: "s4",
+            name: "Caprese Salad",
+            description: "Fresh mozzarella, tomatoes, and basil with balsamic glaze.",
+            price: "$7.99"
+          }
+        ]
+      },
+      {
+        id: "pasta",
+        name: "Pasta",
+        items: [
+          {
+            id: "p1",
+            name: "Spaghetti Carbonara",
+            description: "Spaghetti with egg, cheese, pancetta, and black pepper.",
+            price: "$12.99"
+          },
+          {
+            id: "p2",
+            name: "Fettuccine Alfredo",
+            description: "Fettuccine in a rich, creamy Parmesan sauce.",
+            price: "$11.99"
+          },
+          {
+            id: "p3",
+            name: "Lasagna",
+            description: "Layered pasta with meat sauce, ricotta, and mozzarella.",
+            price: "$13.99"
+          },
+          {
+            id: "p4",
+            name: "Penne Arrabbiata",
+            description: "Penne in a spicy tomato sauce with garlic and chili.",
+            price: "$10.99"
+          }
+        ]
+      },
+      {
+        id: "pizza",
+        name: "Pizza",
+        items: [
+          {
+            id: "z1",
+            name: "Margherita",
+            description: "Tomato sauce, mozzarella, and fresh basil.",
+            price: "$9.99"
+          },
+          {
+            id: "z2",
+            name: "Pepperoni",
+            description: "Tomato sauce, mozzarella, and pepperoni.",
+            price: "$11.99"
+          },
+          {
+            id: "z3",
+            name: "Quattro Formaggi",
+            description: "Four cheese pizza with mozzarella, gorgonzola, parmesan, and ricotta.",
+            price: "$12.99"
+          },
+          {
+            id: "z4",
+            name: "Prosciutto e Funghi",
+            description: "Tomato sauce, mozzarella, prosciutto, and mushrooms.",
+            price: "$13.99"
+          }
+        ]
+      },
+      {
+        id: "desserts",
+        name: "Desserts",
+        items: [
+          {
+            id: "d1",
+            name: "Tiramisu",
+            description: "Coffee-flavored Italian dessert with ladyfingers and mascarpone cheese.",
+            price: "$6.99"
+          },
+          {
+            id: "d2",
+            name: "Cannoli",
+            description: "Crispy pastry shell filled with sweet ricotta cream.",
+            price: "$5.99"
+          },
+          {
+            id: "d3",
+            name: "Panna Cotta",
+            description: "Vanilla cream dessert with berry coulis.",
+            price: "$6.49"
+          },
+          {
+            id: "d4",
+            name: "Gelato",
+            description: "Italian ice cream in vanilla, chocolate, or pistachio flavor.",
+            price: "$4.99"
+          }
+        ]
+      },
+      {
+        id: "drinks",
+        name: "Drinks",
+        items: [
+          {
+            id: "dr1",
+            name: "Italian Soda",
+            description: "Flavored soda water with your choice of syrup.",
+            price: "$2.99"
+          },
+          {
+            id: "dr2",
+            name: "Espresso",
+            description: "Rich and concentrated coffee.",
+            price: "$2.49"
+          },
+          {
+            id: "dr3",
+            name: "Cappuccino",
+            description: "Espresso with steamed milk and foam.",
+            price: "$3.49"
+          },
+          {
+            id: "dr4",
+            name: "Red Wine",
+            description: "Glass of house red wine.",
+            price: "$5.99"
+          }
+        ]
+      }
+    ];
+
+    // Cart data
+    let cartItems = [];
+    let activeSection = "starters";
+    let checkoutLink = "";
+    let checkoutMethod = "";
+
+    // DOM Elements
+    const menuNavList = document.getElementById("menuNavList");
+    const menuSections = document.getElementById("menuSections");
+    const cartButton = document.getElementById("cartButton");
+    const cartButtonText = document.getElementById("cartButtonText");
+    const cartSheet = document.getElementById("cartSheet");
+    const cartOverlay = document.getElementById("cartOverlay");
+    const closeCartButton = document.getElementById("closeCartButton");
+    const cartItemsContainer = document.getElementById("cartItems");
+    const checkoutButton = document.getElementById("checkoutButton");
+    const whatsappButton = document.getElementById("whatsappButton");
+    const receiptOverlay = document.getElementById("receiptOverlay");
+    const receipt = document.getElementById("receipt");
+    const receiptItems = document.getElementById("receiptItems");
+    const receiptTotal = document.getElementById("receiptTotal");
+    const closeReceiptButton = document.getElementById("closeReceiptButton");
+    const reopenSmsButton = document.getElementById("reopenSmsButton");
+    const reopenWhatsappButton = document.getElementById("reopenWhatsappButton");
+
+    // Initialize menu
+    function initMenu() {
+      // Populate menu navigation
+      menuData.forEach(section => {
+        const li = document.createElement("li");
+        li.classList.add("menu-nav-item");
+        if (section.id === activeSection) {
+          li.classList.add("active");
+        }
+        li.textContent = section.name;
+        li.setAttribute("data-section", section.id);
+        li.addEventListener("click", () => {
+          document.querySelectorAll(".menu-nav-item").forEach(item => item.classList.remove("active"));
+          li.classList.add("active");
+          scrollToSection(section.id);
+        });
+        menuNavList.appendChild(li);
+      });
+
+      // Populate menu sections
+      menuData.forEach(section => {
+        const sectionElement = document.createElement("div");
+        sectionElement.classList.add("menu-section");
+        sectionElement.setAttribute("id", section.id);
+        
+        const sectionTitle = document.createElement("h2");
+        sectionTitle.classList.add("section-title");
+        sectionTitle.textContent = section.name;
+        sectionElement.appendChild(sectionTitle);
+        
+        section.items.forEach(item => {
+          const menuItem = document.createElement("div");
+          menuItem.classList.add("menu-item");
+          
+          const itemInfo = document.createElement("div");
+          itemInfo.classList.add("item-info");
+          
+          const nameContainer = document.createElement("div");
+          nameContainer.classList.add("item-name-container");
+          
+          const itemName = document.createElement("h3");
+          itemName.classList.add("item-name");
+          itemName.textContent = item.name;
+          nameContainer.appendChild(itemName);
+          
+          itemInfo.appendChild(nameContainer);
+          
+          const itemDescription = document.createElement("p");
+          itemDescription.classList.add("item-description");
+          itemDescription.textContent = item.description;
+          itemInfo.appendChild(itemDescription);
+          
+          menuItem.appendChild(itemInfo);
+          
+          const addButton = document.createElement("button");
+          addButton.classList.add("add-button");
+          addButton.setAttribute("data-id", item.id);
+          addButton.textContent = "Add";
+          addButton.addEventListener("click", () => addToCart(item));
+          menuItem.appendChild(addButton);
+          
+          sectionElement.appendChild(menuItem);
+        });
+        
+        menuSections.appendChild(sectionElement);
+      });
+    }
+
+    // Initialize cart
+    function initCart() {
+      cartButton.addEventListener("click", openCart);
+      closeCartButton.addEventListener("click", closeCart);
+      cartOverlay.addEventListener("click", closeCart);
+      checkoutButton.addEventListener("click", () => checkout("SMS"));
+      whatsappButton.addEventListener("click", () => checkout("WhatsApp"));
+      closeReceiptButton.addEventListener("click", closeReceipt);
+      
+      reopenSmsButton.addEventListener("click", reopenCheckout);
+      reopenWhatsappButton.addEventListener("click", reopenCheckout);
+    }
+
+    // Scroll to section
+    function scrollToSection(sectionId) {
+      const section = document.getElementById(sectionId);
+      if (section) {
+        window.scrollTo({
+          top: section.offsetTop - 120,
+          behavior: "smooth"
+        });
+        activeSection = sectionId;
+      }
+    }
+
+    // Add item to cart
+    function addToCart(item) {
+      const existingItem = cartItems.find(cartItem => cartItem.id === item.id);
+      
+      if (existingItem) {
+        existingItem.quantity++;
+      } else {
+        cartItems.push({
+          ...item,
+          quantity: 1
+        });
+      }
+      
+      updateCartButton();
+    }
+
+    // Remove item from cart
+    function removeFromCart(itemId) {
+      const itemIndex = cartItems.findIndex(item => item.id === itemId);
+      
+      if (itemIndex >= 0) {
+        if (cartItems[itemIndex].quantity > 1) {
+          cartItems[itemIndex].quantity--;
+        } else {
+          cartItems.splice(itemIndex, 1);
+        }
+        
+        updateCartButton();
+        renderCartItems();
+      }
+    }
+
+    // Clear cart
+    function clearCart() {
+      cartItems = [];
+      updateCartButton();
+      renderCartItems();
+    }
+
+    // Update cart button
+    function updateCartButton() {
+      const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
+      
+      if (totalItems > 0) {
+        cartButton.classList.remove("empty");
+        cartButtonText.textContent = `View Cart (${totalItems})`;
+      } else {
+        cartButton.classList.add("empty");
+        cartButtonText.textContent = "View Cart (0)";
+        closeCart();
+      }
+    }
+
+    // Open cart
+    function openCart() {
+      renderCartItems();
+      cartSheet.classList.add("open");
+      cartOverlay.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    // Close cart
+    function closeCart() {
+      cartSheet.classList.remove("open");
+      cartOverlay.classList.remove("open");
+      document.body.style.overflow = "";
+    }
+
+    // Render cart items
+    function renderCartItems() {
+      cartItemsContainer.innerHTML = "";
+      
+      if (cartItems.length === 0) {
+        const emptyMessage = document.createElement("div");
+        emptyMessage.classList.add("empty-cart-message");
+        emptyMessage.textContent = "Your cart is empty";
+        cartItemsContainer.appendChild(emptyMessage);
+        return;
+      }
+      
+      let total = 0;
+      
+      cartItems.forEach(item => {
+        const itemPrice = parseFloat(item.price.replace("$", ""));
+        const itemTotal = itemPrice * item.quantity;
+        total += itemTotal;
+        
+        const cartItem = document.createElement("div");
+        cartItem.classList.add("cart-item");
+        
+        const cartItemInfo = document.createElement("div");
+        cartItemInfo.classList.add("cart-item-info");
+        
+        const cartItemName = document.createElement("div");
+        cartItemName.classList.add("cart-item-name");
+        cartItemName.textContent = item.name;
+        cartItemInfo.appendChild(cartItemName);
+        
+        const cartItemPrice = document.createElement("div");
+        cartItemPrice.classList.add("cart-item-price");
+        cartItemPrice.textContent = `$${itemTotal.toFixed(2)}`;
+        cartItemInfo.appendChild(cartItemPrice);
+        
+        cartItem.appendChild(cartItemInfo);
+        
+        const cartItemQuantity = document.createElement("div");
+        cartItemQuantity.classList.add("cart-item-quantity");
+        
+        const minusButton = document.createElement("button");
+        minusButton.classList.add("quantity-button");
+        minusButton.textContent = "-";
+        minusButton.addEventListener("click", () => removeFromCart(item.id));
+        cartItemQuantity.appendChild(minusButton);
+        
+        const quantityText = document.createElement("span");
+        quantityText.textContent = item.quantity;
+        cartItemQuantity.appendChild(quantityText);
+        
+        const plusButton = document.createElement("button");
+        plusButton.classList.add("quantity-button");
+        plusButton.textContent = "+";
+        plusButton.addEventListener("click", () => addToCart(item));
+        cartItemQuantity.appendChild(plusButton);
+        
+        cartItem.appendChild(cartItemQuantity);
+        
+        cartItemsContainer.appendChild(cartItem);
+      });
+    }
+
+    // Checkout function
+    function checkout(method) {
+      // Create order message
+      const restaurantName = "Bella Cucina";
+      const phoneNumber = "+1234567890";
+      const orderItems = cartItems.map(item => 
+        `${item.quantity}x ${item.name} ($${parseFloat(item.price.replace("$", "")).toFixed(2)})`
+      ).join("\n");
+      
+      const total = cartItems.reduce((total, item) => 
+        total + (parseFloat(item.price.replace("$", "")) * item.quantity), 0
+      ).toFixed(2);
+      
+      const message = `
+New order from ${restaurantName}:
+
+${orderItems}
+
+Total: $${total}
+
+Thank you!
+      `.trim();
+      
+      const encodedMessage = encodeURIComponent(message);
+      
+      // Set checkout method and link
+      checkoutMethod = method;
+      
+      if (method === "SMS") {
+        checkoutLink = `sms:${phoneNumber}?body=${encodedMessage}`;
+        reopenSmsButton.style.display = "flex";
+        reopenWhatsappButton.style.display = "none";
+      } else {
+        // WhatsApp requires phone number without "+", some other formatting
+        const formattedPhone = phoneNumber.replace(/\D/g, '');
+        checkoutLink = `https://wa.me/${formattedPhone}?text=${encodedMessage}`;
+        reopenSmsButton.style.display = "none";
+        reopenWhatsappButton.style.display = "flex";
+      }
+      
+      // Show receipt
+      renderReceipt();
+      closeCart();
+      openReceipt();
+      
+      // Automatically open the checkout link after a short delay
+      setTimeout(() => {
+        window.open(checkoutLink, '_blank');
+      }, 500);
+    }
+
+    // Render receipt
+    function renderReceipt() {
+      receiptItems.innerHTML = "";
+      
+      cartItems.forEach(item => {
+        const itemPrice = parseFloat(item.price.replace("$", ""));
+        const itemTotal = itemPrice * item.quantity;
+        
+        const receiptItem = document.createElement("div");
+        receiptItem.classList.add("receipt-item");
+        
+        const itemName = document.createElement("div");
+        itemName.classList.add("receipt-item-name");
+        
+        const itemQuantity = document.createElement("span");
+        itemQuantity.classList.add("receipt-item-quantity");
+        itemQuantity.textContent = `${item.quantity}x`;
+        itemName.appendChild(itemQuantity);
+        
+        const nameText = document.createTextNode(item.name);
+        itemName.appendChild(nameText);
+        
+        receiptItem.appendChild(itemName);
+        
+        const itemPriceElement = document.createElement("div");
+        itemPriceElement.textContent = `$${itemTotal.toFixed(2)}`;
+        receiptItem.appendChild(itemPriceElement);
+        
+        receiptItems.appendChild(receiptItem);
+      });
+      
+      const total = cartItems.reduce((total, item) => 
+        total + (parseFloat(item.price.replace("$", "")) * item.quantity), 0
+      ).toFixed(2);
+      
+      receiptTotal.textContent = `$${total}`;
+    }
+
+    // Open receipt
+    function openReceipt() {
+      receiptOverlay.classList.add("open");
+      receipt.classList.add("open");
+      document.body.style.overflow = "hidden";
+    }
+
+    // Close receipt
+    function closeReceipt() {
+      receiptOverlay.classList.remove("open");
+      receipt.classList.remove("open");
+      document.body.style.overflow = "";
+      clearCart();
+    }
+
+    // Reopen checkout
+    function reopenCheckout() {
+      window.open(checkoutLink, '_blank');
+    }
+
+    // Initialize
+    window.addEventListener("DOMContentLoaded", () => {
+      initMenu();
+      initCart();
+    });
+  </script>
+</body>
+</html>
