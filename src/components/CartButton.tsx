@@ -12,10 +12,10 @@ interface CartButtonProps {
 const CartButton: React.FC<CartButtonProps> = ({ itemCount, onClick }) => {
   return (
     <div className={cn(
-      "fixed bottom-4 left-4 right-4 z-50 shadow-lg transform transition-all duration-300",
-      itemCount === 0 ? "opacity-0 pointer-events-none translate-y-16" : "opacity-100 translate-y-0"
+      "fixed bottom-0 left-0 right-0 z-50 shadow-lg transform transition-all duration-300",
+      itemCount === 0 ? "opacity-0 pointer-events-none translate-y-full" : "opacity-100 translate-y-0"
     )}>
-      <div className="bg-[#D9B26A] text-white py-3 px-4 rounded-lg">
+      <div className="bg-[#D9B26A] text-white py-3 px-4">
         <Button
           onClick={onClick}
           className={cn(

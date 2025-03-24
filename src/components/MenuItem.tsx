@@ -20,9 +20,9 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, onAddToCart, quantity }) => {
         <div className="flex items-center gap-2">
           <h3 className="font-medium text-gray-900">{item.name}</h3>
           {quantity > 0 && (
-            <div className="text-sm font-semibold text-green-600 bg-green-50 px-2 py-0.5 rounded-full">
+            <span className="text-sm font-semibold text-green-600">
               ({quantity})
-            </div>
+            </span>
           )}
         </div>
         {item.description && (
@@ -33,7 +33,7 @@ const MenuItem: React.FC<MenuItemProps> = ({ item, onAddToCart, quantity }) => {
         size="sm"
         onClick={() => onAddToCart(item)}
         className={cn(
-          "rounded-md px-4 h-8 shrink-0 font-medium",
+          "rounded-full px-4 h-8 shrink-0 font-medium",
           quantity > 0 
             ? "bg-green-600 hover:bg-green-700 text-white" 
             : "bg-[#D9B26A] hover:bg-[#D9B26A]/90 text-white"

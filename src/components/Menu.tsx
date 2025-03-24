@@ -13,7 +13,7 @@ const Menu: React.FC = () => {
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: "-100px 0px -80% 0px", // Adjust the rootMargin to determine when a section is considered "active"
+      rootMargin: "-100px 0px -85% 0px", // Adjusted to better detect the topmost visible section
       threshold: 0
     };
 
