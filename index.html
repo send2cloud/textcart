@@ -6,260 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Bella Cucina - Order Menu</title>
   <style>
-    /* Base styles */
-    :root {
-      --primary: #D04A35;
-      --secondary: #D9B26A;
-      --background: #F9F3E8;
-      --text: #333;
-      --border: #E6D7B8;
-    }
-    
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-    }
-    
-    body {
-      background-color: var(--background);
-      color: var(--text);
-      min-height: 100vh;
-      position: relative;
-      padding-bottom: 60px;
-    }
-    
-    /* Header */
-    header {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      background-color: var(--primary);
-      color: white;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    
-    .header-content {
-      padding: 0.75rem 1rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    
-    .restaurant-name {
-      font-size: 1.5rem;
-      font-weight: bold;
-      letter-spacing: -0.025em;
-    }
-    
-    .phone-link {
-      display: flex;
-      align-items: center;
-      color: white;
-      text-decoration: none;
-      font-size: 0.875rem;
-      font-weight: 500;
-    }
-    
-    .phone-icon {
-      margin-right: 0.25rem;
-      width: 1rem;
-      height: 1rem;
-    }
-    
-    /* Menu navigation */
-    .menu-nav {
-      position: sticky;
-      top: 58px;
-      z-index: 30;
-      background-color: #F2E8D5;
-      padding: 0.5rem 1rem;
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-      overflow-x: auto;
-    }
-    
-    .menu-nav-list {
-      display: flex;
-      list-style: none;
-      gap: 0.25rem;
-      white-space: nowrap;
-    }
-    
-    .menu-nav-item {
-      padding: 0.5rem 1rem;
-      border-radius: 0.375rem;
-      cursor: pointer;
-      font-size: 0.875rem;
-      font-weight: 500;
-      transition: background-color 0.2s;
-    }
-    
-    .menu-nav-item:hover {
-      background-color: rgba(217, 178, 106, 0.1);
-    }
-    
-    .menu-nav-item.active {
-      background-color: var(--secondary);
-      color: white;
-      font-weight: 600;
-    }
-    
-    /* Hide scrollbar but keep functionality */
-    .menu-nav {
-      -ms-overflow-style: none;
-      scrollbar-width: none;
-    }
-    
-    .menu-nav::-webkit-scrollbar {
-      display: none;
-    }
-    
-    /* Menu container */
-    .menu-container {
-      max-width: 1200px;
-      margin: 0 auto;
-      padding: 0 1.25rem;
-      padding-bottom: 7rem;
-    }
-    
-    /* Menu sections */
-    .menu-section {
-      padding-top: 0.5rem;
-      padding-bottom: 1.5rem;
-      transition: all 0.3s ease;
-    }
-    
-    .section-title {
-      margin-bottom: 0.5rem;
-      padding-bottom: 0.25rem;
-      border-bottom: 2px solid var(--secondary);
-      font-size: 1.25rem;
-      font-weight: 700;
-      color: #111827;
-    }
-    
-    /* Menu items */
-    .menu-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      padding: 0.75rem 0;
-      border-bottom: 1px solid #E5E7EB;
-    }
-    
-    .item-info {
-      flex: 1;
-      padding-right: 0.75rem;
-    }
-    
-    .item-name-container {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    
-    .item-name {
-      font-weight: 500;
-      color: #111827;
-    }
-    
-    .item-quantity {
-      font-size: 0.875rem;
-      font-weight: 600;
-      color: #059669;
-    }
-    
-    .item-description {
-      font-size: 0.875rem;
-      color: #6B7280;
-      margin-top: 0.125rem;
-      padding-right: 1rem;
-    }
-    
-    .add-button {
-      background-color: var(--secondary);
-      color: white;
-      border: none;
-      border-radius: 9999px;
-      padding: 0.25rem 1rem;
-      height: 2rem;
-      font-size: 0.875rem;
-      font-weight: 500;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      transition: background-color 0.2s;
-    }
-    
-    .add-button:hover {
-      background-color: rgba(217, 178, 106, 0.9);
-    }
-    
-    .add-button.in-cart {
-      background-color: #059669;
-    }
-    
-    .add-button.in-cart:hover {
-      background-color: #047857;
-    }
-    
-    /* Location info */
-    .location-info {
-      background-color: rgba(240, 240, 240, 0.5);
-      border-radius: 0.75rem;
-      padding: 1.5rem;
-      margin: 2rem 0;
-    }
-    
-    .location-title {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin-bottom: 1rem;
-    }
-    
-    .contact-info {
-      margin-bottom: 1.5rem;
-    }
-    
-    .contact-info a,
-    .contact-info div {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      margin-bottom: 1rem;
-      text-decoration: none;
-    }
-    
-    .contact-info a {
-      color: #059669;
-    }
-    
-    .contact-info a:hover {
-      text-decoration: underline;
-    }
-    
-    .contact-info div {
-      color: var(--text);
-    }
-    
-    .map-container {
-      aspect-ratio: 16/9;
-      width: 100%;
-      overflow: hidden;
-      border-radius: 0.5rem;
-    }
-    
-    .map-container iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-    }
+    /* ... keep existing code (Base styles, Header, Menu navigation, Menu container, Menu sections, Menu items, Location info) */
     
     /* Cart button */
     .cart-button {
@@ -280,9 +27,8 @@
     }
     
     .cart-button.empty {
-      background-color: rgba(217, 178, 106, 0.4);
-      color: rgba(255, 255, 255, 0.8);
-      opacity: 0.6;
+      transform: translateY(100%);
+      opacity: 0;
       visibility: hidden;
     }
     
@@ -486,6 +232,28 @@
     .no-scrollbar::-webkit-scrollbar {
       display: none;
     }
+    
+    /* Cart summary styles */
+    .cart-summary {
+      border-top: 1px solid #E5E7EB;
+      margin-top: 1rem;
+      padding-top: 1rem;
+    }
+    
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5rem;
+      font-size: 0.875rem;
+    }
+    
+    .summary-row.total {
+      font-weight: 600;
+      font-size: 1rem;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px dashed #E5E7EB;
+    }
   </style>
 </head>
 <body>
@@ -565,6 +333,10 @@
     </div>
     
     <div id="cartItems" class="cart-items">
+      <!-- Will be populated by JavaScript -->
+    </div>
+    
+    <div id="cartSummary" class="cart-summary">
       <!-- Will be populated by JavaScript -->
     </div>
     
@@ -709,6 +481,7 @@
     const cartOverlay = document.getElementById('cartOverlay');
     const closeCartButton = document.getElementById('closeCartButton');
     const cartItems = document.getElementById('cartItems');
+    const cartSummary = document.getElementById('cartSummary');
     const checkoutButton = document.getElementById('checkoutButton');
     const whatsappButton = document.getElementById('whatsappButton');
 
@@ -730,6 +503,29 @@
         
         menuNavList.appendChild(li);
       });
+    }
+
+    // Helper function to parse price string to number
+    function parsePriceToNumber(priceString) {
+      return parseFloat(priceString.replace('$', ''));
+    }
+
+    // Calculate the cart subtotal
+    function calculateSubtotal() {
+      return cart.reduce((total, item) => {
+        const price = parsePriceToNumber(item.price);
+        return total + (price * item.quantity);
+      }, 0);
+    }
+
+    // Calculate tax amount (10%)
+    function calculateTax(subtotal) {
+      return subtotal * 0.10;
+    }
+
+    // Format price as currency
+    function formatCurrency(amount) {
+      return '$' + amount.toFixed(2);
     }
 
     // Render menu sections
@@ -861,6 +657,7 @@
       }
       
       renderCartItems();
+      renderCartSummary();
     }
 
     // Render cart items
@@ -920,6 +717,36 @@
       });
     }
 
+    // Render cart summary with subtotal, tax, and total
+    function renderCartSummary() {
+      cartSummary.innerHTML = '';
+      
+      if (cart.length === 0) {
+        return;
+      }
+      
+      const subtotal = calculateSubtotal();
+      const tax = calculateTax(subtotal);
+      const total = subtotal + tax;
+      
+      // Create summary rows
+      const subtotalRow = document.createElement('div');
+      subtotalRow.classList.add('summary-row');
+      subtotalRow.innerHTML = `<span>Subtotal:</span><span>${formatCurrency(subtotal)}</span>`;
+      
+      const taxRow = document.createElement('div');
+      taxRow.classList.add('summary-row');
+      taxRow.innerHTML = `<span>Tax (10%):</span><span>${formatCurrency(tax)}</span>`;
+      
+      const totalRow = document.createElement('div');
+      totalRow.classList.add('summary-row', 'total');
+      totalRow.innerHTML = `<span>Total:</span><span>${formatCurrency(total)}</span>`;
+      
+      cartSummary.appendChild(subtotalRow);
+      cartSummary.appendChild(taxRow);
+      cartSummary.appendChild(totalRow);
+    }
+
     // Open cart
     function openCart() {
       cartSheet.classList.add('open');
@@ -942,16 +769,37 @@
       }
     }
 
-    // Format order message
+    // Format order message with prices and total
     function formatOrderMessage(cartItems, restaurantName) {
-      let message = `Hello! I would like to order from ${restaurantName}:\n\n`;
+      const subtotal = calculateSubtotal();
+      const tax = calculateTax(subtotal);
+      const total = subtotal + tax;
+      
+      let message = `New order from ${restaurantName}:\n\n`;
       
       cartItems.forEach(item => {
-        message += `- ${item.name} x${item.quantity}\n`;
+        const itemTotal = parsePriceToNumber(item.price) * item.quantity;
+        message += `${item.quantity}x ${item.name} (${item.price}) = ${formatCurrency(itemTotal)}\n`;
       });
       
-      message += "\nThank you!";
-      return message;
+      message += `\nSubtotal: ${formatCurrency(subtotal)}`;
+      message += `\nTax (10%): ${formatCurrency(tax)}`;
+      message += `\nTotal: ${formatCurrency(total)}`;
+      message += "\n\nThank you!";
+      
+      return encodeURIComponent(message);
+    }
+
+    // Get SMS link with order details
+    function getSMSLink(phoneNumber, orderMessage) {
+      return `sms:${phoneNumber}?body=${orderMessage}`;
+    }
+
+    // Get WhatsApp link with order details
+    function getWhatsAppLink(phoneNumber, orderMessage) {
+      // Remove any non-digits from the phone number
+      const formattedPhone = phoneNumber.replace(/\D/g, '');
+      return `https://wa.me/${formattedPhone}?text=${orderMessage}`;
     }
 
     // Checkout with SMS
@@ -962,8 +810,7 @@
       }
       
       const message = formatOrderMessage(cart, restaurantInfo.name);
-      const encodedMessage = encodeURIComponent(message);
-      const smsLink = `sms:${restaurantInfo.phone}?body=${encodedMessage}`;
+      const smsLink = getSMSLink(restaurantInfo.phone, message);
       
       window.location.href = smsLink;
     }
@@ -976,10 +823,7 @@
       }
       
       const message = formatOrderMessage(cart, restaurantInfo.name);
-      const encodedMessage = encodeURIComponent(message);
-      // Remove the '+' from the phone number for WhatsApp
-      const phoneNumber = restaurantInfo.phone.replace('+', '');
-      const whatsappLink = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
+      const whatsappLink = getWhatsAppLink(restaurantInfo.phone, message);
       
       window.location.href = whatsappLink;
     }
