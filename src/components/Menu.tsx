@@ -14,7 +14,7 @@ const Menu: React.FC = () => {
   useEffect(() => {
     const observerOptions = {
       root: null,
-      rootMargin: "-100px 0px -40% 0px", // Adjusted for better detection
+      rootMargin: "-100px 0px -65% 0px", // Adjusted to better detect the topmost visible section
       threshold: 0
     };
 
@@ -30,9 +30,7 @@ const Menu: React.FC = () => {
           return rectA.top - rectB.top;
         });
         
-        const newActiveSection = sortedEntries[0].target.id;
-        console.log("New active section:", newActiveSection);
-        setActiveSection(newActiveSection);
+        setActiveSection(sortedEntries[0].target.id);
       }
     };
 
@@ -40,10 +38,7 @@ const Menu: React.FC = () => {
     
     // Observe all section elements
     Object.values(sectionRefs.current).forEach(ref => {
-      if (ref) {
-        console.log("Observing section:", ref.id);
-        observer.observe(ref);
-      }
+      if (ref) observer.observe(ref);
     });
 
     return () => {
@@ -56,14 +51,13 @@ const Menu: React.FC = () => {
     const section = sectionRefs.current[sectionId];
     if (section) {
       section.scrollIntoView({ behavior: "smooth", block: "start" });
-      setActiveSection(sectionId); // Immediately update active section
     }
   };
 
   return (
     <div className="menu-container pb-28" ref={menuRef}>
       {/* Category Navigation */}
-      <div className="sticky top-[144px] z-30 bg-[#F2E8D5] py-2 -mx-4 px-4 shadow-sm border-y border-[#E6D7B8]">
+      <div className="sticky top-[60px] z-30 bg-[#F2E8D5] py-2 -mx-4 px-4 shadow-sm border-y border-[#E6D7B8]">
         <NavigationMenu className="max-w-full w-full">
           <NavigationMenuList className="flex justify-between overflow-x-auto space-x-1 w-full no-scrollbar">
             {menuData.map((section) => (
