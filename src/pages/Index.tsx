@@ -1,48 +1,50 @@
 
-import React, { useState } from "react";
-import { useCart } from "../hooks/useCart";
-import Menu from "../components/Menu";
-import CartButton from "../components/CartButton";
-import CartSheet from "../components/CartSheet";
-import LocationInfo from "../components/LocationInfo";
-import { restaurantInfo } from "../data/menuData";
-import { Phone } from "lucide-react";
+import React, { useEffect } from "react";
 
 const Index = () => {
-  const { cartItems, getTotalItems, removeFromCart, clearCart } = useCart();
-  const [isCartOpen, setIsCartOpen] = useState(false);
-  
-  const openCart = () => setIsCartOpen(true);
-  const closeCart = () => setIsCartOpen(false);
-  
-  const totalItems = getTotalItems();
+  useEffect(() => {
+    // Load the HTML content directly into the DOM
+    const appRoot = document.getElementById('root');
+    if (appRoot) {
+      // Get HTML from the index.html file and inject it
+      fetch('/index.html')
+        .then(response => response.text())
+        .then(html => {
+          // Extract the body content
+          const bodyContent = html.match(/<body>([\s\S]*)<\/body>/i)?.[1] || '';
+          appRoot.innerHTML = bodyContent;
+          
+          // Execute scripts from the HTML
+          const scriptTags = appRoot.querySelectorAll('script');
+          scriptTags.forEach(scriptTag => {
+            const script = document.createElement('script');
+            script.text = scriptTag.textContent || '';
+            document.body.appendChild(script);
+          });
+        })
+        .catch(error => {
+          console.error('Error loading HTML content:', error);
+          appRoot.innerHTML = `
+            <div style="text-align: center; padding: 2rem;">
+              <h1>Error Loading Menu</h1>
+              <p>Sorry, there was an error loading the restaurant menu.</p>
+            </div>
+          `;
+        });
+    }
+    
+    // Clean up function
+    return () => {
+      // Nothing to clean up
+    };
+  }, []);
 
   return (
-    <div className="min-h-screen bg-[#F9F3E8]">
-      <header className="sticky top-0 z-40 bg-[#D04A35] text-white shadow-md">
-        <div className="px-4 py-3 flex justify-between items-center">
-          <h1 className="text-2xl font-bold tracking-tight">{restaurantInfo.name}</h1>
-          <a href={`tel:${restaurantInfo.phone}`} className="flex items-center text-sm font-medium">
-            <Phone className="h-4 w-4 mr-1" />
-            {restaurantInfo.phone}
-          </a>
-        </div>
-      </header>
-      
-      <main className="bg-[#F9F3E8] pb-16">
-        <Menu />
-        <LocationInfo />
-      </main>
-      
-      <CartButton itemCount={totalItems} onClick={openCart} />
-      
-      <CartSheet
-        isOpen={isCartOpen}
-        onClose={closeCart}
-        cartItems={cartItems}
-        onRemoveItem={removeFromCart}
-        onClearCart={clearCart}
-      />
+    <div id="app-container">
+      {/* The HTML content will be loaded here */}
+      <div style={{ textAlign: 'center', padding: '2rem' }}>
+        <h2>Loading menu...</h2>
+      </div>
     </div>
   );
 };
