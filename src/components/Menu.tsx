@@ -56,8 +56,8 @@ const Menu: React.FC = () => {
 
   return (
     <div className="menu-container" ref={menuRef}>
-      {/* Category Navigation - Remove -mx-4 to fix the gap */}
-      <div className="sticky top-[59px] z-30 bg-[#F2E8D5] py-2 px-4 shadow-sm border-y border-[#E6D7B8]">
+      {/* Category Navigation - Ensure it's exactly at the bottom of header */}
+      <div className="sticky top-[53px] z-30 bg-[#F2E8D5] py-2 px-4 shadow-sm border-y border-[#E6D7B8]">
         <NavigationMenu className="max-w-full w-full">
           <NavigationMenuList className="flex justify-between overflow-x-auto space-x-1 w-full no-scrollbar">
             {menuData.map((section) => (
