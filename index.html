@@ -4,249 +4,327 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Italian Restaurant Menu</title>
+  <title>Bella Cucina - Order Menu</title>
   <style>
-    :root {
-      --primary-color: #D04A35;
-      --secondary-color: #D9B26A;
-      --background-color: #F9F3E8;
-      --text-color: #333333;
-      --light-border: #E6D7B8;
-      --card-background: #FFFFFF;
-    }
-    
-    * {
+    /* Base styles */
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       margin: 0;
       padding: 0;
-      box-sizing: border-box;
-      -webkit-font-smoothing: antialiased;
-      -moz-osx-font-smoothing: grayscale;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #F9F3E8;
+      color: #333;
+      line-height: 1.5;
+      padding-bottom: 60px; /* Add padding to the bottom to account for the sticky footer */
     }
     
-    body {
-      background-color: var(--background-color);
-      color: var(--text-color);
-      min-height: 100vh;
-      position: relative;
-      padding-bottom: 80px; /* Space for cart button */
-    }
-    
+    /* Header styles */
     header {
-      background-color: var(--primary-color);
+      background-color: #D04A35;
       color: white;
-      padding: 16px;
       position: sticky;
       top: 0;
-      z-index: 40;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+      z-index: 50;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    
+    .header-content {
+      padding: 12px 16px;
+      max-width: 1200px;
+      margin: 0 auto;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
     
-    header h1 {
-      font-size: 2rem;
-      font-weight: bold;
+    .restaurant-name {
+      margin: 0;
+      font-size: 1.5rem;
+      font-weight: 700;
     }
     
-    header a {
-      color: white;
-      text-decoration: none;
+    .phone-link {
       display: flex;
       align-items: center;
+      color: white;
+      text-decoration: none;
+      font-size: 0.9rem;
       font-weight: 500;
-      font-size: 1.1rem;
     }
     
+    .phone-icon {
+      width: 16px;
+      height: 16px;
+      margin-right: 4px;
+    }
+    
+    /* Navigation styles - FIXED */
     .menu-nav {
-      position: sticky;
-      top: 70px;
-      z-index: 30;
       background-color: #F2E8D5;
-      padding: 10px 5px;
-      border-top: 1px solid var(--light-border);
-      border-bottom: 1px solid var(--light-border);
-      box-shadow: 0 2px 3px rgba(0, 0, 0, 0.05);
+      position: sticky;
+      top: 48px;
+      z-index: 40;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      border-bottom: 1px solid #E6D7B8;
+      padding: 0 10px;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    
+    .menu-nav-list {
+      display: flex;
+      list-style: none;
+      margin: 0;
+      padding: 8px 0;
       overflow-x: auto;
       -webkit-overflow-scrolling: touch;
       scrollbar-width: none; /* Firefox */
       -ms-overflow-style: none; /* IE and Edge */
-      white-space: nowrap;
-      display: flex;
-      touch-action: pan-x;
     }
     
-    .menu-nav::-webkit-scrollbar {
+    .menu-nav-list::-webkit-scrollbar {
       display: none; /* Chrome, Safari, Opera */
     }
     
-    .menu-nav-container {
-      display: flex;
-      min-width: 100%;
-      justify-content: space-between;
-      padding: 0 5px;
-    }
-    
-    .menu-nav button {
-      background: none;
-      border: none;
-      padding: 10px 15px;
-      margin: 0 5px;
-      cursor: pointer;
-      border-radius: 8px;
-      white-space: nowrap;
+    .menu-nav-item {
+      padding: 8px 16px;
       font-weight: 500;
-      font-size: 1rem;
-      color: var(--text-color);
+      cursor: pointer;
+      position: relative;
+      white-space: nowrap;
       transition: all 0.2s ease;
+      color: #555;
+      border-radius: 4px;
     }
     
-    .menu-nav button.active {
-      background-color: var(--secondary-color);
+    .menu-nav-item.active {
       color: white;
+      background-color: #D9B26A;
       font-weight: 600;
     }
     
-    .menu-nav button:hover:not(.active) {
-      background-color: rgba(217, 178, 106, 0.1);
-    }
-    
+    /* Menu section styles */
     .menu-section {
-      margin: 20px 0;
-      padding: 0 15px;
-      scroll-margin-top: 140px;
+      padding: 24px 16px;
+      scroll-margin-top: 120px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
     
-    .menu-section h2 {
-      font-size: 2rem;
-      margin-bottom: 10px;
-      padding-bottom: 10px;
-      border-bottom: 2px solid var(--secondary-color);
+    .section-title {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #D9B26A;
+      color: #333;
     }
     
     .menu-item {
-      background-color: var(--card-background);
-      border-radius: 12px;
-      padding: 20px;
-      margin-bottom: 15px;
       display: flex;
       justify-content: space-between;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      align-items: flex-start;
+      padding: 16px;
+      margin-bottom: 12px;
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 3px 8px rgba(0, 0, 0, 0.06);
       transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
     
     .menu-item:hover {
       transform: translateY(-3px);
-      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.09);
     }
     
-    .menu-item-content {
+    .item-info {
       flex: 1;
     }
     
-    .menu-item-title {
-      font-size: 1.3rem;
-      font-weight: 600;
-      margin-bottom: 8px;
-    }
-    
-    .menu-item-description {
-      color: #666;
-      margin-bottom: 10px;
-      line-height: 1.5;
-    }
-    
-    .menu-item-price {
-      font-size: 1.3rem;
-      font-weight: 600;
-      color: var(--text-color);
-      margin-right: 10px;
+    .item-name-container {
       display: flex;
-      align-items: center;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 6px;
     }
     
-    .add-to-cart {
-      background-color: var(--primary-color);
+    .item-name {
+      margin: 0;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #333;
+    }
+    
+    .item-price {
+      font-weight: 300; /* Changed from 600 to 300 - thinner weight */
+      color: #888; /* Changed from #D04A35 to #888 - lighter color */
+      margin-left: 8px;
+    }
+    
+    .item-description {
+      color: #666;
+      font-size: 0.95rem;
+      margin: 0;
+    }
+    
+    .item-quantity {
+      margin-left: 6px;
+      font-size: 0.9rem;
+      color: #D04A35;
+      font-weight: 600;
+    }
+    
+    .add-button {
+      padding: 8px 16px;
+      background-color: #D04A35;
       color: white;
       border: none;
-      padding: 12px 25px;
       border-radius: 8px;
+      font-weight: 500;
       cursor: pointer;
-      font-weight: 600;
+      transition: background-color 0.2s ease;
+      margin-left: 12px;
+    }
+    
+    .add-button:hover {
+      background-color: #B83A28;
+    }
+    
+    .add-button.in-cart {
+      background-color: #43A047;
+    }
+    
+    .add-button.in-cart:hover {
+      background-color: #388E3C;
+    }
+    
+    /* Location styles */
+    .location-info {
+      background-color: white;
+      border-radius: 12px;
+      padding: 24px;
+      margin: 32px 16px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    .location-title {
+      font-size: 1.5rem;
+      margin-top: 0;
+      margin-bottom: 20px;
+      padding-bottom: 8px;
+      border-bottom: 2px solid #E5E0D5;
+      color: #333;
+    }
+    
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    
+    .contact-info a,
+    .contact-info div {
+      display: flex;
+      align-items: center;
+      color: #333;
+      text-decoration: none;
       font-size: 1rem;
+    }
+    
+    .contact-info svg {
+      margin-right: 12px;
+      color: #D04A35;
+      flex-shrink: 0;
+    }
+    
+    .map-container {
+      height: 250px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .map-container iframe {
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    
+    /* Cart button styles - Modified to be a sticky footer */
+    .cart-button {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      z-index: 30;
+      background-color: #D9B26A;
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    }
+    
+    .cart-button.empty {
+      display: none;
+    }
+    
+    .cart-button-inner {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      background-color: transparent;
+      color: white;
+      padding: 16px 24px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
       transition: background-color 0.2s ease;
     }
     
-    .add-to-cart:hover {
-      background-color: #b83c2a;
+    .cart-button-inner:hover {
+      background-color: rgba(255, 255, 255, 0.1);
     }
     
-    .cart-button {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background-color: var(--primary-color);
-      color: white;
-      border: none;
-      width: 60px;
-      height: 60px;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-      z-index: 50;
+    .cart-icon {
+      width: 20px;
+      height: 20px;
+      margin-right: 8px;
     }
     
-    .cart-button:hover {
-      background-color: #b83c2a;
-    }
-    
-    .cart-badge {
-      position: absolute;
-      top: -8px;
-      right: -8px;
-      background-color: #333;
-      color: white;
-      width: 24px;
-      height: 24px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      font-weight: bold;
-    }
-    
-    .cart-sheet {
+    /* Cart sheet styles */
+    .cart-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.5);
-      display: none;
-      z-index: 100;
+      z-index: 45;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.3s ease, visibility 0.3s ease;
     }
     
-    .cart-content {
-      position: absolute;
+    .cart-overlay.open {
+      opacity: 1;
+      visibility: visible;
+    }
+    
+    .cart-sheet {
+      position: fixed;
       bottom: 0;
       left: 0;
       width: 100%;
+      max-height: 85vh;
       background-color: white;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      padding: 20px;
-      max-height: 90vh;
-      overflow-y: auto;
+      border-radius: 20px 20px 0 0;
+      z-index: 50;
       transform: translateY(100%);
       transition: transform 0.3s ease;
+      display: flex;
+      flex-direction: column;
     }
     
-    .cart-sheet.open .cart-content {
+    .cart-sheet.open {
       transform: translateY(0);
     }
     
@@ -254,1022 +332,1078 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #eee;
+      padding: 16px 20px;
+      border-bottom: 1px solid #E5E0D5;
     }
     
     .cart-title {
-      font-size: 1.5rem;
-      font-weight: 600;
+      margin: 0;
+      font-size: 1.25rem;
     }
     
-    .close-cart {
+    .close-button {
       background: none;
       border: none;
-      font-size: 1.5rem;
       cursor: pointer;
-      width: 40px;
-      height: 40px;
+      color: #555;
+      padding: 6px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     
-    .close-cart:hover {
-      background-color: #f5f5f5;
+    .close-button:hover {
+      background-color: #f1f1f1;
     }
     
     .cart-items {
-      margin-bottom: 20px;
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 20px;
+    }
+    
+    .empty-cart-message {
+      text-align: center;
+      color: #888;
+      padding: 48px 0;
+      font-size: 1.1rem;
     }
     
     .cart-item {
       display: flex;
       justify-content: space-between;
-      padding: 15px 0;
-      border-bottom: 1px solid #eee;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #E5E0D5;
     }
     
     .cart-item-info {
       flex: 1;
     }
     
-    .cart-item-title {
-      font-weight: 600;
-      margin-bottom: 5px;
+    .cart-item-name {
+      font-weight: 500;
+      margin-bottom: 4px;
     }
     
     .cart-item-price {
-      color: #666;
+      color: #D04A35;
+      font-weight: 600;
+      font-size: 0.9rem;
     }
     
     .cart-item-quantity {
       display: flex;
       align-items: center;
+      margin-left: 12px;
     }
     
-    .quantity-btn {
-      background: none;
-      border: 1px solid #ddd;
-      width: 30px;
-      height: 30px;
-      border-radius: 4px;
+    .quantity-button {
+      width: 28px;
+      height: 28px;
       display: flex;
       align-items: center;
       justify-content: center;
+      background-color: #f1f1f1;
+      border: none;
+      border-radius: 50%;
       cursor: pointer;
-      font-weight: bold;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #555;
     }
     
-    .quantity-btn:hover {
-      background-color: #f5f5f5;
+    .quantity-button:hover {
+      background-color: #e0e0e0;
     }
     
     .cart-item-quantity span {
-      margin: 0 10px;
+      margin: 0 8px;
+      width: 20px;
+      text-align: center;
       font-weight: 500;
-    }
-    
-    .remove-item {
-      background: none;
-      border: none;
-      color: #b83c2a;
-      cursor: pointer;
-      padding: 5px;
-      margin-left: 10px;
-    }
-    
-    .remove-item:hover {
-      text-decoration: underline;
     }
     
     .cart-total {
       display: flex;
       justify-content: space-between;
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin: 20px 0;
-      padding: 15px 0;
-      border-top: 2px solid #eee;
+      align-items: center;
+      padding: 16px 20px;
+      border-top: 1px solid #E5E0D5;
+      font-size: 1.1rem;
+      font-weight: 700;
     }
     
-    .checkout-actions {
+    .cart-actions {
+      padding: 16px 20px 32px;
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: 12px;
     }
     
-    .checkout-btn {
-      background-color: var(--primary-color);
-      color: white;
+    .checkout-button,
+    .whatsapp-button {
+      padding: 14px;
       border: none;
-      padding: 15px;
-      border-radius: 8px;
-      cursor: pointer;
+      border-radius: 12px;
       font-weight: 600;
-      font-size: 1.1rem;
+      cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      transition: background-color 0.2s ease;
     }
     
-    .checkout-btn:hover {
-      background-color: #b83c2a;
+    .checkout-button {
+      background-color: #059669;
+      color: white;
     }
     
-    .checkout-btn.whatsapp {
+    .checkout-button:hover {
+      background-color: #047857;
+    }
+    
+    .whatsapp-button {
       background-color: #25D366;
+      color: white;
     }
     
-    .checkout-btn.whatsapp:hover {
-      background-color: #128C7E;
+    .whatsapp-button:hover {
+      background-color: #1fb959;
     }
     
-    .checkout-btn svg {
-      width: 20px;
-      height: 20px;
+    .checkout-button svg,
+    .whatsapp-button svg {
+      margin-right: 8px;
     }
     
-    .receipt {
+    /* Receipt styles */
+    .receipt-overlay {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
       background-color: rgba(0, 0, 0, 0.5);
+      z-index: 55;
       display: none;
-      z-index: 100;
+      opacity: 0;
+      transition: opacity 0.3s ease;
     }
     
-    .receipt-content {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
+    .receipt-overlay.open {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      opacity: 1;
+    }
+    
+    .receipt {
       background-color: white;
-      border-top-left-radius: 20px;
-      border-top-right-radius: 20px;
-      padding: 20px;
-      max-height: 85vh;
-      overflow-y: auto;
-      transform: translateY(100%);
-      transition: transform 0.3s ease;
+      width: 90%;
+      max-width: 400px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+      opacity: 0;
+      transform: scale(0.95);
+      transition: opacity 0.3s ease, transform 0.3s ease;
     }
     
-    .receipt.open .receipt-content {
-      transform: translateY(0);
+    .receipt.open {
+      opacity: 1;
+      transform: scale(1);
     }
     
     .receipt-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 20px;
-      padding-bottom: 10px;
-      border-bottom: 1px solid #eee;
+      text-align: center;
+      padding: 20px;
+      position: relative;
     }
     
     .receipt-title {
+      margin: 0 0 4px;
       font-size: 1.5rem;
-      font-weight: 600;
-      display: flex;
-      align-items: center;
-      gap: 8px;
     }
     
-    .close-receipt {
+    .receipt-subtitle {
+      margin: 0;
+      color: #666;
+    }
+    
+    .receipt-close {
+      position: absolute;
+      top: 16px;
+      right: 16;
       background: none;
       border: none;
-      font-size: 1.5rem;
       cursor: pointer;
-      width: 40px;
-      height: 40px;
+      color: #555;
+      padding: 6px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
     }
     
-    .restaurant-info {
-      margin-bottom: 20px;
+    .receipt-close:hover {
+      background-color: #f1f1f1;
     }
     
-    .restaurant-info p {
-      margin: 5px 0;
+    .receipt-body {
+      padding: 0 20px;
     }
     
-    .order-summary h3 {
+    .receipt-items {
+      border-top: 1px dashed #ddd;
+      padding: 16px 0;
+    }
+    
+    .receipt-item {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    
+    .receipt-item-name {
+      font-size: 0.95rem;
+    }
+    
+    .receipt-item-quantity {
+      color: #666;
+      margin-right: 4px;
+    }
+    
+    .receipt-summary {
+      padding: 16px 0;
+      border-top: 1px dashed #ddd;
+    }
+    
+    .receipt-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 8px;
+    }
+    
+    .receipt-row.total {
+      font-weight: 700;
       font-size: 1.1rem;
-      margin-bottom: 10px;
+    }
+    
+    .receipt-footer {
+      padding: 20px;
+      border-top: 1px dashed #ddd;
+    }
+    
+    .receipt-footer p {
+      margin-top: 0;
+      margin-bottom: 16px;
+      text-align: center;
       color: #666;
     }
     
-    .summary-item {
+    .receipt-buttons {
       display: flex;
-      justify-content: space-between;
-      padding: 10px 0;
-      border-bottom: 1px solid #f5f5f5;
+      justify-content: center;
     }
     
-    .receipt-total {
-      display: flex;
-      justify-content: space-between;
-      font-size: 1.2rem;
-      font-weight: 600;
-      margin: 20px 0;
-      padding: 15px 0;
-      border-top: 1px solid #eee;
-    }
-    
-    .reopen-btn {
-      margin-top: 20px;
-      padding: 15px;
-      width: 100%;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      font-size: 1.1rem;
+    .receipt-button {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 8px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 999px;
+      font-weight: 600;
       cursor: pointer;
+      transition: background-color 0.2s ease;
     }
     
-    .reopen-sms {
+    .receipt-button svg {
+      margin-right: 8px;
+    }
+    
+    .receipt-sms {
       background-color: #059669;
       color: white;
     }
     
-    .reopen-sms:hover {
+    .receipt-sms:hover {
       background-color: #047857;
     }
     
-    .reopen-whatsapp {
+    .receipt-whatsapp {
       background-color: #25D366;
       color: white;
     }
     
-    .reopen-whatsapp:hover {
-      background-color: #128C7E;
+    .receipt-whatsapp:hover {
+      background-color: #1fb959;
     }
     
-    .empty-cart {
-      text-align: center;
-      padding: 40px 0;
-      color: #666;
-    }
-    
-    .empty-cart svg {
-      width: 60px;
-      height: 60px;
-      margin-bottom: 20px;
-      color: #ddd;
-    }
-    
-    .empty-cart p {
-      font-size: 1.1rem;
-      margin-bottom: 20px;
-    }
-    
-    /* Mobile optimizations */
-    @media (max-width: 768px) {
-      .menu-nav {
-        top: 65px;
+    /* Improved Responsive Design */
+    @media (max-width: 480px) {
+      .restaurant-name {
+        font-size: 1.25rem;
       }
       
-      .menu-section {
-        scroll-margin-top: 130px;
+      .menu-nav-item {
+        padding: 6px 12px;
+        font-size: 0.9rem;
       }
       
-      .menu-item {
-        flex-direction: column;
-        padding: 15px;
+      .section-title {
+        font-size: 1.3rem;
       }
       
-      .menu-item-actions {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        margin-top: 15px;
-      }
-      
-      .menu-item-price {
-        font-size: 1.5rem;
-      }
-      
-      .add-to-cart {
-        padding: 14px 30px;
-        font-size: 1.1rem;
-      }
-      
-      header h1 {
-        font-size: 1.8rem;
-      }
-      
-      header a {
+      .item-name {
         font-size: 1rem;
       }
       
-      .menu-nav button {
-        font-size: 1.1rem;
-        padding: 12px 20px;
-      }
-      
-      .menu-item-title {
-        font-size: 1.4rem;
-      }
-      
-      .menu-item-description {
-        font-size: 1.1rem;
-      }
-      
-      .cart-button {
-        width: 70px;
-        height: 70px;
-      }
-      
-      .cart-badge {
-        width: 28px;
-        height: 28px;
-        font-size: 14px;
-      }
-      
-      .checkout-btn {
-        padding: 18px;
-        font-size: 1.2rem;
-      }
-      
-      /* Swipe indicators */
-      .swipe-indicator {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        width: 30px;
-        height: 30px;
-        background-color: rgba(255, 255, 255, 0.8);
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-        z-index: 10;
-        animation: pulse 1.5s infinite;
-        opacity: 0.7;
-      }
-      
-      .swipe-left {
-        left: 5px;
-      }
-      
-      .swipe-right {
-        right: 5px;
-      }
-      
-      @keyframes pulse {
-        0% { opacity: 0.7; }
-        50% { opacity: 0.3; }
-        100% { opacity: 0.7; }
-      }
-      
-      /* Hide swipe indicators after user has interacted with menu */
-      .menu-nav.interacted .swipe-indicator {
-        display: none;
+      .cart-actions {
+        flex-direction: column;
       }
     }
-
-    @media (max-width: 480px) {
-      .menu-nav button {
-        min-width: auto;
-        padding: 12px 15px;
+    
+    /* Media queries */
+    @media (min-width: 768px) {
+      .header-content {
+        padding: 16px 24px;
       }
       
-      .cart-content, .receipt-content {
-        padding: 15px;
+      .restaurant-name {
+        font-size: 1.75rem;
+      }
+      
+      .menu-section {
+        padding: 32px;
+      }
+      
+      .section-title {
+        font-size: 1.75rem;
+      }
+      
+      .cart-actions {
+        flex-direction: row;
+      }
+      
+      .checkout-button,
+      .whatsapp-button {
+        flex: 1;
       }
     }
   </style>
 </head>
 <body>
   <header>
-    <h1>Bella Cucina</h1>
-    <a href="tel:+1234567890">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="margin-right: 8px;">
-        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-      +1234567890
-    </a>
+    <div class="header-content">
+      <h1 class="restaurant-name">Bella Cucina</h1>
+      <a href="tel:+1234567890" class="phone-link">
+        <svg class="phone-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+        </svg>
+        +1234567890
+      </a>
+    </div>
   </header>
   
-  <div class="menu-nav" id="menuNav">
-    <div class="swipe-indicator swipe-left">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M15 18L9 12L15 6" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <div class="swipe-indicator swipe-right">
-      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <path d="M9 18L15 12L9 6" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
-    </div>
-    <div class="menu-nav-container" id="menuNavContainer">
-      <button class="active" data-section="appetizers">Appetizers</button>
-      <button data-section="pasta">Pasta</button>
-      <button data-section="pizza">Pizza</button>
-      <button data-section="main">Main Courses</button>
-      <button data-section="desserts">Desserts</button>
-    </div>
-  </div>
+  <nav class="menu-nav">
+    <ul class="menu-nav-list" id="menuNavList">
+      <!-- Will be populated by JavaScript -->
+    </ul>
+  </nav>
   
   <main>
-    <section id="appetizers" class="menu-section">
-      <h2>Appetizers</h2>
-      <div class="menu-items" id="appetizersItems"></div>
-    </section>
-    
-    <section id="pasta" class="menu-section">
-      <h2>Pasta</h2>
-      <div class="menu-items" id="pastaItems"></div>
-    </section>
-    
-    <section id="pizza" class="menu-section">
-      <h2>Pizza</h2>
-      <div class="menu-items" id="pizzaItems"></div>
-    </section>
-    
-    <section id="main" class="menu-section">
-      <h2>Main Courses</h2>
-      <div class="menu-items" id="mainItems"></div>
-    </section>
-    
-    <section id="desserts" class="menu-section">
-      <h2>Desserts</h2>
-      <div class="menu-items" id="dessertsItems"></div>
-    </section>
-  </main>
-  
-  <button class="cart-button" id="cartButton">
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-      <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <span class="cart-badge" id="cartBadge">0</span>
-  </button>
-  
-  <div class="cart-sheet" id="cartSheet">
-    <div class="cart-content">
-      <div class="cart-header">
-        <div class="cart-title">Your Cart</div>
-        <button class="close-cart" id="closeCart">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
+    <div class="menu-container">
+      <div id="menuSections">
+        <!-- Will be populated by JavaScript -->
       </div>
       
-      <div id="cartItems" class="cart-items"></div>
-      
-      <div id="emptyCart" class="empty-cart">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M9 22C9.55228 22 10 21.5523 10 21C10 20.4477 9.55228 20 9 20C8.44772 20 8 20.4477 8 21C8 21.5523 8.44772 22 9 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M20 22C20.5523 22 21 21.5523 21 21C21 20.4477 20.5523 20 20 20C19.4477 20 19 20.4477 19 21C19 21.5523 19.4477 22 20 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          <path d="M1 1H5L7.68 14.39C7.77144 14.8504 8.02191 15.264 8.38755 15.5583C8.75318 15.8526 9.2107 16.009 9.68 16H19.4C19.8693 16.009 20.3268 15.8526 20.6925 15.5583C21.0581 15.264 21.3086 14.8504 21.4 14.39L23 6H6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-        </svg>
-        <p>Your cart is empty</p>
-      </div>
-      
-      <div id="cartTotalContainer" class="cart-total" style="display: none;">
-        <span>Total</span>
-        <span id="cartTotal">$0.00</span>
-      </div>
-      
-      <div id="checkoutActions" class="checkout-actions" style="display: none;">
-        <button class="checkout-btn" id="checkoutSMS">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Order via SMS
-        </button>
-        <button class="checkout-btn whatsapp" id="checkoutWhatsApp">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path d="M17.6 6.31999C16.8669 5.58141 15.9943 4.99596 15.033 4.59767C14.0716 4.19938 13.0406 3.99602 12 3.99999C10.6089 4.00277 9.24248 4.36599 8.03271 5.04806C6.82294 5.73013 5.8093 6.70673 5.091 7.89999C4.37271 9.09324 3.97843 10.4549 3.94785 11.8455C3.91728 13.236 4.25165 14.6148 4.92 15.84L4 20L8.2 19.08C9.35975 19.6917 10.6629 20.0028 11.98 20C14.5804 19.9968 17.0732 18.9375 18.9203 17.0771C20.7675 15.2167 21.8093 12.7172 21.8 10.12C21.8 9.06698 21.5959 8.02511 21.1962 7.05223C20.7965 6.07934 20.2092 5.19527 19.47 4.45999C18.7309 3.72471 17.8487 3.13777 16.8775 2.73889C15.9063 2.34002 14.8659 2.1371 13.815 2.13999C12.7641 2.14289 11.7248 2.35146 10.7554 2.75576C9.78592 3.16006 8.90609 3.75209 8.17 4.48999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M14.3517 16.11C14.222 16.2579 14.0271 16.3509 13.8154 16.37C13.6037 16.389 13.3938 16.3326 13.2317 16.21C12.268 15.6581 11.4099 14.9544 10.6917 14.12C9.92814 13.263 9.32328 12.2684 8.90173 11.19C8.83516 11.0095 8.83764 10.8098 8.90879 10.6312C8.97994 10.4525 9.11448 10.307 9.28673 10.22C9.34369 10.189 9.40547 10.1659 9.47 10.15C9.51685 10.1487 9.56354 10.1552 9.60835 10.1692C9.65316 10.1832 9.69547 10.2045 9.73334 10.2323C9.77122 10.2601 9.80412 10.2939 9.83062 10.3324C9.85712 10.3709 9.87685 10.4134 9.88898 10.459C10.0228 10.856 10.187 11.2405 10.3788 11.6095C10.4447 11.73 10.4736 11.8657 10.4626 12.0005C10.4516 12.1354 10.4012 12.2638 10.3167 12.3707C10.2287 12.4719 10.1255 12.5598 10.0105 12.6319C9.89548 12.704 9.77041 12.7596 9.64084 12.7969C9.65728 12.829 9.67542 12.86 9.69517 12.8898C9.75786 12.9845 9.82569 13.0753 9.89828 13.1617C10.0498 13.3517 10.2188 13.5274 10.4032 13.6871C10.5882 13.8654 10.7897 14.0266 11.0053 14.1692C11.1017 14.23 11.2028 14.29 11.3053 14.3392C11.3278 14.3392 11.3506 14.3485 11.3704 14.3657C11.3901 14.3829 11.4059 14.4072 11.4151 14.4353C11.4244 14.4635 11.4267 14.4942 11.4217 14.5237C11.4168 14.5532 11.4048 14.5801 11.3871 14.6007C11.0399 14.9897 10.6704 15.3581 10.2808 15.7038C10.2392 15.7432 10.2091 15.7932 10.1938 15.8482C10.1786 15.9032 10.1788 15.961 10.1945 16.0158C10.2102 16.0706 10.2407 16.1204 10.2826 16.1593C10.3246 16.1983 10.3763 16.2248 10.432 16.2362C10.6067 16.2717 10.7859 16.2786 10.9632 16.2567C11.5571 16.2098 12.1322 16.0465 12.6588 15.7756C13.1853 15.5047 13.6526 15.1322 14.0317 14.6795C14.2457 14.3994 14.2953 14.2644 14.3742 14.1C14.453 13.9357 14.6069 13.2788 14.6069 13.2788C14.6258 13.1946 14.6657 13.1168 14.723 13.0514C14.7803 12.986 14.8534 12.9348 14.9359 12.9026C15.0184 12.8703 15.1079 12.8577 15.1962 12.8657C15.2845 12.8737 15.3693 12.902 15.4435 12.9483C15.8235 13.1717 16.2292 13.3483 16.6515 13.4744C16.7818 13.5159 16.8945 13.6007 16.9723 13.7159C17.0501 13.8311 17.0887 13.9699 17.082 14.11C17.082 14.19 17.0595 14.3289 16.982 14.6795C16.9044 15.0301 16.6289 15.4208 16.432 15.6295C16.2081 15.8695 16.0304 16.0101 15.7717 16.2C15.373 16.4387 14.916 16.5781 14.442 16.6095L14.3517 16.11Z" fill="currentColor"/>
-          </svg>
-          Order via WhatsApp
-        </button>
+      <div class="location-info">
+        <h2 class="location-title">Contact & Location</h2>
+        
+        <div class="contact-info">
+          <a href="sms:+1234567890?body=Hello!%20I'd%20like%20to%20place%20an%20order.">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+            </svg>
+            <span>+1234567890</span>
+          </a>
+          
+          <div>
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+              <circle cx="12" cy="10" r="3"></circle>
+            </svg>
+            <span>123 Italian Street, Foodville, FC 12345</span>
+          </div>
+        </div>
+        
+        <div class="map-container">
+          <iframe src="https://www.google.com/maps/embed/v1/place?q=40.7128,-74.0060&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Restaurant Location"></iframe>
+        </div>
       </div>
     </div>
+  </main>
+  
+  <div class="cart-button empty" id="cartButton">
+    <button class="cart-button-inner">
+      <svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="9" cy="21" r="1"></circle>
+        <circle cx="20" cy="21" r="1"></circle>
+        <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+      </svg>
+      <span id="cartButtonText">View Cart (0)</span>
+    </button>
   </div>
   
-  <div class="receipt" id="receipt">
-    <div class="receipt-content">
-      <div class="receipt-header">
-        <div class="receipt-title">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M9 5H7C4.79086 5 3 6.79086 3 9V17C3 19.2091 4.79086 21 7 21H17C19.2091 21 21 19.2091 21 17V15" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M9 9L21 9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M15 5L12 8L15 11" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Your Receipt
-        </div>
-        <button class="close-receipt" id="closeReceipt">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M6 6L18 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </button>
-      </div>
-      
-      <div class="restaurant-info">
-        <p class="text-sm text-gray-500">Order from</p>
-        <p class="font-semibold">Bella Cucina</p>
-        <p>123 Italian Street, Foodville</p>
-      </div>
-      
-      <div class="order-summary">
-        <h3>Order Summary</h3>
-        <div id="receiptItems"></div>
-      </div>
-      
-      <div class="receipt-total">
-        <span>Total</span>
-        <span id="receiptTotal">$0.00</span>
-      </div>
-      
-      <button id="reopenCheckout" class="reopen-btn">
-        Reopen Checkout
+  <div class="cart-overlay" id="cartOverlay"></div>
+  
+  <div class="cart-sheet" id="cartSheet">
+    <div class="cart-header">
+      <h2 class="cart-title">Your Order</h2>
+      <button class="close-button" id="closeCartButton">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+    
+    <div id="cartItems" class="cart-items">
+      <!-- Will be populated by JavaScript -->
+    </div>
+    
+    <div id="cartTotal" class="cart-total" style="display: none;">
+      <span>Total:</span>
+      <span id="cartTotalAmount">$0.00</span>
+    </div>
+    
+    <div class="cart-actions">
+      <button class="checkout-button" id="checkoutButton">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+        </svg>
+        Checkout with SMS
+      </button>
+      <button class="whatsapp-button" id="whatsappButton">
+        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M17.6 6.31999C16.8669 5.58141 15.9943 4.99596 15.033 4.59767C14.0716 4.19938 13.0406 3.99602 12 3.99999C10.6089 4.00277 9.24248 4.36599 8.03271 5.04806C6.82294 5.73013 5.8093 6.70673 5.091 7.89999C4.37271 9.09324 3.97843 10.4549 3.94785 11.8455C3.91728 13.236 4.25165 14.6148 4.92 15.84L4 20L8.2 19.08C9.35975 19.6917 10.6629 20.0028 11.98 20C14.5804 19.9968 17.0732 18.9375 18.9203 17.0771C20.7675 15.2167 21.8093 12.7172 21.8 10.12C21.8 9.06698 21.5959 8.02511 21.1962 7.05223C20.7965 6.07934 20.2092 5.19527 19.47 4.45999C18.7309 3.72471 17.8487 3.13777 16.8775 2.73889C15.9063 2.34002 14.8659 2.1371 13.815 2.13999C12.7641 2.14289 11.7248 2.35146 10.7554 2.75576C9.78592 3.16006 8.90609 3.75209 8.17 4.48999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M14.3517 16.11C14.222 16.2579 14.0271 16.3509 13.8154 16.37C13.6037 16.389 13.3938 16.3326 13.2317 16.21C12.268 15.6581 11.4099 14.9544 10.6917 14.12C9.92814 13.263 9.32328 12.2684 8.90173 11.19C8.83516 11.0095 8.83764 10.8098 8.90879 10.6312C8.97994 10.4525 9.11448 10.307 9.28673 10.22C9.34369 10.189 9.40547 10.1659 9.47 10.15C9.51685 10.1487 9.56354 10.1552 9.60835 10.1692C9.65316 10.1832 9.69547 10.2045 9.73334 10.2323C9.77122 10.2601 9.80412 10.2939 9.83062 10.3324C9.85712 10.3709 9.87685 10.4134 9.88898 10.459C10.0228 10.856 10.187 11.2405 10.3788 11.6095C10.4447 11.73 10.4736 11.8657 10.4626 12.0005C10.4516 12.1354 10.4012 12.2638 10.3167 12.3707C10.2287 12.4719 10.1255 12.5598 10.0105 12.6319C9.89548 12.704 9.77041 12.7596 9.64084 12.7969C9.65728 12.829 9.67542 12.86 9.69517 12.8898C9.75786 12.9845 9.82569 13.0753 9.89828 13.1617C10.0498 13.3517 10.2188 13.5274 10.4032 13.6871C10.5882 13.8654 10.7897 14.0266 11.0053 14.1692C11.1017 14.23 11.2028 14.29 11.3053 14.3392C11.3278 14.3392 11.3506 14.3485 11.3704 14.3657C11.3901 14.3829 11.4059 14.4072 11.4151 14.4353C11.4244 14.4635 11.4267 14.4942 11.4217 14.5237C11.4168 14.5532 11.4048 14.5801 11.3871 14.6007C11.0399 14.9897 10.6704 15.3581 10.2808 15.7038C10.2392 15.7432 10.2091 15.7932 10.1938 15.8482C10.1786 15.9032 10.1788 15.961 10.1945 16.0158C10.2102 16.0706 10.2407 16.1204 10.2826 16.1593C10.3246 16.1983 10.3763 16.2248 10.432 16.2362C10.6067 16.2717 10.7859 16.2786 10.9632 16.2567C11.5571 16.2098 12.1322 16.0465 12.6588 15.7756C13.1853 15.5047 13.6526 15.1322 14.0317 14.6795C14.2457 14.3994 14.2953 14.2644 14.3742 14.1C14.453 13.9357 14.6069 13.2788 14.6069 13.2788C14.6258 13.1946 14.6657 13.1168 14.723 13.0514C14.7803 12.986 14.8534 12.9348 14.9359 12.9026C15.0184 12.8703 15.1079 12.8577 15.1962 12.8657C15.2845 12.8737 15.3693 12.902 15.4435 12.9483C15.8235 13.1717 16.2292 13.3483 16.6515 13.4744C16.7818 13.5159 16.8945 13.6007 16.9723 13.7159C17.0501 13.8311 17.0887 13.9699 17.082 14.11C17.082 14.19 17.0595 14.3289 16.982 14.6795C16.9044 15.0301 16.6289 15.4208 16.432 15.6295C16.2081 15.8695 16.0304 16.0101 15.7717 16.2C15.373 16.4387 14.916 16.5781 14.442 16.6095L14.3517 16.11Z" fill="currentColor"/>
+        </svg>
+        Checkout with WhatsApp
       </button>
     </div>
   </div>
-  
+
   <script>
-    // Menu data
-    const menuData = {
-      appetizers: [
-        { id: 'a1', name: 'Bruschetta', price: '$8.95', description: 'Grilled bread rubbed with garlic and topped with diced tomatoes, fresh basil, and olive oil.' },
-        { id: 'a2', name: 'Calamari Fritti', price: '$12.95', description: 'Crispy fried calamari served with marinara sauce and lemon wedges.' },
-        { id: 'a3', name: 'Caprese Salad', price: '$10.95', description: 'Fresh mozzarella, tomatoes, and basil drizzled with balsamic glaze and olive oil.' },
-        { id: 'a4', name: 'Prosciutto e Melone', price: '$13.95', description: 'Thinly sliced prosciutto wrapped around sweet cantaloupe wedges.' },
-        { id: 'a5', name: 'Arancini', price: '$9.95', description: 'Crispy fried rice balls stuffed with mozzarella and peas, served with tomato sauce.' },
-        { id: 'a6', name: 'Antipasto Misto', price: '$15.95', description: 'Selection of Italian cured meats, cheeses, olives, and marinated vegetables.' },
-      ],
-      pasta: [
-        { id: 'p1', name: 'Spaghetti Carbonara', price: '$14.95', description: 'Classic pasta with pancetta, egg, pecorino cheese, and black pepper.' },
-        { id: 'p2', name: 'Fettuccine Alfredo', price: '$13.95', description: 'Fettuccine pasta tossed in a rich and creamy parmesan sauce.' },
-        { id: 'p3', name: 'Lasagna alla Bolognese', price: '$16.95', description: 'Layered pasta with meat sauce, béchamel, and parmesan cheese.' },
-        { id: 'p4', name: 'Penne alla Vodka', price: '$15.95', description: 'Penne pasta with a creamy tomato vodka sauce and pancetta.' },
-        { id: 'p5', name: 'Linguine alle Vongole', price: '$17.95', description: 'Linguine pasta with fresh clams, garlic, white wine, and parsley.' },
-        { id: 'p6', name: 'Ravioli di Ricotta', price: '$14.95', description: 'Homemade ravioli filled with ricotta and spinach, topped with sage butter sauce.' },
-      ],
-      pizza: [
-        { id: 'z1', name: 'Margherita', price: '$12.95', description: 'Classic pizza with tomato sauce, fresh mozzarella, and basil.' },
-        { id: 'z2', name: 'Pepperoni', price: '$14.95', description: 'Tomato sauce, mozzarella, and spicy pepperoni.' },
-        { id: 'z3', name: 'Quattro Formaggi', price: '$15.95', description: 'Four cheese pizza with mozzarella, gorgonzola, fontina, and parmesan.' },
-        { id: 'z4', name: 'Prosciutto e Funghi', price: '$16.95', description: 'Tomato sauce, mozzarella, prosciutto, and mushrooms.' },
-        { id: 'z5', name: 'Diavola', price: '$15.95', description: 'Spicy pizza with tomato sauce, mozzarella, spicy salami, and chili flakes.' },
-        { id: 'z6', name: 'Vegetariana', price: '$13.95', description: 'Tomato sauce, mozzarella, grilled vegetables, and fresh herbs.' },
-      ],
-      main: [
-        { id: 'm1', name: 'Chicken Parmigiana', price: '$18.95', description: 'Breaded chicken breast topped with tomato sauce and mozzarella, served with pasta.' },
-        { id: 'm2', name: 'Osso Buco', price: '$24.95', description: 'Braised veal shanks with vegetables, white wine, and gremolata.' },
-        { id: 'm3', name: 'Bistecca alla Fiorentina', price: '$29.95', description: 'Grilled T-bone steak with rosemary, garlic, and olive oil.' },
-        { id: 'm4', name: 'Saltimbocca alla Romana', price: '$22.95', description: 'Veal cutlets with prosciutto and sage, cooked in white wine.' },
-        { id: 'm5', name: 'Branzino al Forno', price: '$26.95', description: 'Whole baked sea bass with herbs, lemon, and olive oil.' },
-        { id: 'm6', name: 'Risotto ai Funghi', price: '$19.95', description: 'Creamy risotto with wild mushrooms, truffle oil, and parmesan cheese.' },
-      ],
-      desserts: [
-        { id: 'd1', name: 'Tiramisu', price: '$8.95', description: 'Classic Italian dessert with layers of coffee-soaked ladyfingers and mascarpone cream.' },
-        { id: 'd2', name: 'Panna Cotta', price: '$7.95', description: 'Creamy vanilla custard with mixed berry sauce.' },
-        { id: 'd3', name: 'Cannoli', price: '$6.95', description: 'Crispy pastry shells filled with sweet ricotta cream and chocolate chips.' },
-        { id: 'd4', name: 'Gelato Misto', price: '$7.95', description: 'Selection of Italian ice creams, served with biscotti.' },
-        { id: 'd5', name: 'Torta di Cioccolato', price: '$8.95', description: 'Rich chocolate cake with a warm molten center, served with vanilla gelato.' },
-        { id: 'd6', name: 'Affogato al Caffe', price: '$6.95', description: 'Vanilla gelato "drowned" with a shot of hot espresso.' },
-      ]
+    // Restaurant data
+    const restaurantInfo = {
+      name: "Bella Cucina",
+      phone: "+1234567890",
+      address: "123 Italian Street, Foodville, FC 12345"
     };
     
-    // Shopping cart
+    // Menu data - Now with 8 items per category
+    const menuData = [
+      {
+        id: "appetizers",
+        name: "Appetizers",
+        items: [
+          {
+            id: "bruschetta",
+            name: "Bruschetta",
+            description: "Grilled bread rubbed with garlic and topped with diced tomatoes, fresh basil, and olive oil.",
+            price: "$8.95"
+          },
+          {
+            id: "calamari",
+            name: "Calamari Fritti",
+            description: "Crispy fried calamari served with marinara sauce and lemon wedges.",
+            price: "$12.95"
+          },
+          {
+            id: "carpaccio",
+            name: "Beef Carpaccio",
+            description: "Thinly sliced raw beef with arugula, capers, shaved Parmesan, and truffle oil.",
+            price: "$14.95"
+          },
+          {
+            id: "arancini",
+            name: "Arancini",
+            description: "Crispy Sicilian rice balls stuffed with mozzarella, peas, and ground beef.",
+            price: "$10.95"
+          },
+          {
+            id: "burrata",
+            name: "Burrata with Prosciutto",
+            description: "Creamy burrata cheese served with thin slices of prosciutto and balsamic glaze.",
+            price: "$15.95"
+          },
+          {
+            id: "mussels",
+            name: "Mussels Marinara",
+            description: "Fresh mussels cooked in white wine, garlic, and marinara sauce.",
+            price: "$13.95"
+          },
+          {
+            id: "antipasto",
+            name: "Antipasto Platter",
+            description: "Selection of Italian cured meats, cheeses, olives, and marinated vegetables.",
+            price: "$18.95"
+          },
+          {
+            id: "caprese",
+            name: "Caprese Salad",
+            description: "Fresh mozzarella, tomatoes, and basil drizzled with balsamic reduction and olive oil.",
+            price: "$11.95"
+          }
+        ]
+      },
+      {
+        id: "pasta",
+        name: "Pasta",
+        items: [
+          {
+            id: "spaghetti",
+            name: "Spaghetti Carbonara",
+            description: "Classic creamy sauce with pancetta, egg, Pecorino Romano, and black pepper.",
+            price: "$16.95"
+          },
+          {
+            id: "fettuccine",
+            name: "Fettuccine Alfredo",
+            description: "Fettuccine pasta in a rich and creamy Parmesan cheese sauce.",
+            price: "$15.95"
+          },
+          {
+            id: "lasagna",
+            name: "Lasagna Bolognese",
+            description: "Layered pasta with slow-cooked meat ragù, béchamel, and Parmesan cheese.",
+            price: "$18.95"
+          },
+          {
+            id: "ravioli",
+            name: "Mushroom Ravioli",
+            description: "Handmade ravioli filled with wild mushrooms and ricotta in a sage butter sauce.",
+            price: "$17.95"
+          },
+          {
+            id: "linguine-vongole",
+            name: "Linguine alle Vongole",
+            description: "Linguine pasta with fresh clams, white wine, garlic, and parsley.",
+            price: "$19.95"
+          },
+          {
+            id: "penne-arrabbiata",
+            name: "Penne all'Arrabbiata",
+            description: "Penne pasta in a spicy tomato sauce with garlic, chili flakes, and parsley.",
+            price: "$14.95"
+          },
+          {
+            id: "gnocchi",
+            name: "Gnocchi al Pesto",
+            description: "Potato gnocchi tossed in a basil pesto sauce with pine nuts and Parmesan.",
+            price: "$16.95"
+          },
+          {
+            id: "rigatoni",
+            name: "Rigatoni alla Vodka",
+            description: "Rigatoni pasta in a creamy tomato vodka sauce with pancetta and red pepper flakes.",
+            price: "$17.95"
+          }
+        ]
+      },
+      {
+        id: "pizza",
+        name: "Pizza",
+        items: [
+          {
+            id: "margherita",
+            name: "Margherita",
+            description: "Classic pizza with tomato sauce, fresh mozzarella, and basil.",
+            price: "$14.95"
+          },
+          {
+            id: "diavola",
+            name: "Diavola",
+            description: "Spicy pizza with tomato sauce, mozzarella, spicy salami, and chili flakes.",
+            price: "$16.95"
+          },
+          {
+            id: "prosciutto",
+            name: "Prosciutto & Arugula",
+            description: "White pizza with mozzarella, topped with prosciutto, arugula, and shaved Parmesan.",
+            price: "$18.95"
+          },
+          {
+            id: "quattro",
+            name: "Quattro Formaggi",
+            description: "Four cheese pizza with mozzarella, gorgonzola, Parmesan, and ricotta.",
+            price: "$17.95"
+          },
+          {
+            id: "vegetariana",
+            name: "Vegetariana",
+            description: "Veggie pizza with bell peppers, mushrooms, onions, olives, and artichokes.",
+            price: "$16.95"
+          },
+          {
+            id: "capricciosa",
+            name: "Capricciosa",
+            description: "Pizza with tomato sauce, mozzarella, ham, mushrooms, artichokes, and olives.",
+            price: "$18.95"
+          },
+          {
+            id: "napoletana",
+            name: "Napoletana",
+            description: "Traditional pizza with tomato sauce, mozzarella, anchovies, capers, and oregano.",
+            price: "$15.95"
+          },
+          {
+            id: "calzone",
+            name: "Calzone",
+            description: "Folded pizza filled with ricotta, mozzarella, ham, and mushrooms.",
+            price: "$19.95"
+          }
+        ]
+      },
+      {
+        id: "mains",
+        name: "Main Courses",
+        items: [
+          {
+            id: "saltimbocca",
+            name: "Veal Saltimbocca",
+            description: "Veal cutlets with prosciutto and sage in a white wine sauce, served with roasted potatoes.",
+            price: "$24.95"
+          },
+          {
+            id: "ossobuco",
+            name: "Osso Buco",
+            description: "Braised veal shanks with vegetables, white wine, and gremolata, served with risotto.",
+            price: "$28.95"
+          },
+          {
+            id: "branzino",
+            name: "Grilled Branzino",
+            description: "Whole Mediterranean sea bass grilled with lemon, herbs, and olive oil, served with seasonal vegetables.",
+            price: "$26.95"
+          },
+          {
+            id: "pollo-marsala",
+            name: "Chicken Marsala",
+            description: "Chicken breast sautéed with mushrooms in a Marsala wine sauce, served with mashed potatoes.",
+            price: "$22.95"
+          },
+          {
+            id: "bistecca",
+            name: "Bistecca Fiorentina",
+            description: "Grilled T-bone steak seasoned with rosemary and garlic, served with roasted vegetables.",
+            price: "$34.95"
+          },
+          {
+            id: "salmon",
+            name: "Grilled Salmon",
+            description: "Atlantic salmon fillet with lemon-dill sauce, served with asparagus and risotto.",
+            price: "$25.95"
+          },
+          {
+            id: "eggplant",
+            name: "Eggplant Parmigiana",
+            description: "Layers of fried eggplant with tomato sauce, mozzarella, and Parmesan cheese.",
+            price: "$19.95"
+          },
+          {
+            id: "lamb-chops",
+            name: "Grilled Lamb Chops",
+            description: "Herb-marinated lamb chops with balsamic reduction, served with roasted potatoes.",
+            price: "$32.95"
+          }
+        ]
+      },
+      {
+        id: "desserts",
+        name: "Desserts",
+        items: [
+          {
+            id: "tiramisu",
+            name: "Tiramisu",
+            description: "Classic Italian dessert with layers of coffee-soaked ladyfingers and mascarpone cream.",
+            price: "$8.95"
+          },
+          {
+            id: "panna-cotta",
+            name: "Panna Cotta",
+            description: "Vanilla cream pudding with mixed berry compote.",
+            price: "$7.95"
+          },
+          {
+            id: "cannoli",
+            name: "Cannoli",
+            description: "Crispy pastry shells filled with sweetened ricotta and chocolate chips.",
+            price: "$7.95"
+          },
+          {
+            id: "gelato",
+            name: "Gelato Selection",
+            description: "Choice of three scoops: vanilla, chocolate, pistachio, or strawberry.",
+            price: "$6.95"
+          },
+          {
+            id: "affogato",
+            name: "Affogato",
+            description: "Vanilla gelato 'drowned' with a shot of hot espresso.",
+            price: "$5.95"
+          },
+          {
+            id: "chocolate-torte",
+            name: "Flourless Chocolate Torte",
+            description: "Rich, dense chocolate cake with raspberry coulis.",
+            price: "$8.95"
+          },
+          {
+            id: "zabaglione",
+            name: "Zabaglione with Berries",
+            description: "Light custard made with Marsala wine, served with fresh berries.",
+            price: "$9.95"
+          },
+          {
+            id: "biscotti",
+            name: "Almond Biscotti",
+            description: "Twice-baked almond cookies, perfect for dipping in coffee or dessert wine.",
+            price: "$6.95"
+          }
+        ]
+      }
+    ];
+    
+    // Cart state
     let cart = [];
-    let checkoutMethod = '';
-    let checkoutLink = '';
     
     // DOM Elements
-    const menuNavContainer = document.getElementById('menuNavContainer');
-    const menuNav = document.getElementById('menuNav');
-    const menuButtons = document.querySelectorAll('.menu-nav button');
+    const menuNavList = document.getElementById('menuNavList');
+    const menuSections = document.getElementById('menuSections');
     const cartButton = document.getElementById('cartButton');
-    const cartBadge = document.getElementById('cartBadge');
+    const cartButtonText = document.getElementById('cartButtonText');
+    const cartOverlay = document.getElementById('cartOverlay');
     const cartSheet = document.getElementById('cartSheet');
-    const closeCart = document.getElementById('closeCart');
     const cartItems = document.getElementById('cartItems');
-    const emptyCart = document.getElementById('emptyCart');
-    const cartTotalContainer = document.getElementById('cartTotalContainer');
     const cartTotal = document.getElementById('cartTotal');
-    const checkoutActions = document.getElementById('checkoutActions');
-    const checkoutSMS = document.getElementById('checkoutSMS');
-    const checkoutWhatsApp = document.getElementById('checkoutWhatsApp');
-    const receipt = document.getElementById('receipt');
-    const closeReceipt = document.getElementById('closeReceipt');
-    const receiptItems = document.getElementById('receiptItems');
-    const receiptTotal = document.getElementById('receiptTotal');
-    const reopenCheckout = document.getElementById('reopenCheckout');
+    const cartTotalAmount = document.getElementById('cartTotalAmount');
+    const closeCartButton = document.getElementById('closeCartButton');
+    const checkoutButton = document.getElementById('checkoutButton');
+    const whatsappButton = document.getElementById('whatsappButton');
     
-    // Initialize menu items
-    function initializeMenu() {
-      Object.keys(menuData).forEach(category => {
-        const container = document.getElementById(`${category}Items`);
-        if (!container) return;
+    // Render menu navigation
+    function renderMenuNav() {
+      menuNavList.innerHTML = ''; // Clear existing items
+      menuData.forEach((section, index) => {
+        const li = document.createElement('li');
+        li.className = `menu-nav-item ${index === 0 ? 'active' : ''}`;
+        li.textContent = section.name;
+        li.setAttribute('data-section', section.id);
+        li.addEventListener('click', () => {
+          document.querySelectorAll('.menu-nav-item').forEach(item => {
+            item.classList.remove('active');
+          });
+          li.classList.add('active');
+          
+          // Scroll to the section
+          const targetSection = document.getElementById(section.id);
+          if (targetSection) {
+            targetSection.scrollIntoView({ behavior: 'smooth' });
+          }
+        });
+        menuNavList.appendChild(li);
+      });
+    }
+    
+    // Render menu sections
+    function renderMenuSections() {
+      menuSections.innerHTML = ''; // Clear existing content
+      menuData.forEach(section => {
+        const sectionDiv = document.createElement('div');
+        sectionDiv.className = 'menu-section';
+        sectionDiv.id = section.id;
         
-        menuData[category].forEach(item => {
+        const sectionTitle = document.createElement('h2');
+        sectionTitle.className = 'section-title';
+        sectionTitle.textContent = section.name;
+        sectionDiv.appendChild(sectionTitle);
+        
+        section.items.forEach(item => {
           const menuItem = document.createElement('div');
           menuItem.className = 'menu-item';
-          menuItem.innerHTML = `
-            <div class="menu-item-content">
-              <div class="menu-item-title">${item.name}</div>
-              <div class="menu-item-description">${item.description}</div>
-            </div>
-            <div class="menu-item-actions">
-              <div class="menu-item-price">${item.price}</div>
-              <button class="add-to-cart" data-id="${item.id}" data-name="${item.name}" data-price="${item.price}">Add</button>
-            </div>
-          `;
-          container.appendChild(menuItem);
-        });
-      });
-      
-      // Add event listeners to "Add to Cart" buttons
-      document.querySelectorAll('.add-to-cart').forEach(button => {
-        button.addEventListener('click', addToCart);
-      });
-    }
-    
-    // Make menu sticky and highlight active section
-    function setupMenuNavigation() {
-      // Scroll to section when nav item is clicked
-      menuButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          const sectionId = button.dataset.section;
-          const section = document.getElementById(sectionId);
-          if (section) {
-            section.scrollIntoView({ behavior: 'smooth' });
-          }
-        });
-      });
-      
-      // Set up intersection observer to highlight active section
-      const observerOptions = {
-        root: null,
-        rootMargin: '-120px 0px -60% 0px',
-        threshold: 0
-      };
-      
-      const observerCallback = (entries) => {
-        entries.forEach(entry => {
-          if (entry.isIntersecting) {
-            const id = entry.target.id;
-            setActiveSection(id);
-          }
-        });
-      };
-      
-      const observer = new IntersectionObserver(observerCallback, observerOptions);
-      
-      document.querySelectorAll('.menu-section').forEach(section => {
-        observer.observe(section);
-      });
-    }
-    
-    function setActiveSection(sectionId) {
-      menuButtons.forEach(button => {
-        if (button.dataset.section === sectionId) {
-          button.classList.add('active');
+          menuItem.dataset.id = item.id;
           
-          // Center the active button in the menu nav
-          const buttonRect = button.getBoundingClientRect();
-          const navRect = menuNav.getBoundingClientRect();
-          const scrollLeft = buttonRect.left - navRect.left - (navRect.width / 2) + (buttonRect.width / 2);
+          const itemInfo = document.createElement('div');
+          itemInfo.className = 'item-info';
           
-          menuNav.scrollTo({
-            left: scrollLeft,
-            behavior: 'smooth'
-          });
-        } else {
-          button.classList.remove('active');
-        }
+          const nameContainer = document.createElement('div');
+          nameContainer.className = 'item-name-container';
+          
+          const itemName = document.createElement('h3');
+          itemName.className = 'item-name';
+          itemName.textContent = item.name;
+          
+          const itemPrice = document.createElement('span');
+          itemPrice.className = 'item-price';
+          itemPrice.textContent = item.price;
+          
+          nameContainer.appendChild(itemName);
+          nameContainer.appendChild(itemPrice);
+          
+          const itemDescription = document.createElement('p');
+          itemDescription.className = 'item-description';
+          itemDescription.textContent = item.description;
+          
+          itemInfo.appendChild(nameContainer);
+          itemInfo.appendChild(itemDescription);
+          
+          const addButton = document.createElement('button');
+          addButton.className = 'add-button';
+          addButton.textContent = 'Add';
+          addButton.addEventListener('click', () => addToCart(item));
+          
+          menuItem.appendChild(itemInfo);
+          menuItem.appendChild(addButton);
+          
+          sectionDiv.appendChild(menuItem);
+        });
+        
+        menuSections.appendChild(sectionDiv);
       });
     }
     
-    // Add swipe functionality for mobile
-    function setupSwipeNavigation() {
-      let touchStartX = 0;
-      let touchEndX = 0;
-      
-      menuNav.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
-        // Mark as interacted to hide swipe indicators
-        menuNav.classList.add('interacted');
-      }, { passive: true });
-      
-      menuNav.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-      }, { passive: true });
-      
-      function handleSwipe() {
-        const swipeDistance = touchEndX - touchStartX;
-        if (Math.abs(swipeDistance) > 50) {
-          // Scroll the menu navigation
-          menuNav.scrollBy({
-            left: -swipeDistance,
-            behavior: 'smooth'
-          });
-        }
-      }
-    }
-    
-    // Add to cart functionality
-    function addToCart(event) {
-      const button = event.currentTarget;
-      const id = button.dataset.id;
-      const name = button.dataset.name;
-      const price = button.dataset.price;
-      
-      const existingItem = cart.find(item => item.id === id);
+    // Add to cart
+    function addToCart(item) {
+      const existingItem = cart.find(cartItem => cartItem.id === item.id);
       
       if (existingItem) {
         existingItem.quantity += 1;
       } else {
         cart.push({
-          id,
-          name,
-          price,
+          id: item.id,
+          name: item.name,
+          price: item.price,
           quantity: 1
         });
       }
       
-      updateCartBadge();
-      showAddedToCartAnimation(button);
+      updateUI();
     }
     
-    function showAddedToCartAnimation(button) {
-      button.textContent = 'Added!';
-      button.style.backgroundColor = '#4CAF50';
+    // Remove from cart
+    function removeFromCart(itemId) {
+      const index = cart.findIndex(item => item.id === itemId);
       
-      setTimeout(() => {
-        button.textContent = 'Add';
-        button.style.backgroundColor = '';
-      }, 1000);
+      if (index !== -1) {
+        if (cart[index].quantity > 1) {
+          cart[index].quantity -= 1;
+        } else {
+          cart.splice(index, 1);
+        }
+      }
+      
+      updateUI();
     }
     
-    function updateCartBadge() {
-      const totalItems = cart.reduce((total, item) => total + item.quantity, 0);
-      cartBadge.textContent = totalItems;
+    // Calculate total number of items in cart
+    function getTotalItems() {
+      return cart.reduce((total, item) => total + item.quantity, 0);
+    }
+    
+    // Calculate total price
+    function calculateTotal() {
+      return cart.reduce((total, item) => {
+        return total + (parseFloat(item.price.replace('$', '')) * item.quantity);
+      }, 0).toFixed(2);
+    }
+    
+    // Update UI based on cart state
+    function updateUI() {
+      const totalItems = getTotalItems();
+      cartButtonText.textContent = `View Cart (${totalItems})`;
       
       if (totalItems > 0) {
-        cartButton.style.display = 'flex';
+        cartButton.classList.remove('empty');
       } else {
-        cartButton.style.display = 'none';
+        cartButton.classList.add('empty');
+        closeCart();
       }
+      
+      // Update menu items to show which ones are in cart
+      document.querySelectorAll('.menu-item').forEach(menuItem => {
+        const itemId = menuItem.dataset.id;
+        const inCart = cart.find(item => item.id === itemId);
+        const addButton = menuItem.querySelector('.add-button');
+        
+        if (inCart) {
+          addButton.classList.add('in-cart');
+          addButton.textContent = `Add (${inCart.quantity})`;
+        } else {
+          addButton.classList.remove('in-cart');
+          addButton.textContent = 'Add';
+        }
+      });
+      
+      updateCartItems();
     }
     
-    function renderCartItems() {
+    // Update cart items display
+    function updateCartItems() {
       cartItems.innerHTML = '';
       
       if (cart.length === 0) {
-        emptyCart.style.display = 'block';
-        cartTotalContainer.style.display = 'none';
-        checkoutActions.style.display = 'none';
+        const emptyMessage = document.createElement('div');
+        emptyMessage.className = 'empty-cart-message';
+        emptyMessage.textContent = 'Your cart is empty';
+        cartItems.appendChild(emptyMessage);
+        cartTotal.style.display = 'none';
+        
         return;
       }
-      
-      emptyCart.style.display = 'none';
-      cartTotalContainer.style.display = 'flex';
-      checkoutActions.style.display = 'flex';
       
       cart.forEach(item => {
         const cartItem = document.createElement('div');
         cartItem.className = 'cart-item';
-        cartItem.innerHTML = `
-          <div class="cart-item-info">
-            <div class="cart-item-title">${item.name}</div>
-            <div class="cart-item-price">${item.price} each</div>
-          </div>
-          <div class="cart-item-quantity">
-            <button class="quantity-btn decrement" data-id="${item.id}">-</button>
-            <span>${item.quantity}</span>
-            <button class="quantity-btn increment" data-id="${item.id}">+</button>
-            <button class="remove-item" data-id="${item.id}">Remove</button>
-          </div>
-        `;
+        
+        const itemInfo = document.createElement('div');
+        itemInfo.className = 'cart-item-info';
+        
+        const itemName = document.createElement('div');
+        itemName.className = 'cart-item-name';
+        itemName.textContent = `${item.name}`;
+        
+        const itemPrice = document.createElement('div');
+        itemPrice.className = 'cart-item-price';
+        itemPrice.textContent = `${item.price} x ${item.quantity}`;
+        
+        itemInfo.appendChild(itemName);
+        itemInfo.appendChild(itemPrice);
+        
+        const removeButton = document.createElement('button');
+        removeButton.className = 'quantity-button';
+        removeButton.textContent = '−';
+        removeButton.addEventListener('click', () => removeFromCart(item.id));
+        
+        cartItem.appendChild(itemInfo);
+        cartItem.appendChild(removeButton);
+        
         cartItems.appendChild(cartItem);
       });
       
-      // Add event listeners to quantity buttons
-      document.querySelectorAll('.increment').forEach(button => {
-        button.addEventListener('click', () => {
-          const id = button.dataset.id;
-          const item = cart.find(item => item.id === id);
-          item.quantity += 1;
-          renderCartItems();
-          updateCartTotal();
-          updateCartBadge();
-        });
-      });
-      
-      document.querySelectorAll('.decrement').forEach(button => {
-        button.addEventListener('click', () => {
-          const id = button.dataset.id;
-          const item = cart.find(item => item.id === id);
-          item.quantity -= 1;
-          
-          if (item.quantity === 0) {
-            cart = cart.filter(cartItem => cartItem.id !== id);
-          }
-          
-          renderCartItems();
-          updateCartTotal();
-          updateCartBadge();
-        });
-      });
-      
-      document.querySelectorAll('.remove-item').forEach(button => {
-        button.addEventListener('click', () => {
-          const id = button.dataset.id;
-          cart = cart.filter(item => item.id !== id);
-          renderCartItems();
-          updateCartTotal();
-          updateCartBadge();
-        });
-      });
-      
-      updateCartTotal();
+      cartTotal.style.display = 'flex';
+      cartTotalAmount.textContent = `$${calculateTotal()}`;
     }
     
-    function updateCartTotal() {
-      const total = cart.reduce((total, item) => {
-        const itemPrice = parseFloat(item.price.replace('$', ''));
-        return total + (itemPrice * item.quantity);
-      }, 0);
-      
-      cartTotal.textContent = `$${total.toFixed(2)}`;
-    }
-    
-    // Cart sheet functionality
+    // Open cart
     function openCart() {
-      cartSheet.style.display = 'block';
-      renderCartItems();
-      
-      setTimeout(() => {
-        cartSheet.querySelector('.cart-content').style.transform = 'translateY(0)';
-      }, 10);
+      cartOverlay.style.visibility = 'visible';
+      cartOverlay.style.opacity = '1';
+      cartSheet.classList.add('open');
+      document.body.style.overflow = 'hidden';
     }
     
-    function closeCartSheet() {
-      const cartContent = cartSheet.querySelector('.cart-content');
-      cartContent.style.transform = 'translateY(100%)';
-      
+    // Close cart
+    function closeCart() {
+      cartOverlay.style.opacity = '0';
+      cartSheet.classList.remove('open');
       setTimeout(() => {
-        cartSheet.style.display = 'none';
+        cartOverlay.style.visibility = 'hidden';
       }, 300);
+      document.body.style.overflow = '';
     }
     
-    // Checkout functionality
-    function checkout(method) {
-      const orderDetails = cart.map(item => `${item.quantity}x ${item.name}`).join('\n');
-      const total = calculateTotal();
-      
-      let link = '';
-      
-      if (method === 'sms') {
-        const smsBody = `New order from Bella Cucina:\n\n${orderDetails}\n\nTotal: $${total}`;
-        link = `sms:+1234567890?body=${encodeURIComponent(smsBody)}`;
-        checkoutMethod = 'SMS';
-      } else if (method === 'whatsapp') {
-        const whatsappBody = `New order from Bella Cucina:\n\n${orderDetails}\n\nTotal: $${total}`;
-        link = `https://wa.me/1234567890?text=${encodeURIComponent(whatsappBody)}`;
-        checkoutMethod = 'WhatsApp';
-      }
-      
-      checkoutLink = link;
-      showReceipt();
-      
-      // Open the messaging app
-      setTimeout(() => {
-        window.open(link, '_blank');
-      }, 500);
-    }
-    
-    function calculateTotal() {
-      return cart.reduce((total, item) => {
-        const itemPrice = parseFloat(item.price.replace('$', ''));
-        return total + (itemPrice * item.quantity);
-      }, 0).toFixed(2);
-    }
-    
-    // Receipt functionality
-    function showReceipt() {
-      closeCartSheet();
-      
-      receiptItems.innerHTML = '';
+    // Format order message
+    function formatOrderMessage() {
+      let message = `New order from ${restaurantInfo.name}:\n\n`;
       
       cart.forEach(item => {
-        const summaryItem = document.createElement('div');
-        summaryItem.className = 'summary-item';
-        
-        const itemPrice = parseFloat(item.price.replace('$', ''));
-        const itemTotal = (itemPrice * item.quantity).toFixed(2);
-        
-        summaryItem.innerHTML = `
-          <div>${item.quantity} x ${item.name}</div>
-          <div>$${itemTotal}</div>
-        `;
-        
-        receiptItems.appendChild(summaryItem);
+        message += `${item.quantity}x ${item.name} - ${item.price}\n`;
       });
       
-      receiptTotal.textContent = `$${calculateTotal()}`;
+      message += `\nTotal: $${calculateTotal()}`;
       
-      receipt.style.display = 'block';
+      return encodeURIComponent(message);
+    }
+    
+    // Handle checkout
+    function handleCheckout(method) {
+      const message = formatOrderMessage();
+      let link;
       
-      setTimeout(() => {
-        receipt.querySelector('.receipt-content').style.transform = 'translateY(0)';
-      }, 10);
-      
-      // Style the reopen button based on checkout method
-      const reopenBtn = document.getElementById('reopenCheckout');
-      if (checkoutMethod === 'SMS') {
-        reopenBtn.className = 'reopen-btn reopen-sms';
-        reopenBtn.innerHTML = `
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Reopen SMS
-        `;
-      } else {
-        reopenBtn.className = 'reopen-btn reopen-whatsapp';
-        reopenBtn.innerHTML = `
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-            <path d="M17.6 6.31999C16.8669 5.58141 15.9943 4.99596 15.033 4.59767C14.0716 4.19938 13.0406 3.99602 12 3.99999C10.6089 4.00277 9.24248 4.36599 8.03271 5.04806C6.82294 5.73013 5.8093 6.70673 5.091 7.89999C4.37271 9.09324 3.97843 10.4549 3.94785 11.8455C3.91728 13.236 4.25165 14.6148 4.92 15.84L4 20L8.2 19.08C9.35975 19.6917 10.6629 20.0028 11.98 20C14.5804 19.9968 17.0732 18.9375 18.9203 17.0771C20.7675 15.2167 21.8093 12.7172 21.8 10.12C21.8 9.06698 21.5959 8.02511 21.1962 7.05223C20.7965 6.07934 20.2092 5.19527 19.47 4.45999C18.7309 3.72471 17.8487 3.13777 16.8775 2.73889C15.9063 2.34002 14.8659 2.1371 13.815 2.13999C12.7641 2.14289 11.7248 2.35146 10.7554 2.75576C9.78592 3.16006 8.90609 3.75209 8.17 4.48999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M14.3517 16.11C14.222 16.2579 14.0271 16.3509 13.8154 16.37C13.6037 16.389 13.3938 16.3326 13.2317 16.21C12.268 15.6581 11.4099 14.9544 10.6917 14.12C9.92814 13.263 9.32328 12.2684 8.90173 11.19C8.83516 11.0095 8.83764 10.8098 8.90879 10.6312C8.97994 10.4525 9.11448 10.307 9.28673 10.22C9.34369 10.189 9.40547 10.1659 9.47 10.15C9.51685 10.1487 9.56354 10.1552 9.60835 10.1692C9.65316 10.1832 9.69547 10.2045 9.73334 10.2323C9.77122 10.2601 9.80412 10.2939 9.83062 10.3324C9.85712 10.3709 9.87685 10.4134 9.88898 10.459C10.0228 10.856 10.187 11.2405 10.3788 11.6095C10.4447 11.73 10.4736 11.8657 10.4626 12.0005C10.4516 12.1354 10.4012 12.2638 10.3167 12.3707C10.2287 12.4719 10.1255 12.5598 10.0105 12.6319C9.89548 12.704 9.77041 12.7596 9.64084 12.7969C9.65728 12.829 9.67542 12.86 9.69517 12.8898C9.75786 12.9845 9.82569 13.0753 9.89828 13.1617C10.0498 13.3517 10.2188 13.5274 10.4032 13.6871C10.5882 13.8654 10.7897 14.0266 11.0053 14.1692C11.1017 14.23 11.2028 14.29 11.3053 14.3392C11.3278 14.3392 11.3506 14.3485 11.3704 14.3657C11.3901 14.3829 11.4059 14.4072 11.4151 14.4353C11.4244 14.4635 11.4267 14.4942 11.4217 14.5237C11.4168 14.5532 11.4048 14.5801 11.3871 14.6007C11.0399 14.9897 10.6704 15.3581 10.2808 15.7038C10.2392 15.7432 10.2091 15.7932 10.1938 15.8482C10.1786 15.9032 10.1788 15.961 10.1945 16.0158C10.2102 16.0706 10.2407 16.1204 10.2826 16.1593C10.3246 16.1983 10.3763 16.2248 10.432 16.2362C10.6067 16.2717 10.7859 16.2786 10.9632 16.2567C11.5571 16.2098 12.1322 16.0465 12.6588 15.7756C13.1853 15.5047 13.6526 15.1322 14.0317 14.6795C14.2457 14.3994 14.2953 14.2644 14.3742 14.1C14.453 13.9357 14.6069 13.2788 14.6069 13.2788C14.6258 13.1946 14.6657 13.1168 14.723 13.0514C14.7803 12.986 14.8534 12.9348 14.9359 12.9026C15.0184 12.8703 15.1079 12.8577 15.1962 12.8657C15.2845 12.8737 15.3693 12.902 15.4435 12.9483C15.8235 13.1717 16.2292 13.3483 16.6515 13.4744C16.7818 13.5159 16.8945 13.6007 16.9723 13.7159C17.0501 13.8311 17.0887 13.9699 17.082 14.11C17.082 14.19 17.0595 14.3289 16.982 14.6795C16.9044 15.0301 16.6289 15.4208 16.432 15.6295C16.2081 15.8695 16.0304 16.0101 15.7717 16.2C15.373 16.4387 14.916 16.5781 14.442 16.6095L14.3517 16.11Z" fill="currentColor"/>
-          </svg>
-          Reopen WhatsApp
-        `;
+      if (method === 'sms') {
+        link = `sms:${restaurantInfo.phone}?body=${message}`;
+      } else if (method === 'whatsapp') {
+        // WhatsApp requires phone number without + sign
+        const phoneNumber = restaurantInfo.phone.replace('+', '');
+        link = `https://wa.me/${phoneNumber}?text=${message}`;
       }
-    }
-    
-    function closeReceiptSheet() {
-      const receiptContent = receipt.querySelector('.receipt-content');
-      receiptContent.style.transform = 'translateY(100%)';
       
-      setTimeout(() => {
-        receipt.style.display = 'none';
-        // Clear cart after receipt is closed
-        cart = [];
-        updateCartBadge();
-      }, 300);
-    }
-    
-    function reopenCheckoutLink() {
-      window.open(checkoutLink, '_blank');
-    }
-    
-    // Initialize the application
-    function init() {
-      initializeMenu();
-      setupMenuNavigation();
-      setupSwipeNavigation();
+      window.open(link, '_blank');
       
-      // Event Listeners
-      cartButton.addEventListener('click', openCart);
-      closeCart.addEventListener('click', closeCartSheet);
-      cartSheet.addEventListener('click', (e) => {
-        if (e.target === cartSheet) {
-          closeCartSheet();
+      // Clear cart after checkout
+      cart = [];
+      updateUI();
+      closeCart();
+    }
+    
+    // Event listeners
+    cartButton.addEventListener('click', openCart);
+    cartOverlay.addEventListener('click', closeCart);
+    closeCartButton.addEventListener('click', closeCart);
+    checkoutButton.addEventListener('click', () => handleCheckout('sms'));
+    whatsappButton.addEventListener('click', () => handleCheckout('whatsapp'));
+    
+    // Initialize
+    renderMenuNav();
+    renderMenuSections();
+    updateUI();
+    
+    // Improved scroll handling with IntersectionObserver for better performance
+    const observerOptions = {
+      rootMargin: "-100px 0px -60% 0px", // Adjusted to better detect the topmost visible section
+      threshold: 0.01
+    };
+    
+    const observerCallback = (entries) => {
+      // Find sections that are intersecting with the viewport
+      const visibleSections = entries.filter(entry => entry.isIntersecting);
+      
+      if (visibleSections.length) {
+        // Sort by Y position to get the topmost visible section
+        const topSection = visibleSections.reduce((top, section) => {
+          return (!top || section.boundingClientRect.top < top.boundingClientRect.top) 
+            ? section 
+            : top;
+        }, null);
+        
+        if (topSection) {
+          const sectionId = topSection.target.id;
+          
+          // Update menu navigation
+          document.querySelectorAll('.menu-nav-item').forEach(item => {
+            if (item.getAttribute('data-section') === sectionId) {
+              item.classList.add('active');
+            } else {
+              item.classList.remove('active');
+            }
+          });
         }
-      });
-      
-      checkoutSMS.addEventListener('click', () => checkout('sms'));
-      checkoutWhatsApp.addEventListener('click', () => checkout('whatsapp'));
-      
-      closeReceipt.addEventListener('click', closeReceiptSheet);
-      receipt.addEventListener('click', (e) => {
-        if (e.target === receipt) {
-          closeReceiptSheet();
-        }
-      });
-      
-      reopenCheckout.addEventListener('click', reopenCheckoutLink);
-      
-      // Update cart badge on page load
-      updateCartBadge();
-    }
+      }
+    };
     
-    // Start the app when the DOM is loaded
-    document.addEventListener('DOMContentLoaded', init);
+    // Create an Observer
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    
+    // Observe all menu sections
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.menu-section').forEach(section => {
+        observer.observe(section);
+      });
+    });
   </script>
 </body>
 </html>
