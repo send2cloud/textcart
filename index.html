@@ -57,62 +57,64 @@
       margin-right: 4px;
     }
     
-    /* Navigation styles */
+    /* Navigation styles - FIXED */
     .menu-nav {
-      background-color: white;
+      background-color: #F2E8D5;
       position: sticky;
       top: 48px;
       z-index: 40;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      overflow-x: auto;
-      -webkit-overflow-scrolling: touch;
+      border-bottom: 1px solid #E6D7B8;
+      padding: 0 10px;
+      width: 100%;
+      box-sizing: border-box;
     }
     
     .menu-nav-list {
       display: flex;
       list-style: none;
       margin: 0;
-      padding: 0;
-      min-width: max-content;
+      padding: 8px 0;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE and Edge */
+    }
+    
+    .menu-nav-list::-webkit-scrollbar {
+      display: none; /* Chrome, Safari, Opera */
     }
     
     .menu-nav-item {
-      padding: 12px 20px;
+      padding: 8px 16px;
       font-weight: 500;
       cursor: pointer;
       position: relative;
       white-space: nowrap;
-      transition: color 0.2s ease;
+      transition: all 0.2s ease;
       color: #555;
+      border-radius: 4px;
     }
     
     .menu-nav-item.active {
-      color: #D04A35;
+      color: white;
+      background-color: #D9B26A;
       font-weight: 600;
-    }
-    
-    .menu-nav-item.active::after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 15%;
-      width: 70%;
-      height: 3px;
-      background-color: #D04A35;
-      border-radius: 3px 3px 0 0;
     }
     
     /* Menu section styles */
     .menu-section {
       padding: 24px 16px;
       scroll-margin-top: 120px;
+      max-width: 1200px;
+      margin: 0 auto;
     }
     
     .section-title {
       font-size: 1.5rem;
       margin-bottom: 20px;
       padding-bottom: 8px;
-      border-bottom: 2px solid #E5E0D5;
+      border-bottom: 2px solid #D9B26A;
       color: #333;
     }
     
@@ -199,8 +201,11 @@
       background-color: white;
       border-radius: 12px;
       padding: 24px;
-      margin-top: 32px;
+      margin: 32px 16px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
     }
     
     .location-title {
@@ -636,6 +641,30 @@
       background-color: #1fb959;
     }
     
+    /* Improved Responsive Design */
+    @media (max-width: 480px) {
+      .restaurant-name {
+        font-size: 1.25rem;
+      }
+      
+      .menu-nav-item {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+      }
+      
+      .section-title {
+        font-size: 1.3rem;
+      }
+      
+      .item-name {
+        font-size: 1rem;
+      }
+      
+      .cart-actions {
+        flex-direction: column;
+      }
+    }
+    
     /* Media queries */
     @media (min-width: 768px) {
       .header-content {
@@ -775,7 +804,7 @@
       address: "123 Italian Street, Foodville, FC 12345"
     };
     
-    // Menu data
+    // Menu data - Now with 8 items per category
     const menuData = [
       {
         id: "appetizers",
@@ -798,6 +827,36 @@
             name: "Beef Carpaccio",
             description: "Thinly sliced raw beef with arugula, capers, shaved Parmesan, and truffle oil.",
             price: "$14.95"
+          },
+          {
+            id: "arancini",
+            name: "Arancini",
+            description: "Crispy Sicilian rice balls stuffed with mozzarella, peas, and ground beef.",
+            price: "$10.95"
+          },
+          {
+            id: "burrata",
+            name: "Burrata with Prosciutto",
+            description: "Creamy burrata cheese served with thin slices of prosciutto and balsamic glaze.",
+            price: "$15.95"
+          },
+          {
+            id: "mussels",
+            name: "Mussels Marinara",
+            description: "Fresh mussels cooked in white wine, garlic, and marinara sauce.",
+            price: "$13.95"
+          },
+          {
+            id: "antipasto",
+            name: "Antipasto Platter",
+            description: "Selection of Italian cured meats, cheeses, olives, and marinated vegetables.",
+            price: "$18.95"
+          },
+          {
+            id: "caprese",
+            name: "Caprese Salad",
+            description: "Fresh mozzarella, tomatoes, and basil drizzled with balsamic reduction and olive oil.",
+            price: "$11.95"
           }
         ]
       },
@@ -827,6 +886,30 @@
             id: "ravioli",
             name: "Mushroom Ravioli",
             description: "Handmade ravioli filled with wild mushrooms and ricotta in a sage butter sauce.",
+            price: "$17.95"
+          },
+          {
+            id: "linguine-vongole",
+            name: "Linguine alle Vongole",
+            description: "Linguine pasta with fresh clams, white wine, garlic, and parsley.",
+            price: "$19.95"
+          },
+          {
+            id: "penne-arrabbiata",
+            name: "Penne all'Arrabbiata",
+            description: "Penne pasta in a spicy tomato sauce with garlic, chili flakes, and parsley.",
+            price: "$14.95"
+          },
+          {
+            id: "gnocchi",
+            name: "Gnocchi al Pesto",
+            description: "Potato gnocchi tossed in a basil pesto sauce with pine nuts and Parmesan.",
+            price: "$16.95"
+          },
+          {
+            id: "rigatoni",
+            name: "Rigatoni alla Vodka",
+            description: "Rigatoni pasta in a creamy tomato vodka sauce with pancetta and red pepper flakes.",
             price: "$17.95"
           }
         ]
@@ -858,6 +941,30 @@
             name: "Quattro Formaggi",
             description: "Four cheese pizza with mozzarella, gorgonzola, Parmesan, and ricotta.",
             price: "$17.95"
+          },
+          {
+            id: "vegetariana",
+            name: "Vegetariana",
+            description: "Veggie pizza with bell peppers, mushrooms, onions, olives, and artichokes.",
+            price: "$16.95"
+          },
+          {
+            id: "capricciosa",
+            name: "Capricciosa",
+            description: "Pizza with tomato sauce, mozzarella, ham, mushrooms, artichokes, and olives.",
+            price: "$18.95"
+          },
+          {
+            id: "napoletana",
+            name: "Napoletana",
+            description: "Traditional pizza with tomato sauce, mozzarella, anchovies, capers, and oregano.",
+            price: "$15.95"
+          },
+          {
+            id: "calzone",
+            name: "Calzone",
+            description: "Folded pizza filled with ricotta, mozzarella, ham, and mushrooms.",
+            price: "$19.95"
           }
         ]
       },
@@ -882,6 +989,36 @@
             name: "Grilled Branzino",
             description: "Whole Mediterranean sea bass grilled with lemon, herbs, and olive oil, served with seasonal vegetables.",
             price: "$26.95"
+          },
+          {
+            id: "pollo-marsala",
+            name: "Chicken Marsala",
+            description: "Chicken breast sautéed with mushrooms in a Marsala wine sauce, served with mashed potatoes.",
+            price: "$22.95"
+          },
+          {
+            id: "bistecca",
+            name: "Bistecca Fiorentina",
+            description: "Grilled T-bone steak seasoned with rosemary and garlic, served with roasted vegetables.",
+            price: "$34.95"
+          },
+          {
+            id: "salmon",
+            name: "Grilled Salmon",
+            description: "Atlantic salmon fillet with lemon-dill sauce, served with asparagus and risotto.",
+            price: "$25.95"
+          },
+          {
+            id: "eggplant",
+            name: "Eggplant Parmigiana",
+            description: "Layers of fried eggplant with tomato sauce, mozzarella, and Parmesan cheese.",
+            price: "$19.95"
+          },
+          {
+            id: "lamb-chops",
+            name: "Grilled Lamb Chops",
+            description: "Herb-marinated lamb chops with balsamic reduction, served with roasted potatoes.",
+            price: "$32.95"
           }
         ]
       },
@@ -906,6 +1043,36 @@
             name: "Cannoli",
             description: "Crispy pastry shells filled with sweetened ricotta and chocolate chips.",
             price: "$7.95"
+          },
+          {
+            id: "gelato",
+            name: "Gelato Selection",
+            description: "Choice of three scoops: vanilla, chocolate, pistachio, or strawberry.",
+            price: "$6.95"
+          },
+          {
+            id: "affogato",
+            name: "Affogato",
+            description: "Vanilla gelato 'drowned' with a shot of hot espresso.",
+            price: "$5.95"
+          },
+          {
+            id: "chocolate-torte",
+            name: "Flourless Chocolate Torte",
+            description: "Rich, dense chocolate cake with raspberry coulis.",
+            price: "$8.95"
+          },
+          {
+            id: "zabaglione",
+            name: "Zabaglione with Berries",
+            description: "Light custard made with Marsala wine, served with fresh berries.",
+            price: "$9.95"
+          },
+          {
+            id: "biscotti",
+            name: "Almond Biscotti",
+            description: "Twice-baked almond cookies, perfect for dipping in coffee or dessert wine.",
+            price: "$6.95"
           }
         ]
       }
@@ -930,6 +1097,7 @@
     
     // Render menu navigation
     function renderMenuNav() {
+      menuNavList.innerHTML = ''; // Clear existing items
       menuData.forEach((section, index) => {
         const li = document.createElement('li');
         li.className = `menu-nav-item ${index === 0 ? 'active' : ''}`;
@@ -953,6 +1121,7 @@
     
     // Render menu sections
     function renderMenuSections() {
+      menuSections.innerHTML = ''; // Clear existing content
       menuData.forEach(section => {
         const sectionDiv = document.createElement('div');
         sectionDiv.className = 'menu-section';
@@ -1063,6 +1232,21 @@
         cartButton.classList.add('empty');
         closeCart();
       }
+      
+      // Update menu items to show which ones are in cart
+      document.querySelectorAll('.menu-item').forEach(menuItem => {
+        const itemId = menuItem.dataset.id;
+        const inCart = cart.find(item => item.id === itemId);
+        const addButton = menuItem.querySelector('.add-button');
+        
+        if (inCart) {
+          addButton.classList.add('in-cart');
+          addButton.textContent = `Add (${inCart.quantity})`;
+        } else {
+          addButton.classList.remove('in-cart');
+          addButton.textContent = 'Add';
+        }
+      });
       
       updateCartItems();
     }
@@ -1178,25 +1362,46 @@
     renderMenuSections();
     updateUI();
     
-    // Handle scroll to update active nav item
-    window.addEventListener('scroll', () => {
-      const scrollPosition = window.scrollY;
+    // Improved scroll handling with IntersectionObserver for better performance
+    const observerOptions = {
+      rootMargin: "-100px 0px -60% 0px", // Adjusted to better detect the topmost visible section
+      threshold: 0.01
+    };
+    
+    const observerCallback = (entries) => {
+      // Find sections that are intersecting with the viewport
+      const visibleSections = entries.filter(entry => entry.isIntersecting);
       
-      document.querySelectorAll('.menu-section').forEach(section => {
-        const sectionTop = section.offsetTop - 150;
-        const sectionBottom = sectionTop + section.offsetHeight;
+      if (visibleSections.length) {
+        // Sort by Y position to get the topmost visible section
+        const topSection = visibleSections.reduce((top, section) => {
+          return (!top || section.boundingClientRect.top < top.boundingClientRect.top) 
+            ? section 
+            : top;
+        }, null);
         
-        if (scrollPosition >= sectionTop && scrollPosition < sectionBottom) {
-          const sectionId = section.getAttribute('id');
+        if (topSection) {
+          const sectionId = topSection.target.id;
           
+          // Update menu navigation
           document.querySelectorAll('.menu-nav-item').forEach(item => {
-            item.classList.remove('active');
-            
             if (item.getAttribute('data-section') === sectionId) {
               item.classList.add('active');
+            } else {
+              item.classList.remove('active');
             }
           });
         }
+      }
+    };
+    
+    // Create an Observer
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+    
+    // Observe all menu sections
+    document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('.menu-section').forEach(section => {
+        observer.observe(section);
       });
     });
   </script>
