@@ -20,7 +20,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     }
   };
 
-  // Create a basic structure similar to the indian.html template
+  // Create a basic structure similar to the burger.html template
   const html = `
 <!DOCTYPE html>
 <html lang="en">
@@ -822,24 +822,9 @@ export const generateHTML = (restaurant: RestaurantData): string => {
   
   <main>
     <div class="menu-container">
-      <!-- Directly render menu sections instead of relying on JavaScript -->
-      ${restaurant.categories.map(category => `
-        <div class="menu-section" id="${category.id}">
-          <h2 class="section-title">${category.name}</h2>
-          ${category.items.map(item => `
-            <div class="menu-item" data-id="${item.id}">
-              <div class="item-info">
-                <div class="item-name-container">
-                  <h3 class="item-name">${item.name}</h3>
-                  <span class="item-price">${item.price}</span>
-                </div>
-                <p class="item-description">${item.description}</p>
-              </div>
-              ${cartSettings.enabled ? `<button class="add-button">${cartSettings.buttonText}</button>` : ''}
-            </div>
-          `).join('')}
-        </div>
-      `).join('')}
+      <div id="menuSections">
+        <!-- Will be populated by JavaScript -->
+      </div>
       
       <div class="location-info">
         <h2 class="location-title">Contact & Location</h2>
@@ -939,7 +924,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       <div class="cart-order-section" id="paymentMethodSection">
         <div class="cart-order-section-title">Payment Method</div>
         <div id="paymentMethodOptions">
-          ${cartSettings.paymentOptions.cashOnDelivery && cartSettings.deliveryEnabled ? `
+          ${cartSettings.paymentOptions?.cashOnDelivery && cartSettings.deliveryEnabled ? `
           <div class="order-option delivery-payment">
             <input type="radio" id="cashOnDelivery" name="paymentMethod" value="cashOnDelivery" class="order-option-radio" checked>
             <label for="cashOnDelivery" class="order-option-label">
@@ -953,9 +938,9 @@ export const generateHTML = (restaurant: RestaurantData): string => {
           </div>
           ` : ''}
           
-          ${cartSettings.paymentOptions.cashOnPickup && cartSettings.pickupEnabled ? `
+          ${cartSettings.paymentOptions?.cashOnPickup && cartSettings.pickupEnabled ? `
           <div class="order-option pickup-payment">
-            <input type="radio" id="cashOnPickup" name="paymentMethod" value="cashOnPickup" class="order-option-radio" ${!cartSettings.paymentOptions.cashOnDelivery || !cartSettings.deliveryEnabled ? 'checked' : ''}>
+            <input type="radio" id="cashOnPickup" name="paymentMethod" value="cashOnPickup" class="order-option-radio" ${!cartSettings.paymentOptions?.cashOnDelivery || !cartSettings.deliveryEnabled ? 'checked' : ''}>
             <label for="cashOnPickup" class="order-option-label">
               <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <rect x="2" y="6" width="20" height="12" rx="2"></rect>
@@ -963,21 +948,6 @@ export const generateHTML = (restaurant: RestaurantData): string => {
                 <path d="M6 12h.01M18 12h.01"></path>
               </svg>
               Cash on Pickup
-            </label>
-          </div>
-          ` : ''}
-          
-          ${cartSettings.paymentOptions.stripe ? `
-          <div class="order-option">
-            <input type="radio" id="stripe" name="paymentMethod" value="stripe" class="order-option-radio" 
-              ${(!cartSettings.paymentOptions.cashOnDelivery || !cartSettings.deliveryEnabled) && 
-                (!cartSettings.paymentOptions.cashOnPickup || !cartSettings.pickupEnabled) ? 'checked' : ''}>
-            <label for="stripe" class="order-option-label">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
-                <line x1="1" y1="10" x2="23" y2="10"></line>
-              </svg>
-              Pay with Card
             </label>
           </div>
           ` : ''}
@@ -1054,7 +1024,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
           ${category.items.map(item => `{
             id: "${item.id}",
             name: "${item.name}",
-            description: "${item.description}",
+            description: "${item.description.replace(/"/g, '\\"')}",
             price: "${item.price}"
           }`).join(',')}
         ]
@@ -1064,10 +1034,10 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     ${cartSettings.enabled ? `
     // Cart settings
     const cartSettings = {
-      taxPercentage: ${cartSettings.taxPercentage},
-      minimumOrderAmount: ${cartSettings.minimumOrderAmount},
+      taxPercentage: ${cartSettings.taxPercentage || 0},
+      minimumOrderAmount: ${cartSettings.minimumOrderAmount || 0},
       deliveryEnabled: ${cartSettings.deliveryEnabled},
-      deliveryFee: ${cartSettings.deliveryFee},
+      deliveryFee: ${cartSettings.deliveryFee || 0},
       pickupEnabled: ${cartSettings.pickupEnabled},
       allowQuantityChange: ${cartSettings.allowQuantityChange}
     };
@@ -1076,9 +1046,8 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     let cart = [];
     let orderType = ${cartSettings.deliveryEnabled ? "'delivery'" : cartSettings.pickupEnabled ? "'pickup'" : "null"};
     let paymentMethod = ${
-      cartSettings.paymentOptions.cashOnDelivery && cartSettings.deliveryEnabled ? "'cashOnDelivery'" :
-      cartSettings.paymentOptions.cashOnPickup && cartSettings.pickupEnabled ? "'cashOnPickup'" :
-      cartSettings.paymentOptions.stripe ? "'stripe'" : "null"
+      cartSettings.paymentOptions?.cashOnDelivery && cartSettings.deliveryEnabled ? "'cashOnDelivery'" :
+      cartSettings.paymentOptions?.cashOnPickup && cartSettings.pickupEnabled ? "'cashOnPickup'" : "null"
     };
     
     // DOM Elements
@@ -1110,7 +1079,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     });
     ` : ''}
     
-    ${cartSettings.paymentOptions.cashOnDelivery || cartSettings.paymentOptions.cashOnPickup || cartSettings.paymentOptions.stripe ? `
+    ${(cartSettings.paymentOptions?.cashOnDelivery || cartSettings.paymentOptions?.cashOnPickup) ? `
     const paymentMethodOptions = document.querySelectorAll('input[name="paymentMethod"]');
     paymentMethodOptions.forEach(option => {
       option.addEventListener('change', function() {
@@ -1127,14 +1096,10 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         document.getElementById('deliveryFee')?.parentElement.style.display = 'flex';
         
         // Select first available payment method for delivery
-        ${cartSettings.paymentOptions.cashOnDelivery ? `
+        ${cartSettings.paymentOptions?.cashOnDelivery ? `
         if (document.getElementById('cashOnDelivery')) {
           document.getElementById('cashOnDelivery').checked = true;
           paymentMethod = 'cashOnDelivery';
-        }` : cartSettings.paymentOptions.stripe ? `
-        if (document.getElementById('stripe')) {
-          document.getElementById('stripe').checked = true;
-          paymentMethod = 'stripe';
         }` : ''}
       } else if (orderType === 'pickup') {
         document.querySelectorAll('.delivery-payment').forEach(el => el.style.display = 'none');
@@ -1142,14 +1107,10 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         document.getElementById('deliveryFee')?.parentElement.style.display = 'none';
         
         // Select first available payment method for pickup
-        ${cartSettings.paymentOptions.cashOnPickup ? `
+        ${cartSettings.paymentOptions?.cashOnPickup ? `
         if (document.getElementById('cashOnPickup')) {
           document.getElementById('cashOnPickup').checked = true;
           paymentMethod = 'cashOnPickup';
-        }` : cartSettings.paymentOptions.stripe ? `
-        if (document.getElementById('stripe')) {
-          document.getElementById('stripe').checked = true;
-          paymentMethod = 'stripe';
         }` : ''}
       }
       
@@ -1191,6 +1152,99 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     whatsappButton.addEventListener('click', () => handleCheckout('whatsapp'));
     ` : ''}
     
+    // Render menu navigation
+    function renderMenuNav() {
+      const menuNavList = document.getElementById('menuNavList');
+      menuNavList.innerHTML = ''; // Clear existing items
+      
+      menuData.forEach((section, index) => {
+        const li = document.createElement('li');
+        li.className = \`menu-nav-item \${index === 0 ? 'active' : ''}\`;
+        li.textContent = section.name;
+        li.setAttribute('data-section', section.id);
+        li.addEventListener('click', () => {
+          document.querySelectorAll('.menu-nav-item').forEach(item => {
+            item.classList.remove('active');
+          });
+          li.classList.add('active');
+          
+          // Scroll to the section
+          const targetSection = document.getElementById(section.id);
+          if (targetSection) {
+            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+        menuNavList.appendChild(li);
+      });
+      
+      // Update navigation indicators after rendering
+      updateNavIndicators();
+    }
+    
+    // Render menu sections
+    function renderMenuSections() {
+      const menuSections = document.getElementById('menuSections');
+      menuSections.innerHTML = ''; // Clear existing content
+      
+      menuData.forEach(section => {
+        const sectionDiv = document.createElement('div');
+        sectionDiv.className = 'menu-section';
+        sectionDiv.id = section.id;
+        
+        const sectionTitle = document.createElement('h2');
+        sectionTitle.className = 'section-title';
+        sectionTitle.textContent = section.name;
+        sectionDiv.appendChild(sectionTitle);
+        
+        section.items.forEach(item => {
+          const menuItem = document.createElement('div');
+          menuItem.className = 'menu-item';
+          menuItem.dataset.id = item.id;
+          
+          const itemInfo = document.createElement('div');
+          itemInfo.className = 'item-info';
+          
+          const nameContainer = document.createElement('div');
+          nameContainer.className = 'item-name-container';
+          
+          const itemName = document.createElement('h3');
+          itemName.className = 'item-name';
+          itemName.textContent = item.name;
+          
+          const itemPrice = document.createElement('span');
+          itemPrice.className = 'item-price';
+          itemPrice.textContent = item.price;
+          
+          nameContainer.appendChild(itemName);
+          nameContainer.appendChild(itemPrice);
+          
+          const itemDescription = document.createElement('p');
+          itemDescription.className = 'item-description';
+          itemDescription.textContent = item.description;
+          
+          itemInfo.appendChild(nameContainer);
+          itemInfo.appendChild(itemDescription);
+          
+          ${cartSettings.enabled ? `
+          const addButton = document.createElement('button');
+          addButton.className = 'add-button';
+          addButton.textContent = '${cartSettings.buttonText || "Add"}';
+          addButton.addEventListener('click', () => addToCart(item));
+          
+          menuItem.appendChild(itemInfo);
+          menuItem.appendChild(addButton);
+          ` : `
+          menuItem.appendChild(itemInfo);
+          `}
+          
+          sectionDiv.appendChild(menuItem);
+        });
+        
+        menuSections.appendChild(sectionDiv);
+      });
+    }
+    
+    ${cartSettings.enabled ? `
     // Add to cart
     function addToCart(item) {
       const existingItem = cart.find(cartItem => cartItem.id === item.id);
@@ -1289,10 +1343,10 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         
         if (inCart) {
           addButton.classList.add('in-cart');
-          addButton.textContent = \`${cartSettings.buttonText} (\${inCart.quantity})\`;
+          addButton.textContent = \`${cartSettings.buttonText || "Add"} (\${inCart.quantity})\`;
         } else {
           addButton.classList.remove('in-cart');
-          addButton.textContent = '${cartSettings.buttonText}';
+          addButton.textContent = '${cartSettings.buttonText || "Add"}';
         }
       });
       
@@ -1487,8 +1541,6 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         message += \`Payment Method: Cash on Delivery\\n\`;
       } else if (paymentMethod === 'cashOnPickup') {
         message += \`Payment Method: Cash on Pickup\\n\`;
-      } else if (paymentMethod === 'stripe') {
-        message += \`Payment Method: Credit Card (Stripe)\\n\`;
       }
       
       return encodeURIComponent(message);
@@ -1524,53 +1576,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     cartButton.addEventListener('click', openCart);
     cartOverlay.addEventListener('click', closeCart);
     closeCartButton.addEventListener('click', closeCart);
-    
-    // Add event listeners to all "Add to Cart" buttons
-    document.querySelectorAll('.add-button').forEach(button => {
-      button.addEventListener('click', function() {
-        const menuItem = this.closest('.menu-item');
-        const itemId = menuItem.dataset.id;
-        
-        // Find the corresponding item in our data
-        for (const category of menuData) {
-          const item = category.items.find(i => i.id === itemId);
-          if (item) {
-            addToCart(item);
-            break;
-          }
-        }
-      });
-    });
     ` : ''}
-    
-    // Render menu navigation
-    function renderMenuNav() {
-      const menuNavList = document.getElementById('menuNavList');
-      menuNavList.innerHTML = ''; // Clear existing items
-      
-      menuData.forEach((section, index) => {
-        const li = document.createElement('li');
-        li.className = \`menu-nav-item \${index === 0 ? 'active' : ''}\`;
-        li.textContent = section.name;
-        li.setAttribute('data-section', section.id);
-        li.addEventListener('click', () => {
-          document.querySelectorAll('.menu-nav-item').forEach(item => {
-            item.classList.remove('active');
-          });
-          li.classList.add('active');
-          
-          // Scroll to the section
-          const targetSection = document.getElementById(section.id);
-          if (targetSection) {
-            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        });
-        menuNavList.appendChild(li);
-      });
-      
-      // Update navigation indicators after rendering
-      updateNavIndicators();
-    }
     
     // Update navigation indicators based on scroll position
     function updateNavIndicators() {
@@ -1642,24 +1648,20 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       const navLeftBtn = document.getElementById('navLeft');
       const navRightBtn = document.getElementById('navRight');
       
-      if (navLeftBtn && navRightBtn) {
-        navLeftBtn.addEventListener('click', () => {
-          navContainer.scrollBy({ left: -150, behavior: 'smooth' });
-        });
-        
-        navRightBtn.addEventListener('click', () => {
-          navContainer.scrollBy({ left: 150, behavior: 'smooth' });
-        });
-      }
+      navLeftBtn.addEventListener('click', () => {
+        navContainer.scrollBy({ left: -150, behavior: 'smooth' });
+      });
+      
+      navRightBtn.addEventListener('click', () => {
+        navContainer.scrollBy({ left: 150, behavior: 'smooth' });
+      });
     }
-    
+
     // Initialize
     renderMenuNav();
+    renderMenuSections();
     ${cartSettings.enabled ? 'updateUI();' : ''}
     setupTouchNavigation();
-    
-    // Initialize order options
-    ${(cartSettings.deliveryEnabled || cartSettings.pickupEnabled) && cartSettings.enabled ? 'initializeOrderOptions();' : ''}
     
     // Improved scroll handling with IntersectionObserver for better performance
     const observerOptions = {
