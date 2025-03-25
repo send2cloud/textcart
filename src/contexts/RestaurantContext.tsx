@@ -1,3 +1,4 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Types
@@ -21,6 +22,13 @@ export interface RestaurantInfo {
   phone: string;
   address: string;
   logo?: string;
+}
+
+// Feature flags for different functionalities
+export interface FeatureFlags {
+  paymentEnabled: boolean;
+  deliveryEnabled: boolean;
+  pickupEnabled: boolean;
 }
 
 export interface CartSettings {
@@ -52,6 +60,7 @@ export interface RestaurantData {
     accent: string;
   };
   cartSettings: CartSettings;
+  features: FeatureFlags;
 }
 
 interface RestaurantContextType {
@@ -109,6 +118,11 @@ const initialRestaurantData: RestaurantData = {
     pickupEnabled: true,
     smsPhone: '+1234567890',
     whatsappPhone: '+1234567890'
+  },
+  features: {
+    paymentEnabled: false,
+    deliveryEnabled: true,
+    pickupEnabled: true
   }
 };
 
@@ -144,7 +158,23 @@ export const RestaurantProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   useEffect(() => {
     const savedData = localStorage.getItem('restaurantData');
     if (savedData) {
-      setRestaurant(JSON.parse(savedData));
+      try {
+        const parsedData = JSON.parse(savedData);
+        
+        // Ensure features exist in the data structure, add if missing
+        if (!parsedData.features) {
+          parsedData.features = {
+            paymentEnabled: false,
+            deliveryEnabled: parsedData.cartSettings?.deliveryEnabled || true,
+            pickupEnabled: parsedData.cartSettings?.pickupEnabled || true
+          };
+        }
+        
+        setRestaurant(parsedData);
+      } catch (error) {
+        console.error("Error parsing saved data:", error);
+        setRestaurant(initialRestaurantData);
+      }
     } else {
       setRestaurant(initialRestaurantData);
     }

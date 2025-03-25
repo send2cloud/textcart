@@ -3,7 +3,6 @@ import React from 'react';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { Switch } from './ui/switch';
 import { Label } from './ui/label';
-import { ShoppingCart } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import BasicSettings from './cart/BasicSettings';
 import DeliveryPickupSettings from './cart/DeliveryPickupSettings';
@@ -35,9 +34,27 @@ const CartSettings: React.FC = () => {
         pickupEnabled: true,
         smsPhone: restaurant.info.phone || '+1234567890',
         whatsappPhone: restaurant.info.phone || '+1234567890'
+      },
+      features: {
+        paymentEnabled: false,
+        deliveryEnabled: true,
+        pickupEnabled: true
       }
     });
     return <div>Initializing settings...</div>;
+  }
+
+  // Ensure features exist
+  if (!restaurant.features) {
+    setRestaurant({
+      ...restaurant,
+      features: {
+        paymentEnabled: false,
+        deliveryEnabled: restaurant.cartSettings.deliveryEnabled,
+        pickupEnabled: restaurant.cartSettings.pickupEnabled
+      }
+    });
+    return <div>Initializing features...</div>;
   }
 
   const handleToggleChange = (key: keyof typeof restaurant.cartSettings) => {
