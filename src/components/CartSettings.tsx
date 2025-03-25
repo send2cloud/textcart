@@ -13,6 +13,22 @@ const CartSettings: React.FC = () => {
     return <div>Loading...</div>;
   }
 
+  // Ensure cartSettings exists, if not initialize with default values
+  if (!restaurant.cartSettings) {
+    setRestaurant({
+      ...restaurant,
+      cartSettings: {
+        enabled: true,
+        allowSmsCheckout: true,
+        allowWhatsAppCheckout: true,
+        allowQuantityChange: true,
+        showItemImages: false,
+        buttonText: 'Add to Cart'
+      }
+    });
+    return <div>Initializing settings...</div>;
+  }
+
   const handleToggleChange = (key: keyof typeof restaurant.cartSettings) => {
     setRestaurant({
       ...restaurant,
