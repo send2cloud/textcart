@@ -11,6 +11,21 @@ export const generateScript = (restaurant: RestaurantData): string => {
     pickupEnabled: false
   };
 
+  // Generate payment method initialization logic separately
+  const generatePaymentMethodInit = () => {
+    let paymentMethodInit = "null";
+    
+    if (cartSettings.paymentOptions?.cashOnDelivery && cartSettings.deliveryEnabled) {
+      paymentMethodInit = "'cashOnDelivery'";
+    } else if (cartSettings.paymentOptions?.cashOnPickup && cartSettings.pickupEnabled) {
+      paymentMethodInit = "'cashOnPickup'";
+    } else if (cartSettings.paymentOptions?.stripe) {
+      paymentMethodInit = "'stripe'";
+    }
+    
+    return paymentMethodInit;
+  };
+
   return `
   <script>
     // Restaurant data
@@ -50,11 +65,7 @@ export const generateScript = (restaurant: RestaurantData): string => {
     // Cart state
     let cart = [];
     let orderType = ${cartSettings.deliveryEnabled ? "'delivery'" : cartSettings.pickupEnabled ? "'pickup'" : "null"};
-    let paymentMethod = ${
-      cartSettings.paymentOptions?.cashOnDelivery && cartSettings.deliveryEnabled ? "'cashOnDelivery'" :
-      cartSettings.paymentOptions?.cashOnPickup && cartSettings.pickupEnabled ? "'cashOnPickup'" : 
-      cartSettings.paymentOptions?.stripe ? "'stripe'" : "null"
-    };
+    let paymentMethod = ${generatePaymentMethodInit()};
     
     // DOM Elements
     const menuNavContainer = document.getElementById('menuNavContainer');
