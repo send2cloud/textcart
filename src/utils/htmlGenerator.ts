@@ -235,6 +235,7 @@ export const generateHTML = (restaurant: RestaurantData, visualSettings?: Visual
     .add-button {
       display: inline-flex;
       align-items: center;
+      justify-content: center;
       gap: 0.5rem;
       background-color: var(--primary);
       color: white;
@@ -244,8 +245,7 @@ export const generateHTML = (restaurant: RestaurantData, visualSettings?: Visual
       cursor: pointer;
       font-weight: 500;
       transition: ${settings.hoverEffects ? 'background-color 0.2s, transform 0.1s' : 'none'};
-      width: 100%;
-      justify-content: center;
+      width: auto;
     }
     
     .add-button:hover {
