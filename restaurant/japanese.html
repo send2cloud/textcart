@@ -105,7 +105,7 @@
       font-weight: 700;
     }
     
-    .contact-info {
+    .phone-info {
       text-align: right;
       font-size: 0.9rem;
     }
@@ -434,6 +434,43 @@
       margin-top: 0.5rem;
     }
     
+    /* Location Info (Footer) */
+    .location-info {
+      background-color: var(--light-bg);
+      padding: 2rem 0;
+      margin-top: 3rem;
+      border-top: 1px solid var(--border);
+    }
+    
+    .location-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+    }
+    
+    .location-title {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      color: var(--secondary);
+    }
+    
+    .location-address {
+      font-size: 1.1rem;
+      margin-bottom: 1rem;
+    }
+    
+    .location-map {
+      width: 100%;
+      max-width: 600px;
+      height: 250px;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-top: 1rem;
+    }
+    
     /* Responsive Styles */
     @media (max-width: 768px) {
       .menu-items {
@@ -449,7 +486,7 @@
         gap: 1rem;
       }
       
-      .contact-info {
+      .phone-info {
         text-align: center;
       }
     }
@@ -527,9 +564,8 @@
       <div class="logo">
         <div class="logo-text">桜庭園 Sakura Garden</div>
       </div>
-      <div class="contact-info">
+      <div class="phone-info">
         <div>電話 / Phone: +1 (555) 123-4567</div>
-        <div>場所 / Location: 789 Cherry Blossom Ave, Tokyo Town</div>
       </div>
     </div>
   </header>
@@ -548,6 +584,22 @@
     
     <div id="menuContainer"></div>
   </main>
+  
+  <!-- Location Info at the bottom (footer-like) -->
+  <div class="location-info">
+    <div class="container">
+      <div class="location-content">
+        <h2 class="location-title">場所 / Location</h2>
+        <div class="location-address">789 Cherry Blossom Ave, Tokyo Town</div>
+        <iframe 
+          class="location-map"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3232.2036134553706!2d139.7525573152582!3d35.68538188019272!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x0%3A0x0!2zMzXCsDQxJzA3LjQiTiAxMznCsDQ1JzE5LjAiRQ!5e0!3m2!1sen!2sus!4v1624924456068!5m2!1sen!2sus" 
+          allowfullscreen="" 
+          loading="lazy">
+        </iframe>
+      </div>
+    </div>
+  </div>
   
   <div class="cart-footer" id="cartFooter">
     <div class="container">
