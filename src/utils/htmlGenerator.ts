@@ -10,7 +10,14 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     allowWhatsAppCheckout: false,
     allowQuantityChange: false,
     showItemImages: false,
-    buttonText: 'Add to Cart'
+    buttonText: 'Add to Cart',
+    deliveryEnabled: false,
+    pickupEnabled: false,
+    paymentOptions: {
+      cashOnDelivery: false,
+      cashOnPickup: false,
+      stripe: false
+    }
   };
 
   // Create a basic structure similar to the indian.html template
@@ -517,14 +524,73 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       font-weight: 500;
     }
     
-    .cart-total {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
+    /* Order type and payment method */
+    .cart-order-details {
+      margin-top: 16px;
       padding: 16px 20px;
       border-top: 1px solid ${restaurant.themeColors.secondary};
+    }
+    
+    .cart-order-section {
+      margin-bottom: 16px;
+    }
+    
+    .cart-order-section-title {
+      font-weight: 600;
+      margin-bottom: 8px;
+      font-size: 1rem;
+      color: #555;
+    }
+    
+    .order-option {
+      display: flex;
+      gap: 8px;
+      margin: 8px 0;
+    }
+    
+    .order-option-radio {
+      accent-color: ${restaurant.themeColors.primary};
+    }
+    
+    .order-option-label {
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+    
+    .order-option-label svg {
+      width: 16px;
+      height: 16px;
+    }
+    
+    .order-option-note {
+      display: block;
+      font-size: 0.8rem;
+      color: #777;
+      margin-left: 20px;
+    }
+    
+    .cart-total {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+      padding: 16px 20px;
+      border-top: 1px solid ${restaurant.themeColors.secondary};
+    }
+    
+    .cart-total-row {
+      display: flex;
+      justify-content: space-between;
+      font-size: 0.95rem;
+    }
+    
+    .cart-total-row.final {
       font-size: 1.1rem;
       font-weight: 700;
+      margin-top: 4px;
+      padding-top: 8px;
+      border-top: 1px dashed #e0e0e0;
     }
     
     .cart-actions {
@@ -579,6 +645,39 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     .checkout-button svg,
     .whatsapp-button svg {
       margin-right: 8px;
+    }
+    
+    .button-divider {
+      display: flex;
+      align-items: center;
+      margin: 8px 0;
+      color: #777;
+      font-size: 0.9rem;
+    }
+    
+    .button-divider::before,
+    .button-divider::after {
+      content: '';
+      flex: 1;
+      border-bottom: 1px solid #e0e0e0;
+    }
+    
+    .button-divider::before {
+      margin-right: 8px;
+    }
+    
+    .button-divider::after {
+      margin-left: 8px;
+    }
+    
+    .minimum-order-alert {
+      text-align: center;
+      color: #e53e3e;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      padding: 8px;
+      background-color: #fff5f5;
+      border-radius: 8px;
     }
     ` : ''}
     
@@ -797,13 +896,124 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     <div id="cartItems" class="cart-items">
       <!-- Will be populated by JavaScript -->
     </div>
+
+    <!-- Order type section (delivery or pickup) -->
+    <div class="cart-order-details" id="orderDetails">
+      ${(cartSettings.deliveryEnabled || cartSettings.pickupEnabled) ? `
+      <div class="cart-order-section">
+        <div class="cart-order-section-title">How would you like to receive your order?</div>
+        <div id="orderTypeOptions">
+          ${cartSettings.deliveryEnabled ? `
+          <div class="order-option">
+            <input type="radio" id="delivery" name="orderType" value="delivery" class="order-option-radio" checked>
+            <label for="delivery" class="order-option-label">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="3" width="15" height="13"></rect>
+                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+              </svg>
+              Delivery
+            </label>
+            ${cartSettings.deliveryFee > 0 ? `<span class="order-option-note">+$${cartSettings.deliveryFee.toFixed(2)} delivery fee</span>` : `<span class="order-option-note">Free delivery</span>`}
+          </div>
+          ` : ''}
+          ${cartSettings.pickupEnabled ? `
+          <div class="order-option">
+            <input type="radio" id="pickup" name="orderType" value="pickup" class="order-option-radio" ${!cartSettings.deliveryEnabled ? 'checked' : ''}>
+            <label for="pickup" class="order-option-label">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M3 3h18v18H3z"></path>
+                <circle cx="12" cy="12" r="3"></circle>
+              </svg>
+              Pickup
+            </label>
+            <span class="order-option-note">Pick up at restaurant</span>
+          </div>
+          ` : ''}
+        </div>
+      </div>
+      ` : ''}
+
+      <!-- Payment method section -->
+      <div class="cart-order-section" id="paymentMethodSection">
+        <div class="cart-order-section-title">Payment Method</div>
+        <div id="paymentMethodOptions">
+          ${cartSettings.paymentOptions.cashOnDelivery && cartSettings.deliveryEnabled ? `
+          <div class="order-option delivery-payment">
+            <input type="radio" id="cashOnDelivery" name="paymentMethod" value="cashOnDelivery" class="order-option-radio" checked>
+            <label for="cashOnDelivery" class="order-option-label">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                <circle cx="12" cy="12" r="2"></circle>
+                <path d="M6 12h.01M18 12h.01"></path>
+              </svg>
+              Cash on Delivery
+            </label>
+          </div>
+          ` : ''}
+          
+          ${cartSettings.paymentOptions.cashOnPickup && cartSettings.pickupEnabled ? `
+          <div class="order-option pickup-payment">
+            <input type="radio" id="cashOnPickup" name="paymentMethod" value="cashOnPickup" class="order-option-radio" ${!cartSettings.paymentOptions.cashOnDelivery || !cartSettings.deliveryEnabled ? 'checked' : ''}>
+            <label for="cashOnPickup" class="order-option-label">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                <circle cx="12" cy="12" r="2"></circle>
+                <path d="M6 12h.01M18 12h.01"></path>
+              </svg>
+              Cash on Pickup
+            </label>
+          </div>
+          ` : ''}
+          
+          ${cartSettings.paymentOptions.stripe ? `
+          <div class="order-option">
+            <input type="radio" id="stripe" name="paymentMethod" value="stripe" class="order-option-radio" 
+              ${(!cartSettings.paymentOptions.cashOnDelivery || !cartSettings.deliveryEnabled) && 
+                (!cartSettings.paymentOptions.cashOnPickup || !cartSettings.pickupEnabled) ? 'checked' : ''}>
+            <label for="stripe" class="order-option-label">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                <line x1="1" y1="10" x2="23" y2="10"></line>
+              </svg>
+              Pay with Card
+            </label>
+          </div>
+          ` : ''}
+        </div>
+      </div>
+    </div>
     
     <div id="cartTotal" class="cart-total" style="display: none;">
-      <span>Total:</span>
-      <span id="cartTotalAmount">$0.00</span>
+      <div class="cart-total-row">
+        <span>Subtotal:</span>
+        <span id="cartSubtotal">$0.00</span>
+      </div>
+      
+      <div class="cart-total-row">
+        <span>Tax (${cartSettings.taxPercentage}%):</span>
+        <span id="cartTax">$0.00</span>
+      </div>
+      
+      ${cartSettings.deliveryEnabled ? `
+      <div class="cart-total-row delivery-fee">
+        <span>Delivery Fee:</span>
+        <span id="deliveryFee">$${cartSettings.deliveryFee.toFixed(2)}</span>
+      </div>
+      ` : ''}
+      
+      <div class="cart-total-row final">
+        <span>Total:</span>
+        <span id="cartTotalAmount">$0.00</span>
+      </div>
     </div>
     
     <div class="cart-actions">
+      <div id="minimumOrderAlert" class="minimum-order-alert" style="display: none;">
+        Minimum order amount is $${cartSettings.minimumOrderAmount.toFixed(2)}
+      </div>
+      
       ${cartSettings.allowSmsCheckout ? `
       <button class="checkout-button" id="checkoutButton">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -812,7 +1022,9 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         Checkout with SMS
       </button>
       ` : ''}
+      
       ${cartSettings.allowWhatsAppCheckout ? `
+      ${cartSettings.allowSmsCheckout ? `<div class="button-divider">or</div>` : ''}
       <button class="whatsapp-button" id="whatsappButton">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
           <path d="M17.6 6.31999C16.8669 5.58141 15.9943 4.99596 15.033 4.59767C14.0716 4.19938 13.0406 3.99602 12 3.99999C10.6089 4.00277 9.24248 4.36599 8.03271 5.04806C6.82294 5.73013 5.8093 6.70673 5.091 7.89999C4.37271 9.09324 3.97843 10.4549 3.94785 11.8455C3.91728 13.236 4.25165 14.6148 4.92 15.84L4 20L8.2 19.08C9.35975 19.6917 10.6629 20.0028 11.98 20C14.5804 19.9968 17.0732 18.9375 18.9203 17.0771C20.7675 15.2167 21.8093 12.7172 21.8 10.12C21.8 9.06698 21.5959 8.02511 21.1962 7.05223C20.7965 6.07934 20.2092 5.19527 19.47 4.45999C18.7309 3.72471 17.8487 3.13777 16.8775 2.73889C15.9063 2.34002 14.8659 2.1371 13.815 2.13999C12.7641 2.14289 11.7248 2.35146 10.7554 2.75576C9.78592 3.16006 8.90609 3.75209 8.17 4.48999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -850,8 +1062,24 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     ];
     
     ${cartSettings.enabled ? `
+    // Cart settings
+    const cartSettings = {
+      taxPercentage: ${cartSettings.taxPercentage},
+      minimumOrderAmount: ${cartSettings.minimumOrderAmount},
+      deliveryEnabled: ${cartSettings.deliveryEnabled},
+      deliveryFee: ${cartSettings.deliveryFee},
+      pickupEnabled: ${cartSettings.pickupEnabled},
+      allowQuantityChange: ${cartSettings.allowQuantityChange}
+    };
+    
     // Cart state
     let cart = [];
+    let orderType = ${cartSettings.deliveryEnabled ? "'delivery'" : cartSettings.pickupEnabled ? "'pickup'" : "null"};
+    let paymentMethod = ${
+      cartSettings.paymentOptions.cashOnDelivery && cartSettings.deliveryEnabled ? "'cashOnDelivery'" :
+      cartSettings.paymentOptions.cashOnPickup && cartSettings.pickupEnabled ? "'cashOnPickup'" :
+      cartSettings.paymentOptions.stripe ? "'stripe'" : "null"
+    };
     
     // DOM Elements
     const menuNavContainer = document.getElementById('menuNavContainer');
@@ -862,10 +1090,96 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     const cartSheet = document.getElementById('cartSheet');
     const cartItems = document.getElementById('cartItems');
     const cartTotal = document.getElementById('cartTotal');
+    const cartSubtotal = document.getElementById('cartSubtotal');
+    const cartTax = document.getElementById('cartTax');
     const cartTotalAmount = document.getElementById('cartTotalAmount');
     const closeCartButton = document.getElementById('closeCartButton');
+    const minimumOrderAlert = document.getElementById('minimumOrderAlert');
     const navLeft = document.getElementById('navLeft');
     const navRight = document.getElementById('navRight');
+    
+    // Order type and payment elements
+    ${(cartSettings.deliveryEnabled || cartSettings.pickupEnabled) ? `
+    const orderTypeOptions = document.querySelectorAll('input[name="orderType"]');
+    orderTypeOptions.forEach(option => {
+      option.addEventListener('change', function() {
+        orderType = this.value;
+        updatePaymentOptions();
+        updateCartTotal();
+      });
+    });
+    ` : ''}
+    
+    ${cartSettings.paymentOptions.cashOnDelivery || cartSettings.paymentOptions.cashOnPickup || cartSettings.paymentOptions.stripe ? `
+    const paymentMethodOptions = document.querySelectorAll('input[name="paymentMethod"]');
+    paymentMethodOptions.forEach(option => {
+      option.addEventListener('change', function() {
+        paymentMethod = this.value;
+        updateCheckoutButtons();
+      });
+    });
+    
+    function updatePaymentOptions() {
+      // Show/hide payment options based on order type
+      if (orderType === 'delivery') {
+        document.querySelectorAll('.delivery-payment').forEach(el => el.style.display = 'block');
+        document.querySelectorAll('.pickup-payment').forEach(el => el.style.display = 'none');
+        document.getElementById('deliveryFee')?.parentElement.style.display = 'flex';
+        
+        // Select first available payment method for delivery
+        ${cartSettings.paymentOptions.cashOnDelivery ? `
+        if (document.getElementById('cashOnDelivery')) {
+          document.getElementById('cashOnDelivery').checked = true;
+          paymentMethod = 'cashOnDelivery';
+        }` : cartSettings.paymentOptions.stripe ? `
+        if (document.getElementById('stripe')) {
+          document.getElementById('stripe').checked = true;
+          paymentMethod = 'stripe';
+        }` : ''}
+      } else if (orderType === 'pickup') {
+        document.querySelectorAll('.delivery-payment').forEach(el => el.style.display = 'none');
+        document.querySelectorAll('.pickup-payment').forEach(el => el.style.display = 'block');
+        document.getElementById('deliveryFee')?.parentElement.style.display = 'none';
+        
+        // Select first available payment method for pickup
+        ${cartSettings.paymentOptions.cashOnPickup ? `
+        if (document.getElementById('cashOnPickup')) {
+          document.getElementById('cashOnPickup').checked = true;
+          paymentMethod = 'cashOnPickup';
+        }` : cartSettings.paymentOptions.stripe ? `
+        if (document.getElementById('stripe')) {
+          document.getElementById('stripe').checked = true;
+          paymentMethod = 'stripe';
+        }` : ''}
+      }
+      
+      updateCheckoutButtons();
+    }
+    
+    function updateCheckoutButtons() {
+      // Enable/disable checkout buttons based on the selected payment method
+      ${cartSettings.allowSmsCheckout ? `
+      const checkoutButton = document.getElementById('checkoutButton');
+      if (checkoutButton) {
+        checkoutButton.style.display = (paymentMethod === 'cashOnDelivery' || paymentMethod === 'cashOnPickup') ? 'flex' : 'none';
+      }
+      ` : ''}
+      
+      ${cartSettings.allowWhatsAppCheckout ? `
+      const whatsappButton = document.getElementById('whatsappButton');
+      if (whatsappButton) {
+        whatsappButton.style.display = (paymentMethod === 'cashOnDelivery' || paymentMethod === 'cashOnPickup') ? 'flex' : 'none';
+      }
+      
+      const buttonDivider = document.querySelector('.button-divider');
+      if (buttonDivider) {
+        buttonDivider.style.display = 
+          (paymentMethod === 'cashOnDelivery' || paymentMethod === 'cashOnPickup') && 
+          ${cartSettings.allowSmsCheckout ? 'true' : 'false'} ? 'flex' : 'none';
+      }
+      ` : ''}
+    }
+    ` : ''}
     
     ${cartSettings.allowSmsCheckout ? `
     const checkoutButton = document.getElementById('checkoutButton');
@@ -915,11 +1229,44 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       return cart.reduce((total, item) => total + item.quantity, 0);
     }
     
+    // Parse price string to number
+    function parsePrice(priceStr) {
+      return parseFloat(priceStr.replace(/[^0-9.]/g, ''));
+    }
+    
+    // Calculate cart subtotal
+    function calculateSubtotal() {
+      return cart.reduce((total, item) => {
+        return total + (parsePrice(item.price) * item.quantity);
+      }, 0);
+    }
+    
+    // Calculate tax
+    function calculateTax(subtotal) {
+      return subtotal * (cartSettings.taxPercentage / 100);
+    }
+    
     // Calculate total price
     function calculateTotal() {
-      return cart.reduce((total, item) => {
-        return total + (parseFloat(item.price.replace(/[^0-9.]/g, '')) * item.quantity);
-      }, 0).toFixed(2);
+      const subtotal = calculateSubtotal();
+      const tax = calculateTax(subtotal);
+      let total = subtotal + tax;
+      
+      // Add delivery fee if applicable
+      if (orderType === 'delivery' && cartSettings.deliveryEnabled) {
+        total += cartSettings.deliveryFee;
+      }
+      
+      return {
+        subtotal,
+        tax,
+        total
+      };
+    }
+    
+    // Check if minimum order is met
+    function isMinimumOrderMet() {
+      return calculateSubtotal() >= cartSettings.minimumOrderAmount;
     }
     
     // Update UI based on cart state
@@ -950,6 +1297,25 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       });
       
       updateCartItems();
+      updateCartTotal();
+      
+      // Initialize order options
+      if (totalItems > 0) {
+        initializeOrderOptions();
+      }
+    }
+    
+    // Initialize order options on first cart item
+    function initializeOrderOptions() {
+      ${(cartSettings.deliveryEnabled || cartSettings.pickupEnabled) ? `
+      // Set initial order type
+      if (orderType === 'delivery' && document.getElementById('delivery')) {
+        document.getElementById('delivery').checked = true;
+      } else if (orderType === 'pickup' && document.getElementById('pickup')) {
+        document.getElementById('pickup').checked = true;
+      }
+      updatePaymentOptions();
+      ` : ''}
     }
     
     // Update cart items display
@@ -1027,7 +1393,51 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       });
       
       cartTotal.style.display = 'flex';
-      cartTotalAmount.textContent = \`$\${calculateTotal()}\`;
+      updateCartTotal();
+    }
+    
+    // Update cart total
+    function updateCartTotal() {
+      if (cart.length === 0) {
+        cartTotal.style.display = 'none';
+        return;
+      }
+      
+      const { subtotal, tax, total } = calculateTotal();
+      
+      cartSubtotal.textContent = \`$\${subtotal.toFixed(2)}\`;
+      cartTax.textContent = \`$\${tax.toFixed(2)}\`;
+      
+      // Update delivery fee display
+      if (orderType === 'delivery' && cartSettings.deliveryEnabled) {
+        document.getElementById('deliveryFee').parentElement.style.display = 'flex';
+        document.getElementById('deliveryFee').textContent = \`$\${cartSettings.deliveryFee.toFixed(2)}\`;
+      } else if (document.getElementById('deliveryFee')) {
+        document.getElementById('deliveryFee').parentElement.style.display = 'none';
+      }
+      
+      cartTotalAmount.textContent = \`$\${total.toFixed(2)}\`;
+      
+      // Check minimum order
+      if (cartSettings.minimumOrderAmount > 0) {
+        const isMinimumMet = isMinimumOrderMet();
+        minimumOrderAlert.style.display = isMinimumMet ? 'none' : 'block';
+        
+        // Disable checkout buttons if minimum not met
+        ${cartSettings.allowSmsCheckout ? `
+        if (checkoutButton) {
+          checkoutButton.disabled = !isMinimumMet;
+          checkoutButton.style.opacity = isMinimumMet ? '1' : '0.5';
+        }
+        ` : ''}
+        
+        ${cartSettings.allowWhatsAppCheckout ? `
+        if (whatsappButton) {
+          whatsappButton.disabled = !isMinimumMet;
+          whatsappButton.style.opacity = isMinimumMet ? '1' : '0.5';
+        }
+        ` : ''}
+      }
     }
     
     // Open cart
@@ -1036,6 +1446,9 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       cartOverlay.style.opacity = '1';
       cartSheet.classList.add('open');
       document.body.style.overflow = 'hidden';
+      
+      // Initialize order options
+      initializeOrderOptions();
     }
     
     // Close cart
@@ -1056,13 +1469,38 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         message += \`\${item.quantity}x \${item.name} - \${item.price}\\n\`;
       });
       
-      message += \`\\nTotal: $\${calculateTotal()}\`;
+      const { subtotal, tax, total } = calculateTotal();
+      
+      message += \`\\nSubtotal: $\${subtotal.toFixed(2)}\\n\`;
+      message += \`Tax (${cartSettings.taxPercentage}%): $\${tax.toFixed(2)}\\n\`;
+      
+      if (orderType === 'delivery' && cartSettings.deliveryEnabled) {
+        message += \`Delivery Fee: $\${cartSettings.deliveryFee.toFixed(2)}\\n\`;
+      }
+      
+      message += \`Total: $\${total.toFixed(2)}\\n\\n\`;
+      
+      // Add order type and payment method
+      message += \`Order Type: \${orderType === 'delivery' ? 'Delivery' : 'Pickup'}\\n\`;
+      
+      if (paymentMethod === 'cashOnDelivery') {
+        message += \`Payment Method: Cash on Delivery\\n\`;
+      } else if (paymentMethod === 'cashOnPickup') {
+        message += \`Payment Method: Cash on Pickup\\n\`;
+      } else if (paymentMethod === 'stripe') {
+        message += \`Payment Method: Credit Card (Stripe)\\n\`;
+      }
       
       return encodeURIComponent(message);
     }
     
     // Handle checkout
     function handleCheckout(method) {
+      if (!isMinimumOrderMet()) {
+        alert(\`Minimum order amount is $\${cartSettings.minimumOrderAmount.toFixed(2)}\`);
+        return;
+      }
+      
       const message = formatOrderMessage();
       let link;
       
@@ -1219,6 +1657,9 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     renderMenuNav();
     ${cartSettings.enabled ? 'updateUI();' : ''}
     setupTouchNavigation();
+    
+    // Initialize order options
+    ${(cartSettings.deliveryEnabled || cartSettings.pickupEnabled) && cartSettings.enabled ? 'initializeOrderOptions();' : ''}
     
     // Improved scroll handling with IntersectionObserver for better performance
     const observerOptions = {
