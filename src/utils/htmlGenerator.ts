@@ -1,3 +1,4 @@
+
 import { RestaurantData } from "../contexts/RestaurantContext";
 import { VisualSettings } from "../services/VisualSettingsService";
 
@@ -503,6 +504,37 @@ export const generateHTML = (restaurant: RestaurantData, visualSettings: VisualS
       margin-top: 32px;
       font-size: 0.85rem;
       color: ${darkMode ? 'rgba(255, 255, 255, 0.5)' : '#888'};
+    }
+    
+    /* Map container */
+    .map-container {
+      width: 100%;
+      height: 300px;
+      margin-top: 20px;
+      border-radius: 8px;
+      overflow: hidden;
+    }
+    
+    .map-container iframe {
+      width: 100%;
+      height: 100%;
+      border: 0;
+    }
+    
+    /* Contact info */
+    .contact-info {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 16px;
+    }
+    
+    .contact-info a,
+    .contact-info div {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text);
     }
     
     /* Media queries */
