@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sakura Garden - Japanese Restaurant</title>
+  <style>
+    /* CSS Reset and Base Styles */
+    :root {
+      --primary: #C13438;
+      --secondary: #1A1F2C;
+      --accent: #D6BCFA;
+      --background: #FFF;
+      --text: #333;
+      --light-bg: #F6F6F7;
+      --border: #EAEAEA;
+      --success: #4CAF50;
+      --error: #F44336;
+      --radius: 8px;
+      --font-heading: 'Noto Serif JP', serif;
+      --font-body: 'Noto Sans JP', sans-serif;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: var(--font-body);
+      line-height: 1.6;
+      color: var(--text);
+      background-color: var(--background);
+      padding-bottom: 60px;
+    }
+    
+    /* Typography */
+    h1, h2, h3, h4 {
+      font-family: var(--font-heading);
+      font-weight: 700;
+      line-height: 1.2;
+      margin-bottom: 0.5rem;
+    }
+    
+    h1 {
+      font-size: 2.5rem;
+      color: var(--primary);
+    }
+    
+    h2 {
+      font-size: 1.75rem;
+      color: var(--secondary);
+      border-bottom: 2px solid var(--accent);
+      padding-bottom: 0.25rem;
+      display: inline-block;
+    }
+    
+    h3 {
+      font-size: 1.25rem;
+    }
+    
+    p {
+      margin-bottom: 1rem;
+    }
+    
+    /* Layout and Components */
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+    
+    header {
+      background-color: var(--secondary);
+      color: white;
+      padding: 1rem 0;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      margin-bottom: 2rem;
+    }
+    
+    .header-inner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .logo img {
+      width: 40px;
+      height: 40px;
+    }
+    
+    .logo-text {
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+    
+    .contact-info {
+      text-align: right;
+      font-size: 0.9rem;
+    }
+    
+    nav {
+      background-color: var(--light-bg);
+      padding: 0.5rem 0;
+      margin-bottom: 2rem;
+      border-bottom: 1px solid var(--border);
+    }
+    
+    .nav-container {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+    }
+    
+    .nav-link {
+      cursor: pointer;
+      padding: 0.5rem 1rem;
+      font-weight: 500;
+      border-bottom: 2px solid transparent;
+      transition: all 0.2s;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+      color: var(--primary);
+      border-bottom-color: var(--primary);
+    }
+    
+    main {
+      padding: 1rem 0;
+    }
+    
+    /* Menu Categories and Items */
+    .category {
+      margin-bottom: 3rem;
+    }
+    
+    .category-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .category-icon {
+      font-size: 1.5rem;
+      margin-right: 0.5rem;
+      color: var(--primary);
+    }
+    
+    .menu-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 1.5rem;
+    }
+    
+    .menu-item {
+      background-color: var(--light-bg);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+      transition: transform 0.2s;
+    }
+    
+    .menu-item:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    }
+    
+    .item-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 0.5rem;
+    }
+    
+    .item-name {
+      font-weight: 700;
+      color: var(--secondary);
+    }
+    
+    .item-price {
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .item-description {
+      margin-bottom: 1rem;
+      font-size: 0.95rem;
+      color: #666;
+    }
+    
+    .add-to-cart {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      font-weight: 500;
+      transition: background-color 0.2s;
+    }
+    
+    .add-to-cart:hover {
+      background-color: #A82E32;
+    }
+    
+    /* Cart */
+    .cart-container {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      z-index: 1000;
+      background-color: var(--secondary);
+      color: white;
+      padding: 0.75rem 0;
+      transform: translateY(100%);
+      transition: transform 0.3s ease-in-out;
+    }
+    
+    .cart-container.active {
+      transform: translateY(0);
+    }
+    
+    .cart-toggle {
+      position: fixed;
+      bottom: 1rem;
+      right: 1rem;
+      background-color: var(--primary);
+      color: white;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      z-index: 1001;
+    }
+    
+    .cart-toggle-count {
+      position: absolute;
+      top: 0;
+      right: 0;
+      background-color: var(--accent);
+      color: var(--secondary);
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 12px;
+      font-weight: bold;
+    }
+    
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+    
+    .cart-title {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .cart-close {
+      cursor: pointer;
+      font-size: 1.25rem;
+    }
+    
+    .cart-items {
+      max-height: 250px;
+      overflow-y: auto;
+      margin-bottom: 1rem;
+    }
+    
+    .cart-item {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      gap: 1rem;
+      align-items: center;
+      padding: 0.75rem 0;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .item-quantity {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    
+    .qty-btn {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: white;
+      border: none;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .cart-summary {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .summary-row {
+      display: flex;
+      justify-content: space-between;
+    }
+    
+    .summary-row.total {
+      font-weight: bold;
+      font-size: 1.1rem;
+      margin-top: 0.5rem;
+      padding-top: 0.5rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .cart-actions {
+      display: flex;
+      gap: 1rem;
+      justify-content: space-between;
+    }
+    
+    .checkout-btn {
+      background-color: var(--success);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius);
+      cursor: pointer;
+      flex: 1;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+    }
+    
+    .checkout-btn:hover {
+      background-color: #3c9c40;
+    }
+    
+    .checkout-btn:disabled {
+      background-color: #75757580;
+      cursor: not-allowed;
+    }
+    
+    .error-message {
+      color: var(--error);
+      font-size: 0.9rem;
+      margin-top: 0.5rem;
+    }
+    
+    /* Responsive Styles */
+    @media (max-width: 768px) {
+      .menu-items {
+        grid-template-columns: 1fr;
+      }
+      
+      .cart-summary {
+        grid-template-columns: 1fr;
+      }
+      
+      .header-inner {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .contact-info {
+        text-align: center;
+      }
+    }
+    
+    /* Utility Classes */
+    .hidden {
+      display: none;
+    }
+    
+    .text-center {
+      text-align: center;
+    }
+    
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      top: 1rem;
+      right: 1rem;
+      background-color: var(--secondary);
+      color: white;
+      padding: 0.75rem 1.5rem;
+      border-radius: var(--radius);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      z-index: 1100;
+      transform: translateX(150%);
+      transition: transform 0.3s ease;
+    }
+    
+    .toast.show {
+      transform: translateX(0);
+    }
+    
+    /* Welcome Banner */
+    .welcome-banner {
+      background-color: var(--light-bg);
+      padding: 2rem;
+      border-radius: var(--radius);
+      margin-bottom: 2rem;
+      text-align: center;
+      background-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><path d="M30,10 Q50,5 70,10 T90,20 T75,30 T80,40 T70,50 T60,60 T50,70 T40,60 T30,50 T20,40 T25,30 T10,20 T30,10" fill="none" stroke="%23D6BCFA" stroke-width="2"/></svg>');
+      background-repeat: no-repeat;
+      background-position: right;
+      background-size: contain;
+    }
+    
+    /* Fonts from Google (added inline) */
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap');
+  </style>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Noto+Serif+JP:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <header>
+    <div class="container header-inner">
+      <div class="logo">
+        <div class="logo-text">桜庭園 Sakura Garden</div>
+      </div>
+      <div class="contact-info">
+        <div>電話 / Phone: +1 (555) 123-4567</div>
+        <div>場所 / Location: 789 Cherry Blossom Ave, Tokyo Town</div>
+      </div>
+    </div>
+  </header>
+  
+  <nav>
+    <div class="container">
+      <div class="nav-container" id="categoryNav"></div>
+    </div>
+  </nav>
+  
+  <main class="container">
+    <div class="welcome-banner">
+      <h1>ようこそ Sakura Garden へ</h1>
+      <p>Experience authentic Japanese cuisine with our carefully crafted menu featuring traditional favorites and modern interpretations.</p>
+    </div>
+    
+    <div id="menuContainer"></div>
+  </main>
+  
+  <div class="cart-toggle" id="cartToggle">
+    <span>🛒</span>
+    <div class="cart-toggle-count" id="cartCount">0</div>
+  </div>
+  
+  <div class="cart-container" id="cartContainer">
+    <div class="container">
+      <div class="cart-header">
+        <div class="cart-title">
+          <h3>お買い物カート / Shopping Cart</h3>
+        </div>
+        <div class="cart-close" id="cartClose">✕</div>
+      </div>
+      
+      <div class="cart-items" id="cartItems">
+        <!-- Cart items will be added here dynamically -->
+      </div>
+      
+      <div class="cart-summary" id="cartSummary">
+        <!-- Summary details will be added here dynamically -->
+      </div>
+      
+      <div class="cart-actions">
+        <button class="checkout-btn" id="whatsappCheckout">
+          <span>WhatsApp Checkout</span>
+        </button>
+        <button class="checkout-btn" id="smsCheckout">
+          <span>SMS Checkout</span>
+        </button>
+      </div>
+      
+      <div id="cartError" class="error-message hidden"></div>
+    </div>
+  </div>
+  
+  <div class="toast" id="toast"></div>
+
+  <script>
+    // Using a module pattern for better organization while keeping everything in one file
+    (function() {
+      // ========== APP STATE ==========
+      const state = {
+        menu: null,
+        cart: [],
+        activeCategory: null,
+        config: {
+          restaurant: {
+            name: "Sakura Garden",
+            phone: "+1 (555) 123-4567",
+            address: "789 Cherry Blossom Ave, Tokyo Town"
+          },
+          cart: {
+            enabled: true,
+            allowSmsCheckout: true,
+            allowQuantityChange: true,
+            buttonText: "Add to Cart",
+            taxPercentage: 8.5,
+            smsPhone: "+15551234567",
+            whatsappPhone: "+15551234567",
+            minimumOrderAmount: 15,
+            deliveryFee: 3.99
+          }
+        }
+      };
+
+      // ========== MENU DATA ==========
+      const menuData = {
+        categories: [
+          {
+            id: "appetizers",
+            name: "Appetizers / 前菜",
+            items: [
+              {
+                id: "edamame",
+                name: "Edamame",
+                description: "Steamed young soybeans lightly seasoned with sea salt.",
+                price: "$4.99"
+              },
+              {
+                id: "gyoza",
+                name: "Gyoza",
+                description: "Pan-fried Japanese dumplings filled with pork and vegetables.",
+                price: "$6.99"
+              },
+              {
+                id: "agedashi-tofu",
+                name: "Agedashi Tofu",
+                description: "Fried tofu in a savory dashi broth topped with green onion and bonito flakes.",
+                price: "$5.99"
+              },
+              {
+                id: "tempura",
+                name: "Vegetable Tempura",
+                description: "Assorted vegetables lightly battered and deep-fried.",
+                price: "$7.99"
+              }
+            ]
+          },
+          {
+            id: "sushi",
+            name: "Sushi & Sashimi / 寿司・刺身",
+            items: [
+              {
+                id: "salmon-nigiri",
+                name: "Salmon Nigiri",
+                description: "Fresh salmon over seasoned rice (2 pieces).",
+                price: "$5.99"
+              },
+              {
+                id: "tuna-nigiri",
+                name: "Tuna Nigiri",
+                description: "Fresh tuna over seasoned rice (2 pieces).",
+                price: "$6.99"
+              },
+              {
+                id: "california-roll",
+                name: "California Roll",
+                description: "Crab, avocado, and cucumber roll (6 pieces).",
+                price: "$7.99"
+              },
+              {
+                id: "rainbow-roll",
+                name: "Rainbow Roll",
+                description: "California roll topped with assorted fish (8 pieces).",
+                price: "$13.99"
+              },
+              {
+                id: "sashimi-platter",
+                name: "Sashimi Platter",
+                description: "Assorted slices of fresh raw fish (12 pieces).",
+                price: "$19.99"
+              }
+            ]
+          },
+          {
+            id: "ramen",
+            name: "Ramen & Noodles / ラーメン・麺類",
+            items: [
+              {
+                id: "tonkotsu-ramen",
+                name: "Tonkotsu Ramen",
+                description: "Rich pork bone broth with chashu, egg, bamboo shoots, and green onions.",
+                price: "$13.99"
+              },
+              {
+                id: "shoyu-ramen",
+                name: "Shoyu Ramen",
+                description: "Soy sauce based broth with chicken, egg, menma, and green onions.",
+                price: "$12.99"
+              },
+              {
+                id: "yakisoba",
+                name: "Yakisoba",
+                description: "Stir-fried noodles with vegetables and your choice of protein.",
+                price: "$11.99"
+              },
+              {
+                id: "udon",
+                name: "Nabeyaki Udon",
+                description: "Thick wheat noodles in hot dashi broth with tempura shrimp, chicken, and vegetables.",
+                price: "$14.99"
+              }
+            ]
+          },
+          {
+            id: "main-dishes",
+            name: "Main Dishes / 主菜",
+            items: [
+              {
+                id: "teriyaki-chicken",
+                name: "Chicken Teriyaki",
+                description: "Grilled chicken glazed with sweet teriyaki sauce, served with rice and vegetables.",
+                price: "$14.99"
+              },
+              {
+                id: "teriyaki-salmon",
+                name: "Salmon Teriyaki",
+                description: "Grilled salmon fillet with teriyaki sauce, served with rice and vegetables.",
+                price: "$16.99"
+              },
+              {
+                id: "katsu-curry",
+                name: "Katsu Curry",
+                description: "Breaded pork cutlet with Japanese curry sauce over rice.",
+                price: "$15.99"
+              },
+              {
+                id: "unagi-don",
+                name: "Unagi Don",
+                description: "Grilled freshwater eel glazed with sweet sauce over a bed of steamed rice.",
+                price: "$18.99"
+              },
+              {
+                id: "tempura-bowl",
+                name: "Tempura Bowl",
+                description: "Assorted tempura over rice, served with tempura sauce.",
+                price: "$14.99"
+              }
+            ]
+          },
+          {
+            id: "sides",
+            name: "Sides / 副菜",
+            items: [
+              {
+                id: "miso-soup",
+                name: "Miso Soup",
+                description: "Traditional Japanese soup with tofu, seaweed, and green onions.",
+                price: "$2.99"
+              },
+              {
+                id: "rice",
+                name: "Steamed Rice",
+                description: "Bowl of freshly steamed white rice.",
+                price: "$1.99"
+              },
+              {
+                id: "seaweed-salad",
+                name: "Seaweed Salad",
+                description: "Seasoned seaweed salad with sesame seeds.",
+                price: "$4.99"
+              },
+              {
+                id: "cucumber-salad",
+                name: "Cucumber Sunomono",
+                description: "Thinly sliced cucumbers in a sweet vinegar dressing.",
+                price: "$3.99"
+              }
+            ]
+          },
+          {
+            id: "desserts",
+            name: "Desserts / デザート",
+            items: [
+              {
+                id: "mochi",
+                name: "Mochi Ice Cream",
+                description: "Rice cake filled with ice cream in various flavors (3 pieces).",
+                price: "$5.99"
+              },
+              {
+                id: "dorayaki",
+                name: "Dorayaki",
+                description: "Japanese pancakes filled with sweet red bean paste.",
+                price: "$4.99"
+              },
+              {
+                id: "matcha-cake",
+                name: "Matcha Cheesecake",
+                description: "Green tea flavored cheesecake with a graham cracker crust.",
+                price: "$6.99"
+              },
+              {
+                id: "taiyaki",
+                name: "Taiyaki",
+                description: "Fish-shaped cake filled with red bean or custard.",
+                price: "$4.99"
+              }
+            ]
+          }
+        ]
+      };
+
+      // ========== DOM ELEMENTS ==========
+      const elements = {
+        categoryNav: document.getElementById('categoryNav'),
+        menuContainer: document.getElementById('menuContainer'),
+        cartToggle: document.getElementById('cartToggle'),
+        cartContainer: document.getElementById('cartContainer'),
+        cartClose: document.getElementById('cartClose'),
+        cartItems: document.getElementById('cartItems'),
+        cartCount: document.getElementById('cartCount'),
+        cartSummary: document.getElementById('cartSummary'),
+        cartError: document.getElementById('cartError'),
+        smsCheckout: document.getElementById('smsCheckout'),
+        whatsappCheckout: document.getElementById('whatsappCheckout'),
+        toast: document.getElementById('toast')
+      };
+
+      // ========== RENDERING FUNCTIONS ==========
+      // Render navigation based on categories
+      function renderNavigation() {
+        const categories = menuData.categories;
+        elements.categoryNav.innerHTML = '';
+        
+        categories.forEach(category => {
+          const navLink = document.createElement('div');
+          navLink.className = 'nav-link';
+          navLink.textContent = category.name.split(' / ')[0]; // Show only English name for nav
+          navLink.dataset.category = category.id;
+          
+          if (state.activeCategory === category.id) {
+            navLink.classList.add('active');
+          }
+          
+          navLink.addEventListener('click', () => {
+            document.querySelectorAll('.nav-link').forEach(link => link.classList.remove('active'));
+            navLink.classList.add('active');
+            state.activeCategory = category.id;
+            scrollToCategory(category.id);
+          });
+          
+          elements.categoryNav.appendChild(navLink);
+        });
+      }
+      
+      // Render the entire menu
+      function renderMenu() {
+        const categories = menuData.categories;
+        elements.menuContainer.innerHTML = '';
+        
+        categories.forEach(category => {
+          const categorySection = document.createElement('section');
+          categorySection.className = 'category';
+          categorySection.id = `category-${category.id}`;
+          
+          const categoryHeader = document.createElement('div');
+          categoryHeader.className = 'category-header';
+          
+          const categoryIcon = document.createElement('span');
+          categoryIcon.className = 'category-icon';
+          categoryIcon.textContent = getCategoryIcon(category.id);
+          
+          const categoryTitle = document.createElement('h2');
+          categoryTitle.textContent = category.name;
+          
+          categoryHeader.appendChild(categoryIcon);
+          categoryHeader.appendChild(categoryTitle);
+          categorySection.appendChild(categoryHeader);
+          
+          const menuItems = document.createElement('div');
+          menuItems.className = 'menu-items';
+          
+          category.items.forEach(item => {
+            const menuItem = document.createElement('div');
+            menuItem.className = 'menu-item';
+            menuItem.dataset.id = item.id;
+            
+            const itemHeader = document.createElement('div');
+            itemHeader.className = 'item-header';
+            
+            const itemName = document.createElement('h3');
+            itemName.className = 'item-name';
+            itemName.textContent = item.name;
+            
+            const itemPrice = document.createElement('div');
+            itemPrice.className = 'item-price';
+            itemPrice.textContent = item.price;
+            
+            itemHeader.appendChild(itemName);
+            itemHeader.appendChild(itemPrice);
+            
+            const itemDescription = document.createElement('div');
+            itemDescription.className = 'item-description';
+            itemDescription.textContent = item.description;
+            
+            const addButton = document.createElement('button');
+            addButton.className = 'add-to-cart';
+            addButton.innerHTML = `<span>+</span> ${state.config.cart.buttonText}`;
+            addButton.addEventListener('click', () => {
+              addToCart(item);
+            });
+            
+            menuItem.appendChild(itemHeader);
+            menuItem.appendChild(itemDescription);
+            menuItem.appendChild(addButton);
+            
+            menuItems.appendChild(menuItem);
+          });
+          
+          categorySection.appendChild(menuItems);
+          elements.menuContainer.appendChild(categorySection);
+        });
+      }
+      
+      // Render cart items
+      function renderCart() {
+        // Update cart count
+        elements.cartCount.textContent = state.cart.reduce((total, item) => total + item.quantity, 0);
+        
+        // Render cart items
+        elements.cartItems.innerHTML = '';
+        
+        if (state.cart.length === 0) {
+          const emptyCart = document.createElement('div');
+          emptyCart.className = 'text-center';
+          emptyCart.style.padding = '1rem';
+          emptyCart.textContent = 'Your cart is empty';
+          elements.cartItems.appendChild(emptyCart);
+        } else {
+          state.cart.forEach(item => {
+            const cartItem = document.createElement('div');
+            cartItem.className = 'cart-item';
+            
+            const itemQuantity = document.createElement('div');
+            itemQuantity.className = 'item-quantity';
+            
+            if (state.config.cart.allowQuantityChange) {
+              const decreaseBtn = document.createElement('button');
+              decreaseBtn.className = 'qty-btn';
+              decreaseBtn.textContent = '-';
+              decreaseBtn.addEventListener('click', () => updateCartItem(item.id, item.quantity - 1));
+              
+              const quantity = document.createElement('span');
+              quantity.textContent = item.quantity;
+              
+              const increaseBtn = document.createElement('button');
+              increaseBtn.className = 'qty-btn';
+              increaseBtn.textContent = '+';
+              increaseBtn.addEventListener('click', () => updateCartItem(item.id, item.quantity + 1));
+              
+              itemQuantity.appendChild(decreaseBtn);
+              itemQuantity.appendChild(quantity);
+              itemQuantity.appendChild(increaseBtn);
+            } else {
+              itemQuantity.textContent = `${item.quantity}x`;
+            }
+            
+            const itemInfo = document.createElement('div');
+            itemInfo.textContent = item.name;
+            
+            const itemPrice = document.createElement('div');
+            itemPrice.textContent = `$${(parseFloat(item.price.substring(1)) * item.quantity).toFixed(2)}`;
+            
+            cartItem.appendChild(itemQuantity);
+            cartItem.appendChild(itemInfo);
+            cartItem.appendChild(itemPrice);
+            
+            elements.cartItems.appendChild(cartItem);
+          });
+        }
+        
+        // Render cart summary
+        renderCartSummary();
+      }
+      
+      // Render cart summary (subtotal, tax, etc.)
+      function renderCartSummary() {
+        elements.cartSummary.innerHTML = '';
+        
+        const subtotal = calculateSubtotal();
+        const tax = subtotal * (state.config.cart.taxPercentage / 100);
+        const deliveryFee = state.config.cart.deliveryFee;
+        const total = subtotal + tax + deliveryFee;
+        
+        const summaryItems = [
+          { label: 'Subtotal', value: subtotal },
+          { label: `Tax (${state.config.cart.taxPercentage}%)`, value: tax },
+          { label: 'Delivery Fee', value: deliveryFee },
+          { label: 'Total', value: total, isTotal: true }
+        ];
+        
+        summaryItems.forEach(item => {
+          const row = document.createElement('div');
+          row.className = `summary-row${item.isTotal ? ' total' : ''}`;
+          
+          const label = document.createElement('div');
+          label.textContent = item.label;
+          
+          const value = document.createElement('div');
+          value.textContent = `$${item.value.toFixed(2)}`;
+          
+          row.appendChild(label);
+          row.appendChild(value);
+          
+          elements.cartSummary.appendChild(row);
+        });
+        
+        // Update checkout buttons state
+        const isMinimumMet = subtotal >= state.config.cart.minimumOrderAmount;
+        elements.smsCheckout.disabled = !isMinimumMet || state.cart.length === 0;
+        elements.whatsappCheckout.disabled = !isMinimumMet || state.cart.length === 0;
+        
+        // Show error message if minimum not met
+        if (!isMinimumMet && state.cart.length > 0) {
+          elements.cartError.textContent = `Minimum order amount is $${state.config.cart.minimumOrderAmount.toFixed(2)}`;
+          elements.cartError.classList.remove('hidden');
+        } else {
+          elements.cartError.classList.add('hidden');
+        }
+        
+        // Show/hide checkout options based on config
+        elements.smsCheckout.style.display = state.config.cart.allowSmsCheckout ? 'flex' : 'none';
+        elements.whatsappCheckout.style.display = state.config.cart.allowWhatsAppCheckout ? 'flex' : 'none';
+      }
+      
+      // ========== CART FUNCTIONS ==========
+      // Add item to cart
+      function addToCart(item) {
+        const existingItem = state.cart.find(cartItem => cartItem.id === item.id);
+        
+        if (existingItem) {
+          updateCartItem(item.id, existingItem.quantity + 1);
+        } else {
+          state.cart.push({
+            id: item.id,
+            name: item.name,
