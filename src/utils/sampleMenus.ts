@@ -1,3 +1,4 @@
+
 import { RestaurantData } from "../contexts/RestaurantContext";
 
 export const indianRestaurantSample: RestaurantData = {
@@ -211,16 +212,9 @@ export const indianRestaurantSample: RestaurantData = {
     showItemImages: false,
     buttonText: 'Add to Cart',
     taxPercentage: 8.5,
-    minimumOrderAmount: 15,
-    deliveryEnabled: true,
-    deliveryFee: 3.99,
-    pickupEnabled: true,
-    paymentOptions: {
-      cashOnDelivery: true,
-      cashOnPickup: true,
-      stripe: false
-    },
     smsPhone: '+1234567890',
-    whatsappPhone: '+1234567890'
+    whatsappPhone: '+1234567890',
+    minimumOrderAmount: 15,
+    deliveryFee: 3.99
   }
 };

@@ -1,15 +1,13 @@
-
 import React, { useEffect, useState } from 'react';
 import { useRestaurant, MenuItem } from '../contexts/RestaurantContext';
 import { toast } from 'sonner';
-import { Save, Download, Copy, ExternalLink, Bug } from 'lucide-react';
+import { Save, Download, Copy, ExternalLink } from 'lucide-react';
 import { generateHTML } from '../utils/htmlGenerator';
 
 const EditorPreview: React.FC = () => {
   const { restaurant, setRestaurant, saveRestaurant } = useRestaurant();
   const [generatedHTML, setGeneratedHTML] = useState<string>('');
   const [newCategoryName, setNewCategoryName] = useState('');
-  const [showDebugInfo, setShowDebugInfo] = useState(false);
   
   useEffect(() => {
     if (restaurant) {
@@ -144,10 +142,6 @@ const EditorPreview: React.FC = () => {
     }
   };
 
-  const toggleDebugInfo = () => {
-    setShowDebugInfo(!showDebugInfo);
-  };
-
   return (
     <div>
       <div className="flex items-center justify-between mb-6">
@@ -174,24 +168,8 @@ const EditorPreview: React.FC = () => {
             <Download className="w-4 h-4" />
             Download HTML
           </button>
-          <button
-            onClick={toggleDebugInfo}
-            className="px-4 py-2 bg-yellow-500 text-white rounded-md flex items-center gap-2 hover:bg-yellow-600"
-          >
-            <Bug className="w-4 h-4" />
-            {showDebugInfo ? 'Hide Debug' : 'Debug Cart'}
-          </button>
         </div>
       </div>
-
-      {showDebugInfo && (
-        <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-md">
-          <h3 className="font-medium mb-2">Cart Settings Debug Info:</h3>
-          <pre className="text-xs bg-black text-white p-2 rounded overflow-auto">
-            {JSON.stringify(restaurant.cartSettings, null, 2)}
-          </pre>
-        </div>
-      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Editor Section */}

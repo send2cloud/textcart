@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Types
@@ -24,13 +23,6 @@ export interface RestaurantInfo {
   logo?: string;
 }
 
-// Feature flags for different functionalities
-export interface FeatureFlags {
-  paymentEnabled: boolean;
-  deliveryEnabled: boolean;
-  pickupEnabled: boolean;
-}
-
 export interface CartSettings {
   enabled: boolean;
   allowSmsCheckout: boolean;
@@ -39,12 +31,10 @@ export interface CartSettings {
   showItemImages: boolean;
   buttonText: string;
   taxPercentage: number;
-  minimumOrderAmount: number;
-  deliveryEnabled: boolean;
-  deliveryFee: number;
-  pickupEnabled: boolean;
   smsPhone: string;
   whatsappPhone: string;
+  minimumOrderAmount: number;
+  deliveryFee: number;
 }
 
 export interface RestaurantData {
@@ -60,7 +50,6 @@ export interface RestaurantData {
     accent: string;
   };
   cartSettings: CartSettings;
-  features: FeatureFlags;
 }
 
 interface RestaurantContextType {
@@ -112,17 +101,10 @@ const initialRestaurantData: RestaurantData = {
     showItemImages: false,
     buttonText: 'Add to Cart',
     taxPercentage: 8.5,
-    minimumOrderAmount: 15,
-    deliveryEnabled: true,
-    deliveryFee: 3.99,
-    pickupEnabled: true,
     smsPhone: '+1234567890',
-    whatsappPhone: '+1234567890'
-  },
-  features: {
-    paymentEnabled: false,
-    deliveryEnabled: true,
-    pickupEnabled: true
+    whatsappPhone: '+1234567890',
+    minimumOrderAmount: 15,
+    deliveryFee: 3.99
   }
 };
 
@@ -158,23 +140,7 @@ export const RestaurantProvider: React.FC<{ children: React.ReactNode }> = ({ ch
   useEffect(() => {
     const savedData = localStorage.getItem('restaurantData');
     if (savedData) {
-      try {
-        const parsedData = JSON.parse(savedData);
-        
-        // Ensure features exist in the data structure, add if missing
-        if (!parsedData.features) {
-          parsedData.features = {
-            paymentEnabled: false,
-            deliveryEnabled: parsedData.cartSettings?.deliveryEnabled || true,
-            pickupEnabled: parsedData.cartSettings?.pickupEnabled || true
-          };
-        }
-        
-        setRestaurant(parsedData);
-      } catch (error) {
-        console.error("Error parsing saved data:", error);
-        setRestaurant(initialRestaurantData);
-      }
+      setRestaurant(JSON.parse(savedData));
     } else {
       setRestaurant(initialRestaurantData);
     }
