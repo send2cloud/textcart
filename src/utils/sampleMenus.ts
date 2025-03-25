@@ -210,6 +210,11 @@ export const indianRestaurantSample: RestaurantData = {
     allowWhatsAppCheckout: true,
     allowQuantityChange: true,
     showItemImages: false,
-    buttonText: 'Add to Cart'
+    buttonText: 'Add to Cart',
+    taxPercentage: 8.5,
+    smsPhone: '+1234567890',
+    whatsappPhone: '+1234567890',
+    minimumOrderAmount: 15,
+    deliveryFee: 3.99
   }
 };

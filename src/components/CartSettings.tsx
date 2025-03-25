@@ -23,7 +23,12 @@ const CartSettings: React.FC = () => {
         allowWhatsAppCheckout: true,
         allowQuantityChange: true,
         showItemImages: false,
-        buttonText: 'Add to Cart'
+        buttonText: 'Add to Cart',
+        taxPercentage: 8.5,
+        smsPhone: restaurant.info.phone || '+1234567890',
+        whatsappPhone: restaurant.info.phone || '+1234567890',
+        minimumOrderAmount: 15,
+        deliveryFee: 3.99
       }
     });
     return <div>Initializing settings...</div>;
@@ -47,6 +52,19 @@ const CartSettings: React.FC = () => {
         [key]: value,
       },
     });
+  };
+
+  const handleNumberChange = (key: keyof typeof restaurant.cartSettings, value: string) => {
+    const numValue = parseFloat(value);
+    if (!isNaN(numValue)) {
+      setRestaurant({
+        ...restaurant,
+        cartSettings: {
+          ...restaurant.cartSettings,
+          [key]: numValue,
+        },
+      });
+    }
   };
 
   return (
@@ -85,6 +103,21 @@ const CartSettings: React.FC = () => {
               />
             </div>
 
+            {restaurant.cartSettings.allowSmsCheckout && (
+              <div className="space-y-2 ml-6">
+                <Label htmlFor="smsPhone">SMS Phone Number</Label>
+                <Input
+                  id="smsPhone"
+                  value={restaurant.cartSettings.smsPhone}
+                  onChange={(e) => handleTextChange('smsPhone', e.target.value)}
+                  placeholder="+1234567890"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Phone number to receive SMS orders
+                </p>
+              </div>
+            )}
+
             <div className="flex items-center justify-between">
               <Label htmlFor="whatsappCheckout" className="flex flex-col">
                 <span>WhatsApp Checkout</span>
@@ -98,6 +131,21 @@ const CartSettings: React.FC = () => {
                 onCheckedChange={() => handleToggleChange('allowWhatsAppCheckout')}
               />
             </div>
+
+            {restaurant.cartSettings.allowWhatsAppCheckout && (
+              <div className="space-y-2 ml-6">
+                <Label htmlFor="whatsappPhone">WhatsApp Phone Number</Label>
+                <Input
+                  id="whatsappPhone"
+                  value={restaurant.cartSettings.whatsappPhone}
+                  onChange={(e) => handleTextChange('whatsappPhone', e.target.value)}
+                  placeholder="+1234567890"
+                />
+                <p className="text-xs text-muted-foreground">
+                  Phone number to receive WhatsApp orders
+                </p>
+              </div>
+            )}
 
             <div className="flex items-center justify-between">
               <Label htmlFor="quantityChange" className="flex flex-col">
@@ -135,6 +183,51 @@ const CartSettings: React.FC = () => {
                 onChange={(e) => handleTextChange('buttonText', e.target.value)}
                 placeholder="Add to Cart"
               />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="taxPercentage">Tax Percentage (%)</Label>
+              <Input
+                id="taxPercentage"
+                type="number"
+                step="0.1"
+                min="0"
+                value={restaurant.cartSettings.taxPercentage}
+                onChange={(e) => handleNumberChange('taxPercentage', e.target.value)}
+                placeholder="8.5"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="minimumOrderAmount">Minimum Order Amount ($)</Label>
+              <Input
+                id="minimumOrderAmount"
+                type="number"
+                step="0.01"
+                min="0"
+                value={restaurant.cartSettings.minimumOrderAmount}
+                onChange={(e) => handleNumberChange('minimumOrderAmount', e.target.value)}
+                placeholder="15"
+              />
+              <p className="text-xs text-muted-foreground">
+                Set to 0 for no minimum order
+              </p>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="deliveryFee">Delivery Fee ($)</Label>
+              <Input
+                id="deliveryFee"
+                type="number"
+                step="0.01"
+                min="0"
+                value={restaurant.cartSettings.deliveryFee}
+                onChange={(e) => handleNumberChange('deliveryFee', e.target.value)}
+                placeholder="3.99"
+              />
+              <p className="text-xs text-muted-foreground">
+                Set to 0 for free delivery
+              </p>
             </div>
           </>
         )}

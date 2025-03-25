@@ -1,4 +1,3 @@
-
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Types
@@ -31,6 +30,11 @@ export interface CartSettings {
   allowQuantityChange: boolean;
   showItemImages: boolean;
   buttonText: string;
+  taxPercentage: number;
+  smsPhone: string;
+  whatsappPhone: string;
+  minimumOrderAmount: number;
+  deliveryFee: number;
 }
 
 export interface RestaurantData {
@@ -96,6 +100,11 @@ const initialRestaurantData: RestaurantData = {
     allowQuantityChange: true,
     showItemImages: false,
     buttonText: 'Add to Cart',
+    taxPercentage: 8.5,
+    smsPhone: '+1234567890',
+    whatsappPhone: '+1234567890',
+    minimumOrderAmount: 15,
+    deliveryFee: 3.99
   }
 };
 
