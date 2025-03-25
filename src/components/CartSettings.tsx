@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { Switch } from './ui/switch';
@@ -10,7 +9,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 
 const CartSettings: React.FC = () => {
   const { restaurant, setRestaurant } = useRestaurant();
-  const [buttonPreview, setButtonPreview] = useState(restaurant?.cartSettings.buttonText || 'Add to Cart');
+  const [buttonPreview, setButtonPreview] = useState(restaurant?.cartSettings?.buttonText || 'Add to Cart');
 
   if (!restaurant) {
     return <div>Loading...</div>;
@@ -28,8 +27,6 @@ const CartSettings: React.FC = () => {
         showItemImages: false,
         buttonText: 'Add to Cart',
         taxPercentage: 8.5,
-        smsPhone: restaurant.info.phone || '+1234567890',
-        whatsappPhone: restaurant.info.phone || '+1234567890',
         minimumOrderAmount: 15,
         deliveryEnabled: true,
         deliveryFee: 3.99,
@@ -38,10 +35,28 @@ const CartSettings: React.FC = () => {
           cashOnDelivery: true,
           cashOnPickup: true,
           stripe: false
-        }
+        },
+        smsPhone: restaurant.info.phone || '+1234567890',
+        whatsappPhone: restaurant.info.phone || '+1234567890'
       }
     });
     return <div>Initializing settings...</div>;
+  }
+
+  // Ensure payment options exists to prevent errors
+  if (!restaurant.cartSettings.paymentOptions) {
+    setRestaurant({
+      ...restaurant,
+      cartSettings: {
+        ...restaurant.cartSettings,
+        paymentOptions: {
+          cashOnDelivery: true,
+          cashOnPickup: true,
+          stripe: false
+        }
+      }
+    });
+    return <div>Initializing payment options...</div>;
   }
 
   const handleToggleChange = (key: keyof typeof restaurant.cartSettings) => {
@@ -105,6 +120,10 @@ const CartSettings: React.FC = () => {
         },
       });
     }
+  };
+
+  const getPaymentOption = (option: keyof typeof restaurant.cartSettings.paymentOptions): boolean => {
+    return restaurant.cartSettings.paymentOptions?.[option] || false;
   };
 
   return (
@@ -312,7 +331,7 @@ const CartSettings: React.FC = () => {
                       </Label>
                       <Switch
                         id="cashOnDelivery"
-                        checked={restaurant.cartSettings.paymentOptions.cashOnDelivery}
+                        checked={getPaymentOption('cashOnDelivery')}
                         onCheckedChange={() => handlePaymentOptionToggle('cashOnDelivery')}
                       />
                     </div>
@@ -333,57 +352,12 @@ const CartSettings: React.FC = () => {
                       </Label>
                       <Switch
                         id="cashOnPickup"
-                        checked={restaurant.cartSettings.paymentOptions.cashOnPickup}
+                        checked={getPaymentOption('cashOnPickup')}
                         onCheckedChange={() => handlePaymentOptionToggle('cashOnPickup')}
                       />
                     </div>
                   </Card>
                 )}
-
-                <Card className="p-4">
-                  <div className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <Label htmlFor="stripe" className="flex flex-col">
-                        <span className="flex items-center gap-1">
-                          <CreditCard className="h-4 w-4" />
-                          Stripe
-                        </span>
-                        <span className="text-sm text-muted-foreground">
-                          Accept online payments
-                        </span>
-                      </Label>
-                      <Switch
-                        id="stripe"
-                        checked={restaurant.cartSettings.paymentOptions.stripe}
-                        onCheckedChange={() => handlePaymentOptionToggle('stripe')}
-                      />
-                    </div>
-
-                    {restaurant.cartSettings.paymentOptions.stripe && (
-                      <div className="pt-2">
-                        <Label htmlFor="stripeKey" className="text-xs">Stripe Publishable Key</Label>
-                        <Input
-                          id="stripeKey"
-                          value={restaurant.cartSettings.paymentOptions.stripeKey || ''}
-                          onChange={(e) => {
-                            setRestaurant({
-                              ...restaurant,
-                              cartSettings: {
-                                ...restaurant.cartSettings,
-                                paymentOptions: {
-                                  ...restaurant.cartSettings.paymentOptions,
-                                  stripeKey: e.target.value
-                                }
-                              }
-                            });
-                          }}
-                          placeholder="pk_test_..."
-                          className="text-xs"
-                        />
-                      </div>
-                    )}
-                  </div>
-                </Card>
               </div>
             </TabsContent>
 
