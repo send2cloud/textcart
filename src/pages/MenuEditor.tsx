@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { useRestaurant } from '../contexts/RestaurantContext';
+import { useRestaurant, MenuItem } from '../contexts/RestaurantContext';
 import { toast } from 'sonner';
 import { Plus, Trash, GripVertical, Save } from 'lucide-react';
 
