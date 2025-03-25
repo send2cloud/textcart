@@ -6,23 +6,33 @@ import { generateHTML } from '../utils/htmlGenerator';
 import PreviewPanel from '../components/editor/PreviewPanel';
 import MenuEditor from '../components/editor/MenuEditor';
 import ActionButtons from '../components/editor/ActionButtons';
+import VisualSettingsPanel from '../components/editor/VisualSettingsPanel';
+import { 
+  VisualSettings, 
+  defaultVisualSettings 
+} from '../services/VisualSettingsService';
 
+// Component follows the Single Responsibility Principle
 const EditorPreview: React.FC = () => {
   const { restaurant, setRestaurant, saveRestaurant } = useRestaurant();
   const [generatedHTML, setGeneratedHTML] = useState<string>('');
+  const [showSettings, setShowSettings] = useState<boolean>(false);
+  const [visualSettings, setVisualSettings] = useState<VisualSettings>(defaultVisualSettings);
   
+  // Open/Closed principle - easy to extend with new settings
   useEffect(() => {
     if (restaurant) {
       // Generate HTML based on template and restaurant data with Alpine.js
-      const html = generateHTML(restaurant);
+      const html = generateHTML(restaurant, visualSettings);
       setGeneratedHTML(html);
     }
-  }, [restaurant]);
+  }, [restaurant, visualSettings]);
   
   if (!restaurant) {
     return <div>Loading...</div>;
   }
 
+  // Actions extraction follows Interface Segregation Principle
   const handleSaveAll = () => {
     saveRestaurant();
     toast.success('Menu saved successfully');
@@ -52,6 +62,18 @@ const EditorPreview: React.FC = () => {
     });
   };
 
+  const toggleSettings = () => {
+    setShowSettings(!showSettings);
+  };
+
+  // Follows Dependency Inversion Principle - depends on abstractions not concretions
+  const updateVisualSetting = <K extends keyof VisualSettings>(key: K, value: VisualSettings[K]) => {
+    setVisualSettings(prev => ({
+      ...prev,
+      [key]: value
+    }));
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between mb-4">
@@ -60,8 +82,17 @@ const EditorPreview: React.FC = () => {
           onSave={handleSaveAll}
           onCopyHTML={handleCopyHTML}
           onDownload={handleDownload}
+          onToggleSettings={toggleSettings}
+          showSettings={showSettings}
         />
       </div>
+
+      {showSettings && (
+        <VisualSettingsPanel 
+          settings={visualSettings}
+          onUpdateSetting={updateVisualSetting}
+        />
+      )}
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* Menu Editor Section */}
