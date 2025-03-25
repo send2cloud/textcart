@@ -1,7 +1,8 @@
+
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRestaurant } from '../contexts/RestaurantContext';
-import { generateHTML } from '../utils/templateGenerator';
+import { generateHTML } from '../utils/htmlGenerator';
 import { applyScrollBehavior } from '../utils/scrollHandler';
 
 const Preview: React.FC = () => {
