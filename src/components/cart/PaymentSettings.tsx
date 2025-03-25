@@ -79,6 +79,25 @@ const PaymentSettings: React.FC = () => {
             </div>
           </Card>
         )}
+
+        <Card className="p-4">
+          <div className="flex items-center justify-between">
+            <Label htmlFor="stripe" className="flex flex-col">
+              <span className="flex items-center gap-1">
+                <CreditCard className="h-4 w-4" />
+                Credit Card
+              </span>
+              <span className="text-sm text-muted-foreground">
+                Pay online with credit card
+              </span>
+            </Label>
+            <Switch
+              id="stripe"
+              checked={getPaymentOption('stripe')}
+              onCheckedChange={() => handlePaymentOptionToggle('stripe')}
+            />
+          </div>
+        </Card>
       </div>
     </>
   );
