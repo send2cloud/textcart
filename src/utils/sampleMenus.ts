@@ -1,7 +1,8 @@
 
-import { Restaurant } from "../contexts/RestaurantContext";
+import { RestaurantData } from "../contexts/RestaurantContext";
 
-export const indianRestaurantSample: Restaurant = {
+export const indianRestaurantSample: RestaurantData = {
+  id: "indian-restaurant",
   info: {
     name: "Taj Mahal",
     phone: "+1234567890",
@@ -194,5 +195,13 @@ export const indianRestaurantSample: Restaurant = {
         }
       ]
     }
-  ]
+  ],
+  templateType: 'elegant',
+  themeColors: {
+    primary: '#C13438',
+    secondary: '#FFC107',
+    background: '#FFF8E1',
+    text: '#333333',
+    accent: '#4CAF50'
+  }
 };
