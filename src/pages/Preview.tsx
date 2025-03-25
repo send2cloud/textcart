@@ -1,8 +1,7 @@
-
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { useRestaurant } from '../contexts/RestaurantContext';
-import { generateHTML } from '../utils/htmlGenerator';
+import { generateHTML } from '../utils/templateGenerator';
 import { applyScrollBehavior } from '../utils/scrollHandler';
 
 const Preview: React.FC = () => {
@@ -14,20 +13,7 @@ const Preview: React.FC = () => {
     if (restaurant && templates.length > 0) {
       const activeTemplate = templates.find(t => t.id === activeTemplateId);
       if (activeTemplate) {
-        // We need to use the default visual settings here
-        const html = generateHTML(restaurant, {
-          buttonRadius: '8px',
-          hoverEffects: true,
-          shadows: true,
-          toastPosition: 'top-right',
-          fontFamily: 'Montserrat, sans-serif',
-          primaryColor: '#8E24AA',
-          secondaryColor: '#E1BEE7',
-          accentColor: '#43A047',
-          backgroundColor: '#FFF3E0',
-          textColor: '#333333',
-          darkMode: false
-        });
+        const html = generateHTML(restaurant, activeTemplate);
         setGeneratedHTML(html);
       }
     }

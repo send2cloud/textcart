@@ -10,54 +10,38 @@ export const applyScrollBehavior = (doc: Document) => {
   const handleScroll = () => {
     const scrollTop = doc.documentElement.scrollTop || doc.body.scrollTop;
     const header = doc.querySelector('header');
-    const nav = doc.querySelector('.menu-nav');
+    const nav = doc.querySelector('nav');
     
     if (header && nav) {
-      // Cast to HTMLElement to access style properties
-      const headerEl = header as HTMLElement;
-      const navEl = nav as HTMLElement;
-      
       // Handle header visibility
       if (scrollTop > 50 && scrollTop > prevScrollTop) {
-        // Scrolling down - hide header, make nav sticky at top
-        headerEl.style.transform = 'translateY(-100%)';
-        headerEl.style.transition = 'transform 0.3s ease-in-out';
+        // Scrolling down
+        header.style.transform = 'translateY(-100%)';
+        header.style.transition = 'transform 0.3s ease-in-out';
         
-        // Make nav sticky at top of viewport
-        navEl.style.position = 'fixed';
-        navEl.style.top = '0';
-        navEl.style.left = '0';
-        navEl.style.right = '0';
-        navEl.style.zIndex = '1000';
-        navEl.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
-      } else if (scrollTop < prevScrollTop) {
-        // Scrolling up - show header again
-        headerEl.style.transform = 'translateY(0)';
-        headerEl.style.transition = 'transform 0.3s ease-in-out';
+        // Make nav sticky
+        nav.style.position = 'fixed';
+        nav.style.top = '0';
+        nav.style.left = '0';
+        nav.style.right = '0';
+        nav.style.width = '100%';
+        nav.style.zIndex = '1000';
+        nav.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+      } else if (scrollTop <= 50 || scrollTop < prevScrollTop) {
+        // Scrolling up or at the top
+        header.style.transform = 'translateY(0)';
         
-        // Adjust nav position below the header
-        navEl.style.position = 'fixed';
-        navEl.style.top = headerEl.offsetHeight + 'px';
-        navEl.style.left = '0';
-        navEl.style.right = '0';
-        navEl.style.zIndex = '990';
-      }
-      
-      // If at the top, reset everything
-      if (scrollTop <= 10) {
-        headerEl.style.transform = 'translateY(0)';
-        navEl.style.position = 'static';
-        navEl.style.boxShadow = 'none';
+        // If at the top, make nav static again
+        if (scrollTop <= 50) {
+          nav.style.position = 'static';
+          nav.style.boxShadow = 'none';
+        }
       }
       
       prevScrollTop = scrollTop;
     }
   };
   
-  // Initial call to set up the correct state based on current scroll position
-  handleScroll();
-  
-  // Add event listener for scroll
   doc.addEventListener('scroll', handleScroll);
   
   // Return cleanup function

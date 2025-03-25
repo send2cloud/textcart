@@ -1,7 +1,6 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { Smartphone, Tablet, Monitor, ExternalLink } from 'lucide-react';
-import { applyScrollBehavior } from '../../utils/scrollHandler';
 
 interface PreviewPanelProps {
   generatedHTML: string;
@@ -27,8 +26,29 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ generatedHTML }) => {
       const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
       if (!iframeDoc) return;
       
-      // Apply our scroll handler to the iframe document
-      applyScrollBehavior(iframeDoc);
+      // Add scroll event listener to the iframe
+      iframeDoc.addEventListener('scroll', () => {
+        const header = iframeDoc.querySelector('header');
+        const nav = iframeDoc.querySelector('nav');
+        
+        if (header && nav) {
+          const scrollTop = iframeDoc.documentElement.scrollTop || iframeDoc.body.scrollTop;
+          
+          if (scrollTop > 50) {
+            header.style.transform = 'translateY(-100%)';
+            nav.style.position = 'fixed';
+            nav.style.top = '0';
+            nav.style.left = '0';
+            nav.style.right = '0';
+            nav.style.zIndex = '1000';
+            nav.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+          } else {
+            header.style.transform = 'translateY(0)';
+            nav.style.position = 'static';
+            nav.style.boxShadow = 'none';
+          }
+        }
+      });
     };
     
     iframe.addEventListener('load', handleIframeLoad);
