@@ -1,6 +1,6 @@
 
 import React, { useEffect, useState } from 'react';
-import { useRestaurant } from '../contexts/RestaurantContext';
+import { useRestaurant, MenuItem } from '../contexts/RestaurantContext';
 import { toast } from 'sonner';
 import { Save, Download, Copy } from 'lucide-react';
 import { generateHTML } from '../utils/htmlGenerator';
@@ -88,7 +88,8 @@ const EditorPreview: React.FC = () => {
     });
   };
 
-  const handleUpdateMenuItem = (categoryId: string, itemId: string, field: keyof typeof restaurant.categories[0].items[0], value: string) => {
+  // Fix the field parameter type by using MenuItem type directly
+  const handleUpdateMenuItem = (categoryId: string, itemId: string, field: keyof MenuItem, value: string) => {
     setRestaurant({
       ...restaurant,
       categories: restaurant.categories.map(cat => {
