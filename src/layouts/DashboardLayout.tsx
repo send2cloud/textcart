@@ -4,12 +4,11 @@ import { Outlet, Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
   PanelLeft, 
-  Menu as MenuIcon, 
-  Eye, 
   Settings as SettingsIcon,
   LogOut,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  ExternalLink
 } from 'lucide-react';
 
 const DashboardLayout: React.FC = () => {
@@ -19,9 +18,7 @@ const DashboardLayout: React.FC = () => {
   const navItems = [
     { path: '/', label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
     { path: '/template-editor', label: 'Template Editor', icon: <PanelLeft className="w-5 h-5" /> },
-    { path: '/menu-editor', label: 'Menu Editor', icon: <MenuIcon className="w-5 h-5" /> },
-    { path: '/preview', label: 'Preview', icon: <Eye className="w-5 h-5" /> },
-    { path: '/editor-preview', label: 'Editor + Preview', icon: <MenuIcon className="w-5 h-5" /> },
+    { path: '/editor-preview', label: 'Editor + Preview', icon: <ExternalLink className="w-5 h-5" /> },
     { path: '/settings', label: 'Settings', icon: <SettingsIcon className="w-5 h-5" /> },
   ];
 

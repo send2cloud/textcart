@@ -5,8 +5,6 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import TemplateEditor from './pages/TemplateEditor';
-import MenuEditor from './pages/MenuEditor';
-import Preview from './pages/Preview';
 import EditorPreview from './pages/EditorPreview';
 import Settings from './pages/Settings';
 import DashboardLayout from './layouts/DashboardLayout';
@@ -24,8 +22,6 @@ function App() {
           <Route path="/" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="template-editor" element={<TemplateEditor />} />
-            <Route path="menu-editor" element={<MenuEditor />} />
-            <Route path="preview" element={<Preview />} />
             <Route path="editor-preview" element={<EditorPreview />} />
             <Route path="settings" element={<Settings />} />
           </Route>

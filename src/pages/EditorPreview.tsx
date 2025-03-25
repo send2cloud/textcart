@@ -1,8 +1,7 @@
-
 import React, { useEffect, useState } from 'react';
 import { useRestaurant, MenuItem } from '../contexts/RestaurantContext';
 import { toast } from 'sonner';
-import { Save, Download, Copy } from 'lucide-react';
+import { Save, Download, Copy, ExternalLink } from 'lucide-react';
 import { generateHTML } from '../utils/htmlGenerator';
 
 const EditorPreview: React.FC = () => {
@@ -88,7 +87,6 @@ const EditorPreview: React.FC = () => {
     });
   };
 
-  // Fix the field parameter type by using MenuItem type directly
   const handleUpdateMenuItem = (categoryId: string, itemId: string, field: keyof MenuItem, value: string) => {
     setRestaurant({
       ...restaurant,
@@ -132,6 +130,16 @@ const EditorPreview: React.FC = () => {
   const handleCopyHTML = () => {
     navigator.clipboard.writeText(generatedHTML);
     toast.success('HTML copied to clipboard');
+  };
+
+  const handleOpenInNewWindow = () => {
+    const newWindow = window.open('', '_blank');
+    if (newWindow) {
+      newWindow.document.write(generatedHTML);
+      newWindow.document.close();
+    } else {
+      toast.error('Could not open new window. Please check your popup blocker settings.');
+    }
   };
 
   return (
@@ -266,12 +274,22 @@ const EditorPreview: React.FC = () => {
 
         {/* Preview Section */}
         <div className="bg-card shadow rounded-lg p-6 h-[calc(100vh-200px)] overflow-hidden">
-          <div className="border rounded-md h-full overflow-hidden">
+          <div className="flex justify-between items-center mb-3">
+            <h3 className="font-medium">Live Preview</h3>
+            <button
+              onClick={handleOpenInNewWindow}
+              className="px-3 py-1 bg-secondary text-secondary-foreground rounded-md flex items-center gap-2 hover:bg-secondary/90 text-sm"
+            >
+              <ExternalLink className="w-3 h-3" />
+              Open in New Window
+            </button>
+          </div>
+          <div className="border rounded-md h-[calc(100%-40px)] overflow-hidden">
             <iframe
               title="Live Preview"
               srcDoc={generatedHTML}
               className="w-full h-full border-0"
-              sandbox="allow-same-origin"
+              sandbox="allow-same-origin allow-scripts"
             />
           </div>
         </div>
