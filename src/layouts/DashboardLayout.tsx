@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 import { Outlet, Link, useLocation } from 'react-router-dom';
 import { 
   LayoutDashboard, 
@@ -7,26 +7,40 @@ import {
   Menu as MenuIcon, 
   Eye, 
   Settings as SettingsIcon,
-  LogOut
+  LogOut,
+  ChevronLeft,
+  ChevronRight
 } from 'lucide-react';
 
 const DashboardLayout: React.FC = () => {
   const location = useLocation();
+  const [collapsed, setCollapsed] = useState(false);
   
   const navItems = [
     { path: '/', label: 'Dashboard', icon: <LayoutDashboard className="w-5 h-5" /> },
     { path: '/template-editor', label: 'Template Editor', icon: <PanelLeft className="w-5 h-5" /> },
     { path: '/menu-editor', label: 'Menu Editor', icon: <MenuIcon className="w-5 h-5" /> },
     { path: '/preview', label: 'Preview', icon: <Eye className="w-5 h-5" /> },
+    { path: '/editor-preview', label: 'Editor + Preview', icon: <MenuIcon className="w-5 h-5" /> },
     { path: '/settings', label: 'Settings', icon: <SettingsIcon className="w-5 h-5" /> },
   ];
+
+  const toggleSidebar = () => {
+    setCollapsed(!collapsed);
+  };
 
   return (
     <div className="flex h-screen bg-gray-50">
       {/* Sidebar */}
-      <div className="w-64 bg-sidebar text-sidebar-foreground hidden md:block">
-        <div className="p-4 border-b border-sidebar-border">
-          <h1 className="text-xl font-bold">Menu Creator</h1>
+      <div className={`${collapsed ? 'w-16' : 'w-64'} bg-sidebar text-sidebar-foreground hidden md:block transition-all duration-300`}>
+        <div className="p-4 border-b border-sidebar-border flex items-center justify-between">
+          {!collapsed && <h1 className="text-xl font-bold">Menu Creator</h1>}
+          <button 
+            onClick={toggleSidebar} 
+            className="text-sidebar-foreground p-1 rounded-md hover:bg-sidebar-accent"
+          >
+            {collapsed ? <ChevronRight className="w-5 h-5" /> : <ChevronLeft className="w-5 h-5" />}
+          </button>
         </div>
         <nav className="p-4 space-y-2">
           {navItems.map((item) => (
@@ -40,7 +54,7 @@ const DashboardLayout: React.FC = () => {
               }`}
             >
               {item.icon}
-              <span className="ml-3">{item.label}</span>
+              {!collapsed && <span className="ml-3">{item.label}</span>}
             </Link>
           ))}
           <div className="pt-6 mt-6 border-t border-sidebar-border">
@@ -49,7 +63,7 @@ const DashboardLayout: React.FC = () => {
               className="flex items-center p-3 rounded-md transition-colors hover:bg-sidebar-accent"
             >
               <LogOut className="w-5 h-5" />
-              <span className="ml-3">Logout</span>
+              {!collapsed && <span className="ml-3">Logout</span>}
             </Link>
           </div>
         </nav>
