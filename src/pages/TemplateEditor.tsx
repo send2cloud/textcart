@@ -3,7 +3,6 @@ import React from 'react';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { toast } from 'sonner';
 import { Check, Palette } from 'lucide-react';
-import CartSettings from '../components/CartSettings';
 
 const TemplateEditor: React.FC = () => {
   const { templates, activeTemplateId, setActiveTemplateId, restaurant, setRestaurant, saveRestaurant } = useRestaurant();
@@ -177,8 +176,6 @@ const TemplateEditor: React.FC = () => {
               </div>
             </div>
           </div>
-          
-          <CartSettings />
         </div>
       </div>
     </div>

@@ -2,7 +2,8 @@
 import React, { useState } from 'react';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { toast } from 'sonner';
-import { Save, Upload } from 'lucide-react';
+import { Save, Upload, ShoppingCart } from 'lucide-react';
+import CartSettings from '../components/CartSettings';
 
 const Settings: React.FC = () => {
   const { restaurant, setRestaurant, saveRestaurant } = useRestaurant();
@@ -73,7 +74,7 @@ const Settings: React.FC = () => {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold">Settings</h1>
+        <h1 className="text-2xl font-bold">Restaurant Settings</h1>
         <button
           onClick={handleSave}
           className="px-4 py-2 bg-primary text-primary-foreground rounded-md flex items-center gap-2 hover:bg-primary/90"
@@ -159,6 +160,14 @@ const Settings: React.FC = () => {
             </div>
           </div>
         </div>
+      </div>
+
+      <div className="bg-card shadow rounded-lg p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <ShoppingCart className="w-5 h-5" />
+          <h2 className="text-lg font-medium">Shopping Cart Settings</h2>
+        </div>
+        <CartSettings />
       </div>
     </div>
   );
