@@ -2,21 +2,34 @@
 import React, { useEffect, useState } from 'react';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { toast } from 'sonner';
-import { Download, Smartphone, Tablet, Monitor, Copy } from 'lucide-react';
+import { Download, Smartphone, Tablet, Monitor, Copy, Eye } from 'lucide-react';
 import { generateHTML } from '../utils/htmlGenerator';
 
 const Preview: React.FC = () => {
   const { restaurant } = useRestaurant();
   const [viewMode, setViewMode] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
   const [generatedHTML, setGeneratedHTML] = useState<string>('');
+  const [previewType, setPreviewType] = useState<'generated' | 'template'>('generated');
+  const [selectedTemplate, setSelectedTemplate] = useState<string>('mexican');
   
   useEffect(() => {
-    if (restaurant) {
+    if (restaurant && previewType === 'generated') {
       // Generate HTML based on template and restaurant data
       const html = generateHTML(restaurant);
       setGeneratedHTML(html);
+    } else if (previewType === 'template') {
+      // Load the selected template HTML
+      fetch(`/restaurant/${selectedTemplate}.html`)
+        .then(response => response.text())
+        .then(html => {
+          setGeneratedHTML(html);
+        })
+        .catch(error => {
+          console.error('Error loading template:', error);
+          toast.error('Failed to load template');
+        });
     }
-  }, [restaurant]);
+  }, [restaurant, previewType, selectedTemplate]);
   
   const handleDownload = () => {
     const element = document.createElement('a');
@@ -42,8 +55,18 @@ const Preview: React.FC = () => {
       case 'desktop': return 'w-full max-w-[1200px]';
     }
   };
+
+  const availableTemplates = [
+    { id: 'mexican', name: 'Mexican Restaurant' },
+    { id: 'japanese', name: 'Japanese Restaurant' },
+    { id: 'thai', name: 'Thai Restaurant' },
+    { id: 'italian', name: 'Italian Restaurant' },
+    { id: 'chinese', name: 'Chinese Restaurant' },
+    { id: 'burger', name: 'Burger Restaurant' },
+    { id: 'indian', name: 'Indian Restaurant' }
+  ];
   
-  if (!restaurant) {
+  if (!restaurant && previewType === 'generated') {
     return <div>Loading...</div>;
   }
 
@@ -66,6 +89,40 @@ const Preview: React.FC = () => {
             <Download className="w-4 h-4" />
             Download HTML
           </button>
+        </div>
+      </div>
+
+      <div className="mb-4">
+        <div className="flex gap-4 items-center">
+          <div className="flex items-center space-x-2">
+            <button
+              onClick={() => setPreviewType('generated')} 
+              className={`px-4 py-2 rounded-md ${previewType === 'generated' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}
+            >
+              Generated HTML
+            </button>
+            <button
+              onClick={() => setPreviewType('template')}
+              className={`px-4 py-2 rounded-md flex items-center gap-2 ${previewType === 'template' ? 'bg-primary text-primary-foreground' : 'bg-secondary text-secondary-foreground'}`}
+            >
+              <Eye className="w-4 h-4" />
+              View Templates
+            </button>
+          </div>
+          
+          {previewType === 'template' && (
+            <select 
+              value={selectedTemplate}
+              onChange={(e) => setSelectedTemplate(e.target.value)}
+              className="border rounded-md px-3 py-2"
+            >
+              {availableTemplates.map(template => (
+                <option key={template.id} value={template.id}>
+                  {template.name}
+                </option>
+              ))}
+            </select>
+          )}
         </div>
       </div>
 
