@@ -1,10 +1,9 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { Switch } from './ui/switch';
 import { Label } from './ui/label';
-import { Input } from './ui/input';
-import { ShoppingCart, Phone } from 'lucide-react';
+import { ShoppingCart } from 'lucide-react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from './ui/tabs';
 import BasicSettings from './cart/BasicSettings';
 import DeliveryPickupSettings from './cart/DeliveryPickupSettings';
@@ -34,32 +33,11 @@ const CartSettings: React.FC = () => {
         deliveryEnabled: true,
         deliveryFee: 3.99,
         pickupEnabled: true,
-        paymentOptions: {
-          cashOnDelivery: true,
-          cashOnPickup: true,
-          stripe: false
-        },
         smsPhone: restaurant.info.phone || '+1234567890',
         whatsappPhone: restaurant.info.phone || '+1234567890'
       }
     });
     return <div>Initializing settings...</div>;
-  }
-
-  // Ensure payment options exists to prevent errors
-  if (!restaurant.cartSettings.paymentOptions) {
-    setRestaurant({
-      ...restaurant,
-      cartSettings: {
-        ...restaurant.cartSettings,
-        paymentOptions: {
-          cashOnDelivery: true,
-          cashOnPickup: true,
-          stripe: false
-        }
-      }
-    });
-    return <div>Initializing payment options...</div>;
   }
 
   const handleToggleChange = (key: keyof typeof restaurant.cartSettings) => {

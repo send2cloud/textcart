@@ -2,7 +2,6 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Types
 type TemplateType = 'basic' | 'premium' | 'modern' | 'elegant';
-type PaymentMethod = 'cash_on_delivery' | 'cash_on_pickup' | 'stripe';
 
 export interface MenuCategory {
   id: string;
@@ -36,12 +35,6 @@ export interface CartSettings {
   deliveryEnabled: boolean;
   deliveryFee: number;
   pickupEnabled: boolean;
-  paymentOptions: {
-    cashOnDelivery: boolean;
-    cashOnPickup: boolean;
-    stripe: boolean;
-    stripeKey?: string;
-  };
   smsPhone: string;
   whatsappPhone: string;
 }
@@ -114,11 +107,6 @@ const initialRestaurantData: RestaurantData = {
     deliveryEnabled: true,
     deliveryFee: 3.99,
     pickupEnabled: true,
-    paymentOptions: {
-      cashOnDelivery: true,
-      cashOnPickup: true,
-      stripe: false
-    },
     smsPhone: '+1234567890',
     whatsappPhone: '+1234567890'
   }
