@@ -1,14 +1,14 @@
 
 import React from 'react';
 import { Plus, Trash, GripVertical } from 'lucide-react';
-import { MenuCategory } from '../../contexts/RestaurantContext';
+import { MenuCategory, MenuItem } from '../../contexts/RestaurantContext';
 import MenuItem from './MenuItem';
 
 interface CategorySectionProps {
   category: MenuCategory;
   onAddMenuItem: (categoryId: string) => void;
   onDeleteCategory: (categoryId: string) => void;
-  onUpdateMenuItem: (categoryId: string, itemId: string, field: keyof typeof category.items[0], value: string) => void;
+  onUpdateMenuItem: (categoryId: string, itemId: string, field: keyof MenuItem, value: string) => void;
   onDeleteMenuItem: (categoryId: string, itemId: string) => void;
 }
 

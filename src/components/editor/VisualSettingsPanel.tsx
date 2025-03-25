@@ -1,22 +1,13 @@
 
 import React from 'react';
-import { 
-  VisualSettings, 
-  fontOptions,
-  buttonRadiusOptions,
-  toastPositionOptions
-} from '../../services/VisualSettingsService';
+import { VisualSettings } from '../../services/VisualSettingsService';
 
 interface VisualSettingsPanelProps {
   settings: VisualSettings;
   onUpdateSetting: <K extends keyof VisualSettings>(key: K, value: VisualSettings[K]) => void;
 }
 
-// Component follows Single Responsibility Principle - only handles visual settings UI
-const VisualSettingsPanel: React.FC<VisualSettingsPanelProps> = ({ 
-  settings, 
-  onUpdateSetting 
-}) => {
+const VisualSettingsPanel: React.FC<VisualSettingsPanelProps> = ({ settings, onUpdateSetting }) => {
   return (
     <div className="bg-card shadow rounded-lg p-6 mb-4">
       <h2 className="text-lg font-medium mb-4">Visual Settings</h2>
@@ -28,11 +19,11 @@ const VisualSettingsPanel: React.FC<VisualSettingsPanelProps> = ({
             onChange={(e) => onUpdateSetting('buttonRadius', e.target.value)}
             className="w-full p-2 border rounded-md"
           >
-            {buttonRadiusOptions.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
+            <option value="0">Square (0px)</option>
+            <option value="4px">Slight Round (4px)</option>
+            <option value="8px">Round (8px)</option>
+            <option value="16px">Very Round (16px)</option>
+            <option value="9999px">Pill</option>
           </select>
         </div>
         
@@ -91,11 +82,11 @@ const VisualSettingsPanel: React.FC<VisualSettingsPanelProps> = ({
             onChange={(e) => onUpdateSetting('toastPosition', e.target.value as any)}
             className="w-full p-2 border rounded-md"
           >
-            {toastPositionOptions.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
+            <option value="top-right">Top Right</option>
+            <option value="top-left">Top Left</option>
+            <option value="bottom-right">Bottom Right</option>
+            <option value="bottom-left">Bottom Left</option>
+            <option value="bottom-center">Bottom Center</option>
           </select>
         </div>
         
@@ -106,11 +97,12 @@ const VisualSettingsPanel: React.FC<VisualSettingsPanelProps> = ({
             onChange={(e) => onUpdateSetting('fontFamily', e.target.value)}
             className="w-full p-2 border rounded-md"
           >
-            {fontOptions.map(option => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
+            <option value="Montserrat, sans-serif">Montserrat</option>
+            <option value="'Playfair Display', serif">Playfair Display</option>
+            <option value="'Roboto', sans-serif">Roboto</option>
+            <option value="'Open Sans', sans-serif">Open Sans</option>
+            <option value="'Lato', sans-serif">Lato</option>
+            <option value="'Poppins', sans-serif">Poppins</option>
           </select>
         </div>
       </div>
