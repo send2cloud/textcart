@@ -22,7 +22,7 @@ const EditorPreview: React.FC = () => {
   // Open/Closed principle - easy to extend with new settings
   useEffect(() => {
     if (restaurant) {
-      // Generate HTML based on template and restaurant data with Alpine.js
+      // Generate HTML based on restaurant data with visual settings
       const html = generateHTML(restaurant, visualSettings);
       setGeneratedHTML(html);
     }

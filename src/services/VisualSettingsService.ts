@@ -6,6 +6,12 @@ export interface VisualSettings {
   shadows: boolean;
   toastPosition: ToastPosition;
   fontFamily: string;
+  primaryColor: string;
+  secondaryColor: string;
+  accentColor: string;
+  backgroundColor: string;
+  textColor: string;
+  darkMode: boolean;
 }
 
 export type ToastPosition = 'top-right' | 'top-left' | 'bottom-right' | 'bottom-left' | 'bottom-center';
@@ -16,7 +22,13 @@ export const defaultVisualSettings: VisualSettings = {
   hoverEffects: true,
   shadows: true,
   toastPosition: 'top-right',
-  fontFamily: 'Montserrat, sans-serif'
+  fontFamily: 'Montserrat, sans-serif',
+  primaryColor: '#8E24AA',
+  secondaryColor: '#E1BEE7',
+  accentColor: '#43A047',
+  backgroundColor: '#FFF3E0',
+  textColor: '#333333',
+  darkMode: false
 };
 
 // Font options for select dropdown

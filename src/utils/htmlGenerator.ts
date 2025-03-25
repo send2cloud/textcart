@@ -1,37 +1,28 @@
 
-import { Restaurant, MenuCategory, CartSettings } from '../contexts/RestaurantContext';
-import { VisualSettings } from '../services/VisualSettingsService';
+import { RestaurantData, MenuCategory, CartSettings } from '../contexts/RestaurantContext';
+import { VisualSettings, getToastPositionStyles } from '../services/VisualSettingsService';
 
-export const generateHTML = (restaurant: Restaurant, settings: VisualSettings = {
-  primaryColor: '#FF5722',
-  secondaryColor: '#2E7D32',
-  accentColor: '#FFC107',
-  fontFamily: 'Roboto, sans-serif',
-  fontSize: 'medium',
-  borderRadius: 'medium',
-  boxShadow: 'medium',
-  spacing: 'medium',
-  darkMode: false,
+export const generateHTML = (restaurant: RestaurantData, settings: VisualSettings = {
+  buttonRadius: '8px',
   hoverEffects: true,
-  animations: true,
+  shadows: true,
+  toastPosition: 'top-right',
+  fontFamily: 'Montserrat, sans-serif',
+  primaryColor: '#8E24AA',
+  secondaryColor: '#E1BEE7',
+  accentColor: '#43A047',
+  backgroundColor: '#FFF3E0',
+  textColor: '#333333',
+  darkMode: false
 }): string => {
   const { categories, info } = restaurant;
   const cartSettings = restaurant.cartSettings;
   
-  // Generate CSS variable values based on settings
-  const borderRadiusValue = settings.borderRadius === 'small' ? '4px' : 
-                           settings.borderRadius === 'medium' ? '8px' : '12px';
+  // Generate shadow value based on settings
+  const boxShadowValue = settings.shadows ? 
+                         '0 4px 10px rgba(0,0,0,0.1)' : 
+                         'none';
   
-  const boxShadowValue = settings.boxShadow === 'none' ? 'none' : 
-                        settings.boxShadow === 'small' ? '0 2px 5px rgba(0,0,0,0.1)' : 
-                        settings.boxShadow === 'medium' ? '0 4px 10px rgba(0,0,0,0.1)' : '0 6px 20px rgba(0,0,0,0.15)';
-  
-  const spacingValue = settings.spacing === 'small' ? '0.75rem' : 
-                      settings.spacing === 'medium' ? '1rem' : '1.5rem';
-  
-  const fontSizeValue = settings.fontSize === 'small' ? '14px' : 
-                       settings.fontSize === 'medium' ? '16px' : '18px';
-
   return `
 <!DOCTYPE html>
 <html lang="en">
@@ -49,14 +40,12 @@ export const generateHTML = (restaurant: Restaurant, settings: VisualSettings = 
       --primary-active: ${adjustColor(settings.primaryColor, -40)};
       --secondary: ${settings.secondaryColor};
       --accent: ${settings.accentColor};
-      --text: ${settings.darkMode ? '#f5f5f5' : '#333'};
-      --background: ${settings.darkMode ? '#121212' : '#ffffff'};
+      --text: ${settings.darkMode ? '#f5f5f5' : settings.textColor};
+      --background: ${settings.backgroundColor};
       --light-bg: ${settings.darkMode ? '#1e1e1e' : '#f5f5f5'};
       --border: ${settings.darkMode ? '#333' : '#e0e0e0'};
-      --radius: ${borderRadiusValue};
+      --radius: ${settings.buttonRadius};
       --box-shadow: ${boxShadowValue};
-      --spacing: ${spacingValue};
-      --font-size: ${fontSizeValue};
       --card-bg: ${settings.darkMode ? '#1e1e1e' : '#ffffff'};
       --success: #4CAF50;
       --error: #F44336;
@@ -73,7 +62,6 @@ export const generateHTML = (restaurant: Restaurant, settings: VisualSettings = 
       font-family: ${settings.fontFamily};
       background-color: var(--background);
       color: var(--text);
-      font-size: var(--font-size);
       line-height: 1.6;
       padding-bottom: 60px;
     }
@@ -176,7 +164,7 @@ export const generateHTML = (restaurant: Restaurant, settings: VisualSettings = 
       border-radius: var(--radius);
       padding: 1rem;
       box-shadow: var(--box-shadow);
-      transition: ${settings.animations ? 'transform 0.3s ease, box-shadow 0.3s ease' : 'none'};
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
     }
     
     .menu-item:hover {
@@ -776,7 +764,7 @@ export const generateHTML = (restaurant: Restaurant, settings: VisualSettings = 
           if (method === 'sms') {
             window.open(\`sms:\${this.smsPhone}?body=\${encodedMessage}\`, '_blank');
           } else if (method === 'whatsapp') {
-            const phoneNumber = this.whatsappPhone.replace(/[+\s]/g, '');
+            const phoneNumber = this.whatsappPhone.replace(/[+\\s]/g, '');
             window.open(\`https://wa.me/\${phoneNumber}?text=\${encodedMessage}\`, '_blank');
           }
           
