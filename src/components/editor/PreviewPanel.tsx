@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Smartphone, Tablet, Monitor, ExternalLink } from 'lucide-react';
 
 interface PreviewPanelProps {
@@ -8,6 +8,7 @@ interface PreviewPanelProps {
 
 const PreviewPanel: React.FC<PreviewPanelProps> = ({ generatedHTML }) => {
   const [viewMode, setViewMode] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
+  const iframeRef = useRef<HTMLIFrameElement>(null);
 
   const handleOpenInNewWindow = () => {
     const newWindow = window.open('', '_blank');
@@ -16,6 +17,46 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ generatedHTML }) => {
       newWindow.document.close();
     }
   };
+
+  useEffect(() => {
+    const iframe = iframeRef.current;
+    if (!iframe) return;
+    
+    const handleIframeLoad = () => {
+      const iframeDoc = iframe.contentDocument || iframe.contentWindow?.document;
+      if (!iframeDoc) return;
+      
+      // Add scroll event listener to the iframe
+      iframeDoc.addEventListener('scroll', () => {
+        const header = iframeDoc.querySelector('header');
+        const nav = iframeDoc.querySelector('nav');
+        
+        if (header && nav) {
+          const scrollTop = iframeDoc.documentElement.scrollTop || iframeDoc.body.scrollTop;
+          
+          if (scrollTop > 50) {
+            header.style.transform = 'translateY(-100%)';
+            nav.style.position = 'fixed';
+            nav.style.top = '0';
+            nav.style.left = '0';
+            nav.style.right = '0';
+            nav.style.zIndex = '1000';
+            nav.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+          } else {
+            header.style.transform = 'translateY(0)';
+            nav.style.position = 'static';
+            nav.style.boxShadow = 'none';
+          }
+        }
+      });
+    };
+    
+    iframe.addEventListener('load', handleIframeLoad);
+    
+    return () => {
+      iframe.removeEventListener('load', handleIframeLoad);
+    };
+  }, [generatedHTML]);
 
   const getPreviewWidth = () => {
     switch (viewMode) {
@@ -63,6 +104,7 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ generatedHTML }) => {
       <div className="flex justify-center">
         <div className={`${getPreviewWidth()} border rounded-md h-[600px] overflow-hidden`}>
           <iframe
+            ref={iframeRef}
             title="Live Preview"
             srcDoc={generatedHTML}
             className="w-full h-full border-0"
