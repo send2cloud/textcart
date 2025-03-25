@@ -1,4 +1,3 @@
-
 import { RestaurantData } from "../../contexts/RestaurantContext";
 
 /**
@@ -60,6 +59,9 @@ export const generateScripts = (restaurant: RestaurantData): string => {
         titleH2.textContent = category.name;
         sectionDiv.appendChild(titleH2);
         
+        const itemsContainer = document.createElement('div');
+        itemsContainer.className = 'menu-items-grid';
+        
         category.items.forEach(item => {
           const itemDiv = document.createElement('div');
           itemDiv.className = 'menu-item';
@@ -77,7 +79,7 @@ export const generateScripts = (restaurant: RestaurantData): string => {
           
           const priceSpan = document.createElement('span');
           priceSpan.className = 'item-price';
-          priceSpan.textContent = '$' + item.price.toFixed(2);
+          priceSpan.textContent = item.price;
           
           nameContainerDiv.appendChild(nameH3);
           nameContainerDiv.appendChild(priceSpan);
@@ -97,9 +99,10 @@ export const generateScripts = (restaurant: RestaurantData): string => {
           itemDiv.appendChild(infoDiv);
           itemDiv.appendChild(addButton);
           
-          sectionDiv.appendChild(itemDiv);
+          itemsContainer.appendChild(itemDiv);
         });
         
+        sectionDiv.appendChild(itemsContainer);
         menuSections.appendChild(sectionDiv);
       });
       

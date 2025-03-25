@@ -58,7 +58,7 @@ export const generateHTML = (restaurant: RestaurantData, visualSettings: VisualS
   
   ${menuNavHtml}
   
-  <main>
+  <main class="container">
     ${menuSectionsHtml}
   </main>
   
@@ -68,6 +68,15 @@ export const generateHTML = (restaurant: RestaurantData, visualSettings: VisualS
 
   <script>
     ${scripts}
+  </script>
+  
+  <script>
+    // Initialize immediately when DOM is ready
+    document.addEventListener('DOMContentLoaded', function() {
+      if (typeof initMenu === 'function') {
+        initMenu();
+      }
+    });
   </script>
 </body>
 </html>

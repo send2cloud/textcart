@@ -6,7 +6,7 @@
 export const generateMenuSectionsHtml = (): string => {
   return `
   <div class="menu-container">
-    <div id="menuSections">
+    <div id="menuSections" class="menu-sections-container">
       <!-- Will be populated by JavaScript -->
     </div>
     
@@ -30,7 +30,7 @@ export const generateMenuSectionsHtml = (): string => {
         </div>
       </div>
       
-      <div class="map-container">
+      <div class="map-container full-width">
         <iframe src="https://www.google.com/maps/embed/v1/place?q={{addressEncoded}}&key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8" allowfullscreen loading="lazy" referrerpolicy="no-referrer-when-downgrade" title="Restaurant Location"></iframe>
       </div>
     </div>
