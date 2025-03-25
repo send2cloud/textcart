@@ -951,6 +951,19 @@ export const generateHTML = (restaurant: RestaurantData): string => {
             </label>
           </div>
           ` : ''}
+          
+          ${cartSettings.paymentOptions?.stripe ? `
+          <div class="order-option">
+            <input type="radio" id="stripe" name="paymentMethod" value="stripe" class="order-option-radio" ${!cartSettings.paymentOptions?.cashOnDelivery && !cartSettings.paymentOptions?.cashOnPickup ? 'checked' : ''}>
+            <label for="stripe" class="order-option-label">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <rect x="2" y="6" width="20" height="12" rx="2"></rect>
+                <line x1="2" y1="10" x2="22" y2="10"></line>
+              </svg>
+              Credit Card
+            </label>
+          </div>
+          ` : ''}
         </div>
       </div>
     </div>
@@ -1047,7 +1060,8 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     let orderType = ${cartSettings.deliveryEnabled ? "'delivery'" : cartSettings.pickupEnabled ? "'pickup'" : "null"};
     let paymentMethod = ${
       cartSettings.paymentOptions?.cashOnDelivery && cartSettings.deliveryEnabled ? "'cashOnDelivery'" :
-      cartSettings.paymentOptions?.cashOnPickup && cartSettings.pickupEnabled ? "'cashOnPickup'" : "null"
+      cartSettings.paymentOptions?.cashOnPickup && cartSettings.pickupEnabled ? "'cashOnPickup'" : 
+      cartSettings.paymentOptions?.stripe ? "'stripe'" : "null"
     };
     
     // DOM Elements
@@ -1079,7 +1093,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     });
     ` : ''}
     
-    ${(cartSettings.paymentOptions?.cashOnDelivery || cartSettings.paymentOptions?.cashOnPickup) ? `
+    ${(cartSettings.paymentOptions?.cashOnDelivery || cartSettings.paymentOptions?.cashOnPickup || cartSettings.paymentOptions?.stripe) ? `
     const paymentMethodOptions = document.querySelectorAll('input[name="paymentMethod"]');
     paymentMethodOptions.forEach(option => {
       option.addEventListener('change', function() {
@@ -1100,6 +1114,10 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         if (document.getElementById('cashOnDelivery')) {
           document.getElementById('cashOnDelivery').checked = true;
           paymentMethod = 'cashOnDelivery';
+        }` : cartSettings.paymentOptions?.stripe ? `
+        if (document.getElementById('stripe')) {
+          document.getElementById('stripe').checked = true;
+          paymentMethod = 'stripe';
         }` : ''}
       } else if (orderType === 'pickup') {
         document.querySelectorAll('.delivery-payment').forEach(el => el.style.display = 'none');
@@ -1111,6 +1129,10 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         if (document.getElementById('cashOnPickup')) {
           document.getElementById('cashOnPickup').checked = true;
           paymentMethod = 'cashOnPickup';
+        }` : cartSettings.paymentOptions?.stripe ? `
+        if (document.getElementById('stripe')) {
+          document.getElementById('stripe').checked = true;
+          paymentMethod = 'stripe';
         }` : ''}
       }
       
@@ -1541,6 +1563,8 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         message += \`Payment Method: Cash on Delivery\\n\`;
       } else if (paymentMethod === 'cashOnPickup') {
         message += \`Payment Method: Cash on Pickup\\n\`;
+      } else if (paymentMethod === 'stripe') {
+        message += \`Payment Method: Credit Card\\n\`;
       }
       
       return encodeURIComponent(message);
