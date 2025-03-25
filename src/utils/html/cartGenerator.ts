@@ -81,53 +81,6 @@ export const generateCartHTML = (restaurant: RestaurantData): string => {
         </div>
       </div>
       ` : ''}
-
-      <!-- Payment method section -->
-      <div class="cart-order-section" id="paymentMethodSection">
-        <div class="cart-order-section-title">Payment Method</div>
-        <div id="paymentMethodOptions">
-          ${cartSettings.paymentOptions?.cashOnDelivery && cartSettings.deliveryEnabled ? `
-          <div class="order-option delivery-payment">
-            <input type="radio" id="cashOnDelivery" name="paymentMethod" value="cashOnDelivery" class="order-option-radio" checked>
-            <label for="cashOnDelivery" class="order-option-label">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="6" width="20" height="12" rx="2"></rect>
-                <circle cx="12" cy="12" r="2"></circle>
-                <path d="M6 12h.01M18 12h.01"></path>
-              </svg>
-              Cash on Delivery
-            </label>
-          </div>
-          ` : ''}
-          
-          ${cartSettings.paymentOptions?.cashOnPickup && cartSettings.pickupEnabled ? `
-          <div class="order-option pickup-payment">
-            <input type="radio" id="cashOnPickup" name="paymentMethod" value="cashOnPickup" class="order-option-radio" ${!cartSettings.paymentOptions?.cashOnDelivery || !cartSettings.deliveryEnabled ? 'checked' : ''}>
-            <label for="cashOnPickup" class="order-option-label">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="6" width="20" height="12" rx="2"></rect>
-                <circle cx="12" cy="12" r="2"></circle>
-                <path d="M6 12h.01M18 12h.01"></path>
-              </svg>
-              Cash on Pickup
-            </label>
-          </div>
-          ` : ''}
-          
-          ${cartSettings.paymentOptions?.stripe ? `
-          <div class="order-option">
-            <input type="radio" id="stripe" name="paymentMethod" value="stripe" class="order-option-radio" ${!cartSettings.paymentOptions?.cashOnDelivery && !cartSettings.paymentOptions?.cashOnPickup ? 'checked' : ''}>
-            <label for="stripe" class="order-option-label">
-              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                <rect x="2" y="6" width="20" height="12" rx="2"></rect>
-                <line x1="2" y1="10" x2="22" y2="10"></line>
-              </svg>
-              Credit Card
-            </label>
-          </div>
-          ` : ''}
-        </div>
-      </div>
     </div>
     
     <div id="cartTotal" class="cart-total" style="display: none;">

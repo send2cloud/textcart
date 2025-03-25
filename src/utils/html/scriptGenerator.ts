@@ -11,21 +11,6 @@ export const generateScript = (restaurant: RestaurantData): string => {
     pickupEnabled: false
   };
 
-  // Generate payment method initialization logic separately
-  const generatePaymentMethodInit = () => {
-    let paymentMethodInit = "null";
-    
-    if (cartSettings.paymentOptions?.cashOnDelivery && cartSettings.deliveryEnabled) {
-      paymentMethodInit = "'cashOnDelivery'";
-    } else if (cartSettings.paymentOptions?.cashOnPickup && cartSettings.pickupEnabled) {
-      paymentMethodInit = "'cashOnPickup'";
-    } else if (cartSettings.paymentOptions?.stripe) {
-      paymentMethodInit = "'stripe'";
-    }
-    
-    return paymentMethodInit;
-  };
-
   return `
   <script>
     // Restaurant data
@@ -65,7 +50,6 @@ export const generateScript = (restaurant: RestaurantData): string => {
     // Cart state
     let cart = [];
     let orderType = ${cartSettings.deliveryEnabled ? "'delivery'" : cartSettings.pickupEnabled ? "'pickup'" : "null"};
-    let paymentMethod = ${generatePaymentMethodInit()};
     
     // DOM Elements
     const menuNavContainer = document.getElementById('menuNavContainer');
@@ -84,87 +68,15 @@ export const generateScript = (restaurant: RestaurantData): string => {
     const navLeft = document.getElementById('navLeft');
     const navRight = document.getElementById('navRight');
     
-    // Order type and payment elements
+    // Order type elements
     ${(cartSettings.deliveryEnabled || cartSettings.pickupEnabled) ? `
     const orderTypeOptions = document.querySelectorAll('input[name="orderType"]');
     orderTypeOptions.forEach(option => {
       option.addEventListener('change', function() {
         orderType = this.value;
-        updatePaymentOptions();
         updateCartTotal();
       });
     });
-    ` : ''}
-    
-    ${(cartSettings.paymentOptions?.cashOnDelivery || cartSettings.paymentOptions?.cashOnPickup || cartSettings.paymentOptions?.stripe) ? `
-    const paymentMethodOptions = document.querySelectorAll('input[name="paymentMethod"]');
-    paymentMethodOptions.forEach(option => {
-      option.addEventListener('change', function() {
-        paymentMethod = this.value;
-        updateCheckoutButtons();
-      });
-    });
-    
-    function updatePaymentOptions() {
-      // Show/hide payment options based on order type
-      if (orderType === 'delivery') {
-        document.querySelectorAll('.delivery-payment').forEach(el => el.style.display = 'block');
-        document.querySelectorAll('.pickup-payment').forEach(el => el.style.display = 'none');
-        document.getElementById('deliveryFee')?.parentElement.style.display = 'flex';
-        
-        // Select first available payment method for delivery
-        ${cartSettings.paymentOptions?.cashOnDelivery ? `
-        if (document.getElementById('cashOnDelivery')) {
-          document.getElementById('cashOnDelivery').checked = true;
-          paymentMethod = 'cashOnDelivery';
-        }` : cartSettings.paymentOptions?.stripe ? `
-        if (document.getElementById('stripe')) {
-          document.getElementById('stripe').checked = true;
-          paymentMethod = 'stripe';
-        }` : ''}
-      } else if (orderType === 'pickup') {
-        document.querySelectorAll('.delivery-payment').forEach(el => el.style.display = 'none');
-        document.querySelectorAll('.pickup-payment').forEach(el => el.style.display = 'block');
-        document.getElementById('deliveryFee')?.parentElement.style.display = 'none';
-        
-        // Select first available payment method for pickup
-        ${cartSettings.paymentOptions?.cashOnPickup ? `
-        if (document.getElementById('cashOnPickup')) {
-          document.getElementById('cashOnPickup').checked = true;
-          paymentMethod = 'cashOnPickup';
-        }` : cartSettings.paymentOptions?.stripe ? `
-        if (document.getElementById('stripe')) {
-          document.getElementById('stripe').checked = true;
-          paymentMethod = 'stripe';
-        }` : ''}
-      }
-      
-      updateCheckoutButtons();
-    }
-    
-    function updateCheckoutButtons() {
-      // Enable/disable checkout buttons based on the selected payment method
-      ${cartSettings.allowSmsCheckout ? `
-      const checkoutButton = document.getElementById('checkoutButton');
-      if (checkoutButton) {
-        checkoutButton.style.display = (paymentMethod === 'cashOnDelivery' || paymentMethod === 'cashOnPickup') ? 'flex' : 'none';
-      }
-      ` : ''}
-      
-      ${cartSettings.allowWhatsAppCheckout ? `
-      const whatsappButton = document.getElementById('whatsappButton');
-      if (whatsappButton) {
-        whatsappButton.style.display = (paymentMethod === 'cashOnDelivery' || paymentMethod === 'cashOnPickup') ? 'flex' : 'none';
-      }
-      
-      const buttonDivider = document.querySelector('.button-divider');
-      if (buttonDivider) {
-        buttonDivider.style.display = 
-          (paymentMethod === 'cashOnDelivery' || paymentMethod === 'cashOnPickup') && 
-          ${cartSettings.allowSmsCheckout ? 'true' : 'false'} ? 'flex' : 'none';
-      }
-      ` : ''}
-    }
     ` : ''}
     
     ${cartSettings.allowSmsCheckout ? `
@@ -393,7 +305,6 @@ export const generateScript = (restaurant: RestaurantData): string => {
       } else if (orderType === 'pickup' && document.getElementById('pickup')) {
         document.getElementById('pickup').checked = true;
       }
-      updatePaymentOptions();
       ` : ''}
     }
     
@@ -559,16 +470,8 @@ export const generateScript = (restaurant: RestaurantData): string => {
       
       message += \`Total: $\${total.toFixed(2)}\\n\\n\`;
       
-      // Add order type and payment method
+      // Add order type
       message += \`Order Type: \${orderType === 'delivery' ? 'Delivery' : 'Pickup'}\\n\`;
-      
-      if (paymentMethod === 'cashOnDelivery') {
-        message += \`Payment Method: Cash on Delivery\\n\`;
-      } else if (paymentMethod === 'cashOnPickup') {
-        message += \`Payment Method: Cash on Pickup\\n\`;
-      } else if (paymentMethod === 'stripe') {
-        message += \`Payment Method: Credit Card\\n\`;
-      }
       
       return encodeURIComponent(message);
     }
