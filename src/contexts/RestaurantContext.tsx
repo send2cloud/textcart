@@ -1,7 +1,8 @@
+
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 // Types
-type TemplateType = 'basic' | 'premium' | 'modern' | 'elegant';
+type TemplateType = 'modern' | 'elegant' | 'casual' | 'minimal';
 
 export interface MenuCategory {
   id: string;
@@ -63,7 +64,7 @@ interface RestaurantContextType {
 
 const RestaurantContext = createContext<RestaurantContextType | undefined>(undefined);
 
-// Sample initial data with the "Basic" template
+// Sample initial data with the "Modern" template
 const initialRestaurantData: RestaurantData = {
   id: '1',
   info: {
@@ -85,7 +86,7 @@ const initialRestaurantData: RestaurantData = {
       ],
     },
   ],
-  templateType: 'basic',
+  templateType: 'modern',
   themeColors: {
     primary: '#8E24AA',
     secondary: '#E1BEE7',
@@ -108,17 +109,7 @@ const initialRestaurantData: RestaurantData = {
   }
 };
 
-const sampleTemplates = [
-  { 
-    id: 'basic', 
-    name: 'Basic', 
-    preview: '/placeholder.svg' 
-  },
-  { 
-    id: 'premium', 
-    name: 'Premium', 
-    preview: '/placeholder.svg' 
-  },
+const alpineTemplates = [
   { 
     id: 'modern', 
     name: 'Modern', 
@@ -129,12 +120,22 @@ const sampleTemplates = [
     name: 'Elegant', 
     preview: '/placeholder.svg' 
   },
+  { 
+    id: 'casual', 
+    name: 'Casual', 
+    preview: '/placeholder.svg' 
+  },
+  { 
+    id: 'minimal', 
+    name: 'Minimal', 
+    preview: '/placeholder.svg' 
+  },
 ];
 
 export const RestaurantProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [restaurant, setRestaurant] = useState<RestaurantData | null>(null);
-  const [templates] = useState(sampleTemplates);
-  const [activeTemplateId, setActiveTemplateId] = useState('basic');
+  const [templates] = useState(alpineTemplates);
+  const [activeTemplateId, setActiveTemplateId] = useState('modern');
 
   // Load data from localStorage on initial render
   useEffect(() => {
