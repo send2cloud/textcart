@@ -203,5 +203,13 @@ export const indianRestaurantSample: RestaurantData = {
     background: '#FFF8E1',
     text: '#333333',
     accent: '#4CAF50'
+  },
+  cartSettings: {
+    enabled: true,
+    allowSmsCheckout: true,
+    allowWhatsAppCheckout: true,
+    allowQuantityChange: true,
+    showItemImages: false,
+    buttonText: 'Add to Cart'
   }
 };

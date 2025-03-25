@@ -3,6 +3,16 @@ import { RestaurantData } from "../contexts/RestaurantContext";
 
 // Function to generate the HTML content based on template type and restaurant data
 export const generateHTML = (restaurant: RestaurantData): string => {
+  // Ensure cartSettings exists, or provide defaults
+  const cartSettings = restaurant.cartSettings || {
+    enabled: false,
+    allowSmsCheckout: false,
+    allowWhatsAppCheckout: false,
+    allowQuantityChange: false,
+    showItemImages: false,
+    buttonText: 'Add to Cart'
+  };
+
   // Create a basic structure similar to the indian.html template
   const html = `
 <!DOCTYPE html>
@@ -20,7 +30,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       background-color: ${restaurant.themeColors.background};
       color: ${restaurant.themeColors.text};
       line-height: 1.5;
-      padding-bottom: ${restaurant.cartSettings.enabled ? '60px' : '0'};
+      padding-bottom: ${cartSettings.enabled ? '60px' : '0'};
     }
     
     /* Header styles */
@@ -222,7 +232,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       margin: 0;
     }
     
-    ${restaurant.cartSettings.enabled ? `
+    ${cartSettings.enabled ? `
     /* Item quantity badge */
     .item-quantity {
       margin-left: 6px;
@@ -318,7 +328,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       border: none;
     }
     
-    ${restaurant.cartSettings.enabled ? `
+    ${cartSettings.enabled ? `
     /* Cart button styles */
     .cart-button {
       position: fixed;
@@ -595,7 +605,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         font-size: 0.9rem;
       }
       
-      ${restaurant.cartSettings.enabled ? `
+      ${cartSettings.enabled ? `
       .add-button {
         font-size: 0.95rem;
         padding: 8px 15px;
@@ -638,7 +648,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         font-size: 1.75rem;
       }
       
-      ${restaurant.cartSettings.enabled ? `
+      ${cartSettings.enabled ? `
       .cart-actions {
         flex-direction: row;
       }
@@ -726,7 +736,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
                 </div>
                 <p class="item-description">${item.description}</p>
               </div>
-              ${restaurant.cartSettings.enabled ? `<button class="add-button">${restaurant.cartSettings.buttonText}</button>` : ''}
+              ${cartSettings.enabled ? `<button class="add-button">${cartSettings.buttonText}</button>` : ''}
             </div>
           `).join('')}
         </div>
@@ -759,7 +769,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     </div>
   </main>
   
-  ${restaurant.cartSettings.enabled ? `
+  ${cartSettings.enabled ? `
   <div class="cart-button empty" id="cartButton">
     <button class="cart-button-inner">
       <svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -794,7 +804,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     </div>
     
     <div class="cart-actions">
-      ${restaurant.cartSettings.allowSmsCheckout ? `
+      ${cartSettings.allowSmsCheckout ? `
       <button class="checkout-button" id="checkoutButton">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
           <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
@@ -802,7 +812,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         Checkout with SMS
       </button>
       ` : ''}
-      ${restaurant.cartSettings.allowWhatsAppCheckout ? `
+      ${cartSettings.allowWhatsAppCheckout ? `
       <button class="whatsapp-button" id="whatsappButton">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
           <path d="M17.6 6.31999C16.8669 5.58141 15.9943 4.99596 15.033 4.59767C14.0716 4.19938 13.0406 3.99602 12 3.99999C10.6089 4.00277 9.24248 4.36599 8.03271 5.04806C6.82294 5.73013 5.8093 6.70673 5.091 7.89999C4.37271 9.09324 3.97843 10.4549 3.94785 11.8455C3.91728 13.236 4.25165 14.6148 4.92 15.84L4 20L8.2 19.08C9.35975 19.6917 10.6629 20.0028 11.98 20C14.5804 19.9968 17.0732 18.9375 18.9203 17.0771C20.7675 15.2167 21.8093 12.7172 21.8 10.12C21.8 9.06698 21.5959 8.02511 21.1962 7.05223C20.7965 6.07934 20.2092 5.19527 19.47 4.45999C18.7309 3.72471 17.8487 3.13777 16.8775 2.73889C15.9063 2.34002 14.8659 2.1371 13.815 2.13999C12.7641 2.14289 11.7248 2.35146 10.7554 2.75576C9.78592 3.16006 8.90609 3.75209 8.17 4.48999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -839,7 +849,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       }`).join(',')}
     ];
     
-    ${restaurant.cartSettings.enabled ? `
+    ${cartSettings.enabled ? `
     // Cart state
     let cart = [];
     
@@ -857,12 +867,12 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     const navLeft = document.getElementById('navLeft');
     const navRight = document.getElementById('navRight');
     
-    ${restaurant.cartSettings.allowSmsCheckout ? `
+    ${cartSettings.allowSmsCheckout ? `
     const checkoutButton = document.getElementById('checkoutButton');
     checkoutButton.addEventListener('click', () => handleCheckout('sms'));
     ` : ''}
     
-    ${restaurant.cartSettings.allowWhatsAppCheckout ? `
+    ${cartSettings.allowWhatsAppCheckout ? `
     const whatsappButton = document.getElementById('whatsappButton');
     whatsappButton.addEventListener('click', () => handleCheckout('whatsapp'));
     ` : ''}
@@ -932,10 +942,10 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         
         if (inCart) {
           addButton.classList.add('in-cart');
-          addButton.textContent = \`${restaurant.cartSettings.buttonText} (\${inCart.quantity})\`;
+          addButton.textContent = \`${cartSettings.buttonText} (\${inCart.quantity})\`;
         } else {
           addButton.classList.remove('in-cart');
-          addButton.textContent = '${restaurant.cartSettings.buttonText}';
+          addButton.textContent = '${cartSettings.buttonText}';
         }
       });
       
@@ -974,7 +984,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         itemInfo.appendChild(itemName);
         itemInfo.appendChild(itemPrice);
         
-        ${restaurant.cartSettings.allowQuantityChange ? `
+        ${cartSettings.allowQuantityChange ? `
         const quantityControls = document.createElement('div');
         quantityControls.className = 'cart-item-quantity';
         
@@ -1207,7 +1217,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     
     // Initialize
     renderMenuNav();
-    ${restaurant.cartSettings.enabled ? 'updateUI();' : ''}
+    ${cartSettings.enabled ? 'updateUI();' : ''}
     setupTouchNavigation();
     
     // Improved scroll handling with IntersectionObserver for better performance
