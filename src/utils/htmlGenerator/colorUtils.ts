@@ -20,3 +20,45 @@ export const adjustColor = (color: string, percent: number): string => {
 
   return `#${RR}${GG}${BB}`;
 };
+
+/**
+ * Generates CSS color variables based on visual settings
+ * @param settings Visual settings object
+ * @returns CSS variables string
+ */
+export const generateColorVariables = (settings: any): string => {
+  const {
+    primaryColor,
+    secondaryColor,
+    accentColor,
+    backgroundColor,
+    textColor,
+    darkMode
+  } = settings;
+  
+  // Generate lighter and darker variants of the primary color
+  const primaryHover = adjustColor(primaryColor, -10);
+  const primaryLight = adjustColor(primaryColor, 30);
+  const primaryExtraLight = adjustColor(primaryColor, 60);
+  
+  // Generate border color based on context
+  const borderColor = darkMode ? '#444' : '#e1e1e1';
+  
+  // Success color for UI feedback
+  const successColor = '#4CAF50';
+  
+  return `
+    :root {
+      --primary: ${primaryColor};
+      --primary-hover: ${primaryHover};
+      --primary-light: ${primaryLight};
+      --primary-extra-light: ${primaryExtraLight};
+      --secondary: ${secondaryColor};
+      --accent: ${accentColor};
+      --background: ${backgroundColor};
+      --text: ${textColor};
+      --border: ${borderColor};
+      --success: ${successColor};
+    }
+  `;
+};
