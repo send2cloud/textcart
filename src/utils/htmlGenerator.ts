@@ -1,9 +1,7 @@
+import { RestaurantData } from "../contexts/RestaurantContext";
+import { VisualSettings } from "../services/VisualSettingsService";
 
-import { Restaurant } from '../contexts/RestaurantContext';
-import { VisualSettings } from '../services/VisualSettingsService';
-
-// Generate complete HTML for restaurant menu
-export const generateHTML = (restaurant: Restaurant, visualSettings: VisualSettings): string => {
+export const generateHTML = (restaurant: RestaurantData, visualSettings: VisualSettings): string => {
   // Apply color customizations based on visual settings
   const primaryColor = visualSettings.primaryColor;
   const secondaryColor = visualSettings.secondaryColor;
