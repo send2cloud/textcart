@@ -136,6 +136,30 @@ export const generateHTML = (restaurant: RestaurantData, visualSettings?: Visual
       padding: 1rem;
     }
     
+    /* Header styles */
+    header {
+      background-color: var(--secondary);
+      color: white;
+      padding: 1rem 0;
+      margin-bottom: 1.5rem;
+      box-shadow: var(--box-shadow);
+    }
+    
+    .header-content {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .restaurant-name {
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+    
+    .restaurant-contact {
+      font-size: 0.95rem;
+    }
+    
     nav {
       background-color: var(--light-bg);
       padding: 0.5rem 0;
@@ -248,6 +272,32 @@ export const generateHTML = (restaurant: RestaurantData, visualSettings?: Visual
     .add-button:active {
       transform: ${settings.hoverEffects ? 'scale(0.98)' : 'none'};
       background-color: ${settings.hoverEffects ? 'var(--primary-active)' : 'var(--primary)'};
+    }
+
+    /* Footer styles */
+    footer {
+      background-color: var(--secondary);
+      color: white;
+      padding: 2rem 0;
+      margin-top: 3rem;
+      box-shadow: 0 -2px 5px rgba(0,0,0,0.1);
+    }
+    
+    .footer-content {
+      text-align: center;
+    }
+    
+    .footer-address {
+      margin-bottom: 1rem;
+    }
+    
+    .footer-hours {
+      margin-bottom: 1rem;
+    }
+    
+    .footer-copyright {
+      font-size: 0.9rem;
+      opacity: 0.8;
     }
 
     /* Toast notification */
@@ -573,6 +623,12 @@ export const generateHTML = (restaurant: RestaurantData, visualSettings?: Visual
       .cart-actions {
         flex-direction: column;
       }
+      
+      .header-content {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
+      }
     }
     
     @media (min-width: 768px) {
@@ -588,6 +644,16 @@ export const generateHTML = (restaurant: RestaurantData, visualSettings?: Visual
   </style>
 </head>
 <body x-data="menuApp()">
+  <!-- Restaurant Header -->
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <div class="restaurant-name" x-text="restaurantInfo.name"></div>
+        <div class="restaurant-contact" x-text="'Phone: ' + restaurantInfo.phone"></div>
+      </div>
+    </div>
+  </header>
+
   <!-- Category Navigation -->
   <nav>
     <div class="nav-container">
@@ -632,6 +698,17 @@ export const generateHTML = (restaurant: RestaurantData, visualSettings?: Visual
       </template>
     </div>
   </main>
+  
+  <!-- Restaurant Footer with Address and Hours -->
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-address" x-text="restaurantInfo.address"></div>
+        <div class="footer-hours" x-text="restaurantInfo.hours"></div>
+        <div class="footer-copyright" x-text="'© ' + new Date().getFullYear() + ' ' + restaurantInfo.name"></div>
+      </div>
+    </div>
+  </footer>
   
   <!-- Toast notifications -->
   <div class="toast-container">
@@ -731,6 +808,13 @@ export const generateHTML = (restaurant: RestaurantData, visualSettings?: Visual
         activeCategory: ${categories.length > 0 ? `'${categories[0].id}'` : 'null'},
         cart: [],
         toasts: [],
+        isCartOpen: false,
+        restaurantInfo: {
+          name: "${info.name}",
+          phone: "${info.phone || '+1 (555) 123-4567'}",
+          address: "${info.address || '123 Main Street, City, Country'}",
+          hours: "${info.hours || 'Open daily: 10am - 10pm'}"
+        },
         cartEnabled: ${cartSettings?.enabled ? 'true' : 'false'},
         allowQuantityChange: ${cartSettings?.allowQuantityChange ? 'true' : 'false'},
         allowSmsCheckout: ${cartSettings?.allowSmsCheckout ? 'true' : 'false'},
@@ -742,7 +826,6 @@ export const generateHTML = (restaurant: RestaurantData, visualSettings?: Visual
         whatsappPhone: "${cartSettings?.whatsappPhone || ''}",
         minimumOrderAmount: ${cartSettings?.minimumOrderAmount || 0},
         deliveryFee: ${cartSettings?.deliveryFee || 0},
-        isCartOpen: false,
         
         scrollToCategory(categoryId) {
           const element = document.getElementById(categoryId);
@@ -912,3 +995,4 @@ export const generateHTML = (restaurant: RestaurantData, visualSettings?: Visual
 </html>
   `;
 };
+
