@@ -9,7 +9,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>${restaurant.info.name} - Authentic Indian Cuisine</title>
+  <title>${restaurant.info.name} - Menu</title>
   <style>
     /* Base styles */
     body {
@@ -219,43 +219,6 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       font-size: 0.95rem;
       color: #666;
       margin: 0;
-    }
-    
-    .item-quantity {
-      margin-left: 6px;
-      font-size: 0.9rem;
-      color: #9C4722;
-      font-weight: 600;
-    }
-    
-    .add-button {
-      padding: 10px 18px;
-      background-color: #9C4722;
-      color: white;
-      border: none;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: background-color 0.2s ease;
-      margin-left: 12px;
-      font-size: 1rem;
-      min-width: 65px;
-    }
-    
-    .add-button:hover {
-      background-color: #7A3A1D;
-    }
-    
-    .add-button:active {
-      transform: scale(0.95);
-    }
-    
-    .add-button.in-cart {
-      background-color: #43A047;
-    }
-    
-    .add-button.in-cart:hover {
-      background-color: #388E3C;
     }
     
     /* Location styles */
@@ -702,9 +665,24 @@ export const generateHTML = (restaurant: RestaurantData): string => {
   
   <main>
     <div class="menu-container">
-      <div id="menuSections">
-        <!-- Will be populated by JavaScript -->
-      </div>
+      <!-- Directly render menu sections instead of relying on JavaScript -->
+      ${restaurant.categories.map(category => `
+        <div class="menu-section" id="${category.id}">
+          <h2 class="section-title">${category.name}</h2>
+          ${category.items.map(item => `
+            <div class="menu-item" data-id="${item.id}">
+              <div class="item-info">
+                <div class="item-name-container">
+                  <h3 class="item-name">${item.name}</h3>
+                  <span class="item-price">${item.price}</span>
+                </div>
+                <p class="item-description">${item.description}</p>
+              </div>
+              <button class="add-button">Add</button>
+            </div>
+          `).join('')}
+        </div>
+      `).join('')}
       
       <div class="location-info">
         <h2 class="location-title">Contact & Location</h2>
