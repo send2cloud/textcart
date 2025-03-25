@@ -1,4 +1,3 @@
-
 import { RestaurantData } from "../../contexts/RestaurantContext";
 
 /**
@@ -44,7 +43,7 @@ export const generateScript = (restaurant: RestaurantData): string => {
       deliveryEnabled: ${cartSettings.deliveryEnabled},
       deliveryFee: ${cartSettings.deliveryFee || 0},
       pickupEnabled: ${cartSettings.pickupEnabled},
-      allowQuantityChange: ${cartSettings.allowQuantityChange}
+      allowQuantityChange: ${cartSettings.allowQuantityChange || false}
     };
     
     // Cart state
