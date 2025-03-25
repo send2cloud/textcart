@@ -24,6 +24,15 @@ export interface RestaurantInfo {
   logo?: string;
 }
 
+export interface CartSettings {
+  enabled: boolean;
+  allowSmsCheckout: boolean;
+  allowWhatsAppCheckout: boolean;
+  allowQuantityChange: boolean;
+  showItemImages: boolean;
+  buttonText: string;
+}
+
 export interface RestaurantData {
   id: string;
   info: RestaurantInfo;
@@ -36,6 +45,7 @@ export interface RestaurantData {
     text: string;
     accent: string;
   };
+  cartSettings: CartSettings;
 }
 
 interface RestaurantContextType {
@@ -79,6 +89,14 @@ const initialRestaurantData: RestaurantData = {
     text: '#333333',
     accent: '#43A047',
   },
+  cartSettings: {
+    enabled: true,
+    allowSmsCheckout: true,
+    allowWhatsAppCheckout: true,
+    allowQuantityChange: true,
+    showItemImages: false,
+    buttonText: 'Add to Cart',
+  }
 };
 
 const sampleTemplates = [

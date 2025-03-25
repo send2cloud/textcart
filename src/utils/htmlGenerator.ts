@@ -1,3 +1,4 @@
+
 import { RestaurantData } from "../contexts/RestaurantContext";
 
 // Function to generate the HTML content based on template type and restaurant data
@@ -16,15 +17,15 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #FFF8F0;
-      color: #333;
+      background-color: ${restaurant.themeColors.background};
+      color: ${restaurant.themeColors.text};
       line-height: 1.5;
-      padding-bottom: 60px;
+      padding-bottom: ${restaurant.cartSettings.enabled ? '60px' : '0'};
     }
     
     /* Header styles */
     header {
-      background-color: #9C4722;
+      background-color: ${restaurant.themeColors.primary};
       color: white;
       position: sticky;
       top: 0;
@@ -64,12 +65,12 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     
     /* Navigation styles */
     .menu-nav {
-      background-color: #FFE6CC;
+      background-color: ${restaurant.themeColors.secondary};
       position: sticky;
       top: 48px;
       z-index: 40;
       box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-      border-bottom: 1px solid #FFCC99;
+      border-bottom: 1px solid ${restaurant.themeColors.secondary};
       padding: 0;
       width: 100%;
       overflow: hidden;
@@ -106,7 +107,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       position: relative;
       white-space: nowrap;
       transition: all 0.2s ease;
-      color: #555;
+      color: ${restaurant.themeColors.text};
       border-radius: 6px;
       margin: 0 4px;
       user-select: none;
@@ -115,7 +116,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     
     .menu-nav-item.active {
       color: white;
-      background-color: #9C4722;
+      background-color: ${restaurant.themeColors.primary};
       font-weight: 600;
     }
 
@@ -170,8 +171,8 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       font-size: 1.5rem;
       margin-bottom: 20px;
       padding-bottom: 8px;
-      border-bottom: 2px solid #9C4722;
-      color: #333;
+      border-bottom: 2px solid ${restaurant.themeColors.primary};
+      color: ${restaurant.themeColors.text};
     }
     
     .menu-item {
@@ -206,7 +207,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       margin: 0;
       font-size: 1.1rem;
       font-weight: 600;
-      color: #333;
+      color: ${restaurant.themeColors.text};
     }
     
     .item-price {
@@ -220,6 +221,47 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       color: #666;
       margin: 0;
     }
+    
+    ${restaurant.cartSettings.enabled ? `
+    /* Item quantity badge */
+    .item-quantity {
+      margin-left: 6px;
+      font-size: 0.9rem;
+      color: ${restaurant.themeColors.primary};
+      font-weight: 600;
+    }
+    
+    /* Add to cart button */
+    .add-button {
+      padding: 10px 18px;
+      background-color: ${restaurant.themeColors.primary};
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+      margin-left: 12px;
+      font-size: 1rem;
+      min-width: 65px;
+    }
+    
+    .add-button:hover {
+      background-color: ${restaurant.themeColors.accent};
+    }
+    
+    .add-button:active {
+      transform: scale(0.95);
+    }
+    
+    .add-button.in-cart {
+      background-color: ${restaurant.themeColors.accent};
+    }
+    
+    .add-button.in-cart:hover {
+      background-color: ${restaurant.themeColors.accent};
+    }
+    ` : ''}
     
     /* Location styles */
     .location-info {
@@ -238,8 +280,8 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       margin-top: 0;
       margin-bottom: 20px;
       padding-bottom: 8px;
-      border-bottom: 2px solid #FFCC99;
-      color: #333;
+      border-bottom: 2px solid ${restaurant.themeColors.secondary};
+      color: ${restaurant.themeColors.text};
     }
     
     .contact-info {
@@ -253,14 +295,14 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     .contact-info div {
       display: flex;
       align-items: center;
-      color: #333;
+      color: ${restaurant.themeColors.text};
       text-decoration: none;
       font-size: 1rem;
     }
     
     .contact-info svg {
       margin-right: 12px;
-      color: #9C4722;
+      color: ${restaurant.themeColors.primary};
       flex-shrink: 0;
     }
     
@@ -276,6 +318,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       border: none;
     }
     
+    ${restaurant.cartSettings.enabled ? `
     /* Cart button styles */
     .cart-button {
       position: fixed;
@@ -283,7 +326,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       left: 0;
       right: 0;
       z-index: 30;
-      background-color: #9C4722;
+      background-color: ${restaurant.themeColors.primary};
       box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     }
     
@@ -363,7 +406,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       justify-content: space-between;
       align-items: center;
       padding: 16px 20px;
-      border-bottom: 1px solid #FFCC99;
+      border-bottom: 1px solid ${restaurant.themeColors.secondary};
     }
     
     .cart-title {
@@ -409,7 +452,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       justify-content: space-between;
       align-items: center;
       padding: 12px 0;
-      border-bottom: 1px solid #FFCC99;
+      border-bottom: 1px solid ${restaurant.themeColors.secondary};
     }
     
     .cart-item-info {
@@ -422,7 +465,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     }
     
     .cart-item-price {
-      color: #9C4722;
+      color: ${restaurant.themeColors.primary};
       font-weight: 600;
       font-size: 0.9rem;
     }
@@ -469,7 +512,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       justify-content: space-between;
       align-items: center;
       padding: 16px 20px;
-      border-top: 1px solid #FFCC99;
+      border-top: 1px solid ${restaurant.themeColors.secondary};
       font-size: 1.1rem;
       font-weight: 700;
     }
@@ -527,6 +570,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     .whatsapp-button svg {
       margin-right: 8px;
     }
+    ` : ''}
     
     /* Media queries */
     @media (max-width: 480px) {
@@ -551,6 +595,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         font-size: 0.9rem;
       }
       
+      ${restaurant.cartSettings.enabled ? `
       .add-button {
         font-size: 0.95rem;
         padding: 8px 15px;
@@ -569,6 +614,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       .whatsapp-button {
         font-size: 1rem;
       }
+      ` : ''}
       
       .nav-indicators {
         display: block;
@@ -592,6 +638,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         font-size: 1.75rem;
       }
       
+      ${restaurant.cartSettings.enabled ? `
       .cart-actions {
         flex-direction: row;
       }
@@ -600,6 +647,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       .whatsapp-button {
         flex: 1;
       }
+      ` : ''}
       
       .menu-nav-container {
         display: flex;
@@ -678,7 +726,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
                 </div>
                 <p class="item-description">${item.description}</p>
               </div>
-              <button class="add-button">Add</button>
+              ${restaurant.cartSettings.enabled ? `<button class="add-button">${restaurant.cartSettings.buttonText}</button>` : ''}
             </div>
           `).join('')}
         </div>
@@ -711,6 +759,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     </div>
   </main>
   
+  ${restaurant.cartSettings.enabled ? `
   <div class="cart-button empty" id="cartButton">
     <button class="cart-button-inner">
       <svg class="cart-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -745,12 +794,15 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     </div>
     
     <div class="cart-actions">
+      ${restaurant.cartSettings.allowSmsCheckout ? `
       <button class="checkout-button" id="checkoutButton">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
           <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
         </svg>
         Checkout with SMS
       </button>
+      ` : ''}
+      ${restaurant.cartSettings.allowWhatsAppCheckout ? `
       <button class="whatsapp-button" id="whatsappButton">
         <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
           <path d="M17.6 6.31999C16.8669 5.58141 15.9943 4.99596 15.033 4.59767C14.0716 4.19938 13.0406 3.99602 12 3.99999C10.6089 4.00277 9.24248 4.36599 8.03271 5.04806C6.82294 5.73013 5.8093 6.70673 5.091 7.89999C4.37271 9.09324 3.97843 10.4549 3.94785 11.8455C3.91728 13.236 4.25165 14.6148 4.92 15.84L4 20L8.2 19.08C9.35975 19.6917 10.6629 20.0028 11.98 20C14.5804 19.9968 17.0732 18.9375 18.9203 17.0771C20.7675 15.2167 21.8093 12.7172 21.8 10.12C21.8 9.06698 21.5959 8.02511 21.1962 7.05223C20.7965 6.07934 20.2092 5.19527 19.47 4.45999C18.7309 3.72471 17.8487 3.13777 16.8775 2.73889C15.9063 2.34002 14.8659 2.1371 13.815 2.13999C12.7641 2.14289 11.7248 2.35146 10.7554 2.75576C9.78592 3.16006 8.90609 3.75209 8.17 4.48999" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -758,8 +810,10 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         </svg>
         Checkout with WhatsApp
       </button>
+      ` : ''}
     </div>
   </div>
+  ` : ''}
 
   <script>
     // Restaurant data
@@ -769,7 +823,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       address: "${restaurant.info.address}"
     };
     
-    // Menu data with Indian restaurant items
+    // Menu data
     const menuData = [
       ${restaurant.categories.map(category => `{
         id: "${category.id}",
@@ -785,13 +839,13 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       }`).join(',')}
     ];
     
+    ${restaurant.cartSettings.enabled ? `
     // Cart state
     let cart = [];
     
     // DOM Elements
     const menuNavContainer = document.getElementById('menuNavContainer');
     const menuNavList = document.getElementById('menuNavList');
-    const menuSections = document.getElementById('menuSections');
     const cartButton = document.getElementById('cartButton');
     const cartButtonText = document.getElementById('cartButtonText');
     const cartOverlay = document.getElementById('cartOverlay');
@@ -800,94 +854,18 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     const cartTotal = document.getElementById('cartTotal');
     const cartTotalAmount = document.getElementById('cartTotalAmount');
     const closeCartButton = document.getElementById('closeCartButton');
-    const checkoutButton = document.getElementById('checkoutButton');
-    const whatsappButton = document.getElementById('whatsappButton');
     const navLeft = document.getElementById('navLeft');
     const navRight = document.getElementById('navRight');
     
-    // Render menu navigation
-    function renderMenuNav() {
-      menuNavList.innerHTML = ''; // Clear existing items
-      menuData.forEach((section, index) => {
-        const li = document.createElement('li');
-        li.className = \`menu-nav-item \${index === 0 ? 'active' : ''}\`;
-        li.textContent = section.name;
-        li.setAttribute('data-section', section.id);
-        li.addEventListener('click', () => {
-          document.querySelectorAll('.menu-nav-item').forEach(item => {
-            item.classList.remove('active');
-          });
-          li.classList.add('active');
-          
-          // Scroll to the section
-          const targetSection = document.getElementById(section.id);
-          if (targetSection) {
-            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
-          }
-        });
-        menuNavList.appendChild(li);
-      });
-      
-      // Update navigation indicators after rendering
-      updateNavIndicators();
-    }
+    ${restaurant.cartSettings.allowSmsCheckout ? `
+    const checkoutButton = document.getElementById('checkoutButton');
+    checkoutButton.addEventListener('click', () => handleCheckout('sms'));
+    ` : ''}
     
-    // Render menu sections
-    function renderMenuSections() {
-      menuSections.innerHTML = ''; // Clear existing content
-      menuData.forEach(section => {
-        const sectionDiv = document.createElement('div');
-        sectionDiv.className = 'menu-section';
-        sectionDiv.id = section.id;
-        
-        const sectionTitle = document.createElement('h2');
-        sectionTitle.className = 'section-title';
-        sectionTitle.textContent = section.name;
-        sectionDiv.appendChild(sectionTitle);
-        
-        section.items.forEach(item => {
-          const menuItem = document.createElement('div');
-          menuItem.className = 'menu-item';
-          menuItem.dataset.id = item.id;
-          
-          const itemInfo = document.createElement('div');
-          itemInfo.className = 'item-info';
-          
-          const nameContainer = document.createElement('div');
-          nameContainer.className = 'item-name-container';
-          
-          const itemName = document.createElement('h3');
-          itemName.className = 'item-name';
-          itemName.textContent = item.name;
-          
-          const itemPrice = document.createElement('span');
-          itemPrice.className = 'item-price';
-          itemPrice.textContent = item.price;
-          
-          nameContainer.appendChild(itemName);
-          nameContainer.appendChild(itemPrice);
-          
-          const itemDescription = document.createElement('p');
-          itemDescription.className = 'item-description';
-          itemDescription.textContent = item.description;
-          
-          itemInfo.appendChild(nameContainer);
-          itemInfo.appendChild(itemDescription);
-          
-          const addButton = document.createElement('button');
-          addButton.className = 'add-button';
-          addButton.textContent = 'Add';
-          addButton.addEventListener('click', () => addToCart(item));
-          
-          menuItem.appendChild(itemInfo);
-          menuItem.appendChild(addButton);
-          
-          sectionDiv.appendChild(menuItem);
-        });
-        
-        menuSections.appendChild(sectionDiv);
-      });
-    }
+    ${restaurant.cartSettings.allowWhatsAppCheckout ? `
+    const whatsappButton = document.getElementById('whatsappButton');
+    whatsappButton.addEventListener('click', () => handleCheckout('whatsapp'));
+    ` : ''}
     
     // Add to cart
     function addToCart(item) {
@@ -930,7 +908,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
     // Calculate total price
     function calculateTotal() {
       return cart.reduce((total, item) => {
-        return total + (parseFloat(item.price.replace('$', '')) * item.quantity);
+        return total + (parseFloat(item.price.replace(/[^0-9.]/g, '')) * item.quantity);
       }, 0).toFixed(2);
     }
     
@@ -954,10 +932,10 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         
         if (inCart) {
           addButton.classList.add('in-cart');
-          addButton.textContent = \`Add (\${inCart.quantity})\`;
+          addButton.textContent = \`${restaurant.cartSettings.buttonText} (\${inCart.quantity})\`;
         } else {
           addButton.classList.remove('in-cart');
-          addButton.textContent = 'Add';
+          addButton.textContent = '${restaurant.cartSettings.buttonText}';
         }
       });
       
@@ -996,6 +974,36 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         itemInfo.appendChild(itemName);
         itemInfo.appendChild(itemPrice);
         
+        ${restaurant.cartSettings.allowQuantityChange ? `
+        const quantityControls = document.createElement('div');
+        quantityControls.className = 'cart-item-quantity';
+        
+        const minusButton = document.createElement('button');
+        minusButton.className = 'quantity-button';
+        minusButton.textContent = '−';
+        minusButton.addEventListener('click', () => removeFromCart(item.id));
+        
+        const quantityText = document.createElement('span');
+        quantityText.textContent = item.quantity;
+        
+        const plusButton = document.createElement('button');
+        plusButton.className = 'quantity-button';
+        plusButton.textContent = '+';
+        plusButton.addEventListener('click', () => {
+          const existingItem = cart.find(cartItem => cartItem.id === item.id);
+          if (existingItem) {
+            existingItem.quantity += 1;
+            updateUI();
+          }
+        });
+        
+        quantityControls.appendChild(minusButton);
+        quantityControls.appendChild(quantityText);
+        quantityControls.appendChild(plusButton);
+        
+        cartItem.appendChild(itemInfo);
+        cartItem.appendChild(quantityControls);
+        ` : `
         const removeButton = document.createElement('button');
         removeButton.className = 'quantity-button';
         removeButton.textContent = '−';
@@ -1003,6 +1011,7 @@ export const generateHTML = (restaurant: RestaurantData): string => {
         
         cartItem.appendChild(itemInfo);
         cartItem.appendChild(removeButton);
+        `}
         
         cartItems.appendChild(cartItem);
       });
@@ -1061,6 +1070,58 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       cart = [];
       updateUI();
       closeCart();
+    }
+    
+    // Event listeners
+    cartButton.addEventListener('click', openCart);
+    cartOverlay.addEventListener('click', closeCart);
+    closeCartButton.addEventListener('click', closeCart);
+    
+    // Add event listeners to all "Add to Cart" buttons
+    document.querySelectorAll('.add-button').forEach(button => {
+      button.addEventListener('click', function() {
+        const menuItem = this.closest('.menu-item');
+        const itemId = menuItem.dataset.id;
+        
+        // Find the corresponding item in our data
+        for (const category of menuData) {
+          const item = category.items.find(i => i.id === itemId);
+          if (item) {
+            addToCart(item);
+            break;
+          }
+        }
+      });
+    });
+    ` : ''}
+    
+    // Render menu navigation
+    function renderMenuNav() {
+      const menuNavList = document.getElementById('menuNavList');
+      menuNavList.innerHTML = ''; // Clear existing items
+      
+      menuData.forEach((section, index) => {
+        const li = document.createElement('li');
+        li.className = \`menu-nav-item \${index === 0 ? 'active' : ''}\`;
+        li.textContent = section.name;
+        li.setAttribute('data-section', section.id);
+        li.addEventListener('click', () => {
+          document.querySelectorAll('.menu-nav-item').forEach(item => {
+            item.classList.remove('active');
+          });
+          li.classList.add('active');
+          
+          // Scroll to the section
+          const targetSection = document.getElementById(section.id);
+          if (targetSection) {
+            targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          }
+        });
+        menuNavList.appendChild(li);
+      });
+      
+      // Update navigation indicators after rendering
+      updateNavIndicators();
     }
     
     // Update navigation indicators based on scroll position
@@ -1133,26 +1194,20 @@ export const generateHTML = (restaurant: RestaurantData): string => {
       const navLeftBtn = document.getElementById('navLeft');
       const navRightBtn = document.getElementById('navRight');
       
-      navLeftBtn.addEventListener('click', () => {
-        navContainer.scrollBy({ left: -150, behavior: 'smooth' });
-      });
-      
-      navRightBtn.addEventListener('click', () => {
-        navContainer.scrollBy({ left: 150, behavior: 'smooth' });
-      });
+      if (navLeftBtn && navRightBtn) {
+        navLeftBtn.addEventListener('click', () => {
+          navContainer.scrollBy({ left: -150, behavior: 'smooth' });
+        });
+        
+        navRightBtn.addEventListener('click', () => {
+          navContainer.scrollBy({ left: 150, behavior: 'smooth' });
+        });
+      }
     }
-    
-    // Event listeners
-    cartButton.addEventListener('click', openCart);
-    cartOverlay.addEventListener('click', closeCart);
-    closeCartButton.addEventListener('click', closeCart);
-    checkoutButton.addEventListener('click', () => handleCheckout('sms'));
-    whatsappButton.addEventListener('click', () => handleCheckout('whatsapp'));
     
     // Initialize
     renderMenuNav();
-    renderMenuSections();
-    updateUI();
+    ${restaurant.cartSettings.enabled ? 'updateUI();' : ''}
     setupTouchNavigation();
     
     // Improved scroll handling with IntersectionObserver for better performance

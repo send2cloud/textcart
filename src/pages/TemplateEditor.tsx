@@ -3,6 +3,7 @@ import React from 'react';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { toast } from 'sonner';
 import { Check, Palette } from 'lucide-react';
+import CartSettings from '../components/CartSettings';
 
 const TemplateEditor: React.FC = () => {
   const { templates, activeTemplateId, setActiveTemplateId, restaurant, setRestaurant, saveRestaurant } = useRestaurant();
@@ -80,100 +81,104 @@ const TemplateEditor: React.FC = () => {
           </div>
         </div>
 
-        <div className="bg-card shadow rounded-lg p-6">
-          <h2 className="text-lg font-medium mb-4">Theme Customization</h2>
-          
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Primary Color</label>
-              <div className="flex items-center">
-                <input 
-                  type="color" 
-                  value={restaurant.themeColors.primary}
-                  onChange={(e) => handleColorChange('primary', e.target.value)}
-                  className="w-10 h-10 rounded overflow-hidden"
-                />
-                <input 
-                  type="text" 
-                  value={restaurant.themeColors.primary}
-                  onChange={(e) => handleColorChange('primary', e.target.value)}
-                  className="ml-2 flex-1 p-2 border rounded-md"
-                />
-              </div>
-            </div>
+        <div className="space-y-6">
+          <div className="bg-card shadow rounded-lg p-6">
+            <h2 className="text-lg font-medium mb-4">Theme Customization</h2>
             
-            <div>
-              <label className="block text-sm font-medium mb-1">Secondary Color</label>
-              <div className="flex items-center">
-                <input 
-                  type="color" 
-                  value={restaurant.themeColors.secondary}
-                  onChange={(e) => handleColorChange('secondary', e.target.value)}
-                  className="w-10 h-10 rounded overflow-hidden"
-                />
-                <input 
-                  type="text" 
-                  value={restaurant.themeColors.secondary}
-                  onChange={(e) => handleColorChange('secondary', e.target.value)}
-                  className="ml-2 flex-1 p-2 border rounded-md"
-                />
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Primary Color</label>
+                <div className="flex items-center">
+                  <input 
+                    type="color" 
+                    value={restaurant.themeColors.primary}
+                    onChange={(e) => handleColorChange('primary', e.target.value)}
+                    className="w-10 h-10 rounded overflow-hidden"
+                  />
+                  <input 
+                    type="text" 
+                    value={restaurant.themeColors.primary}
+                    onChange={(e) => handleColorChange('primary', e.target.value)}
+                    className="ml-2 flex-1 p-2 border rounded-md"
+                  />
+                </div>
               </div>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-1">Background Color</label>
-              <div className="flex items-center">
-                <input 
-                  type="color" 
-                  value={restaurant.themeColors.background}
-                  onChange={(e) => handleColorChange('background', e.target.value)}
-                  className="w-10 h-10 rounded overflow-hidden"
-                />
-                <input 
-                  type="text" 
-                  value={restaurant.themeColors.background}
-                  onChange={(e) => handleColorChange('background', e.target.value)}
-                  className="ml-2 flex-1 p-2 border rounded-md"
-                />
+              
+              <div>
+                <label className="block text-sm font-medium mb-1">Secondary Color</label>
+                <div className="flex items-center">
+                  <input 
+                    type="color" 
+                    value={restaurant.themeColors.secondary}
+                    onChange={(e) => handleColorChange('secondary', e.target.value)}
+                    className="w-10 h-10 rounded overflow-hidden"
+                  />
+                  <input 
+                    type="text" 
+                    value={restaurant.themeColors.secondary}
+                    onChange={(e) => handleColorChange('secondary', e.target.value)}
+                    className="ml-2 flex-1 p-2 border rounded-md"
+                  />
+                </div>
               </div>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-1">Text Color</label>
-              <div className="flex items-center">
-                <input 
-                  type="color" 
-                  value={restaurant.themeColors.text}
-                  onChange={(e) => handleColorChange('text', e.target.value)}
-                  className="w-10 h-10 rounded overflow-hidden"
-                />
-                <input 
-                  type="text" 
-                  value={restaurant.themeColors.text}
-                  onChange={(e) => handleColorChange('text', e.target.value)}
-                  className="ml-2 flex-1 p-2 border rounded-md"
-                />
+              
+              <div>
+                <label className="block text-sm font-medium mb-1">Background Color</label>
+                <div className="flex items-center">
+                  <input 
+                    type="color" 
+                    value={restaurant.themeColors.background}
+                    onChange={(e) => handleColorChange('background', e.target.value)}
+                    className="w-10 h-10 rounded overflow-hidden"
+                  />
+                  <input 
+                    type="text" 
+                    value={restaurant.themeColors.background}
+                    onChange={(e) => handleColorChange('background', e.target.value)}
+                    className="ml-2 flex-1 p-2 border rounded-md"
+                  />
+                </div>
               </div>
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium mb-1">Accent Color</label>
-              <div className="flex items-center">
-                <input 
-                  type="color" 
-                  value={restaurant.themeColors.accent}
-                  onChange={(e) => handleColorChange('accent', e.target.value)}
-                  className="w-10 h-10 rounded overflow-hidden"
-                />
-                <input 
-                  type="text" 
-                  value={restaurant.themeColors.accent}
-                  onChange={(e) => handleColorChange('accent', e.target.value)}
-                  className="ml-2 flex-1 p-2 border rounded-md"
-                />
+              
+              <div>
+                <label className="block text-sm font-medium mb-1">Text Color</label>
+                <div className="flex items-center">
+                  <input 
+                    type="color" 
+                    value={restaurant.themeColors.text}
+                    onChange={(e) => handleColorChange('text', e.target.value)}
+                    className="w-10 h-10 rounded overflow-hidden"
+                  />
+                  <input 
+                    type="text" 
+                    value={restaurant.themeColors.text}
+                    onChange={(e) => handleColorChange('text', e.target.value)}
+                    className="ml-2 flex-1 p-2 border rounded-md"
+                  />
+                </div>
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium mb-1">Accent Color</label>
+                <div className="flex items-center">
+                  <input 
+                    type="color" 
+                    value={restaurant.themeColors.accent}
+                    onChange={(e) => handleColorChange('accent', e.target.value)}
+                    className="w-10 h-10 rounded overflow-hidden"
+                  />
+                  <input 
+                    type="text" 
+                    value={restaurant.themeColors.accent}
+                    onChange={(e) => handleColorChange('accent', e.target.value)}
+                    className="ml-2 flex-1 p-2 border rounded-md"
+                  />
+                </div>
               </div>
             </div>
           </div>
+          
+          <CartSettings />
         </div>
       </div>
     </div>
