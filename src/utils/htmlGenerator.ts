@@ -1147,4 +1147,3 @@ function adjustColor(color: string, amount: number): string {
   // Convert back to hex
   return `#${Math.round(adjustR).toString(16).padStart(2, '0')}${Math.round(adjustG).toString(16).padStart(2, '0')}${Math.round(adjustB).toString(16).padStart(2, '0')}`;
 }
-
