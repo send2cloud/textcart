@@ -1,9 +1,36 @@
+
 import React, { useEffect, useState, useRef } from 'react';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import PreviewPanel from '../components/editor/PreviewPanel';
 import TextMenuEditor from '../components/editor/TextMenuEditor';
 import { generateHTML } from '../utils/htmlGenerator';
 import { toast } from 'sonner';
+
+// Helper function to strip markdown from text
+const stripMarkdown = (text: string): string => {
+  if (!text) return '';
+  
+  // Remove markdown formatting
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '$1') // Bold
+    .replace(/\*(.*?)\*/g, '$1')     // Italic
+    .replace(/__(.*?)__/g, '$1')     // Bold with underscore
+    .replace(/_(.*?)_/g, '$1')       // Italic with underscore
+    .replace(/~~(.*?)~~/g, '$1')     // Strikethrough
+    .replace(/^#+\s+(.*)/gm, '$1')   // Headers
+    .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Links
+    .replace(/!\[(.*?)\]\(.*?\)/g, '$1') // Images
+    .replace(/`(.*?)`/g, '$1')       // Inline code
+    .replace(/```[^`]*```/g, '')     // Code blocks
+    .replace(/^\s*>\s*(.*)/gm, '$1') // Blockquotes
+    .replace(/^\s*[-*+]\s+/gm, '')   // Unordered lists
+    .replace(/^\s*\d+\.\s+/gm, '')   // Ordered lists
+    .replace(/\|.*\|/g, '')          // Tables
+    .replace(/^-{3,}$/gm, '')        // Horizontal rules with hyphens
+    .replace(/^_{3,}$/gm, '')        // Horizontal rules with underscores
+    .replace(/^\*{3,}$/gm, '');      // Horizontal rules with asterisks
+};
+
 const EditorPreview: React.FC = () => {
   const {
     restaurant,
@@ -18,15 +45,33 @@ const EditorPreview: React.FC = () => {
     name: string;
   }[]>([]);
   const previewRef = useRef<HTMLIFrameElement | null>(null);
+
   useEffect(() => {
     if (restaurant && templates.length > 0) {
       const activeTemplate = templates.find(t => t.id === activeTemplateId);
       if (activeTemplate) {
-        const html = generateHTML(restaurant, activeTemplate);
+        // Create a deep copy of the restaurant to clean markdown
+        const cleanedRestaurant = JSON.parse(JSON.stringify(restaurant));
+        
+        // Strip markdown from category names and item fields
+        if (cleanedRestaurant.categories) {
+          cleanedRestaurant.categories = cleanedRestaurant.categories.map(category => ({
+            ...category,
+            name: stripMarkdown(category.name),
+            items: category.items.map(item => ({
+              ...item,
+              name: stripMarkdown(item.name),
+              description: stripMarkdown(item.description),
+              price: stripMarkdown(item.price)
+            }))
+          }));
+        }
+        
+        const html = generateHTML(cleanedRestaurant, activeTemplate);
         setGeneratedHTML(html);
 
         // Update category links for the navigation
-        setCategoryLinks(restaurant.categories.map(cat => ({
+        setCategoryLinks(cleanedRestaurant.categories.map(cat => ({
           id: cat.id,
           name: cat.name.split(' / ')[0] // Only use the first part of the name before slash
         })));
@@ -45,7 +90,9 @@ const EditorPreview: React.FC = () => {
 
     // Try to find the category element by ID in the iframe document
     // We'll look for both category-{id} and the actual ID
-    const categoryElement = previewIframe.contentDocument.getElementById(`category-${categoryId}`) || previewIframe.contentDocument.getElementById(categoryId);
+    const categoryElement = previewIframe.contentDocument.getElementById(`category-${categoryId}`) || 
+                            previewIframe.contentDocument.getElementById(categoryId);
+    
     if (categoryElement) {
       categoryElement.scrollIntoView({
         behavior: 'smooth',
@@ -71,7 +118,8 @@ const EditorPreview: React.FC = () => {
   const slugify = (text: string): string => {
     return text.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '');
   };
-  const handleUpdateMenu = newCategories => {
+
+  const handleUpdateMenu = (newCategories) => {
     if (restaurant) {
       try {
         const updatedRestaurant = {
@@ -99,10 +147,10 @@ const EditorPreview: React.FC = () => {
       }
     }
   };
-  return <div className="space-y-6">
+
+  return (
+    <div className="space-y-6">
       <h1 className="text-2xl font-bold mb-6">Editor + Preview</h1>
-      
-      {categoryLinks.length > 0}
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div>
@@ -112,6 +160,8 @@ const EditorPreview: React.FC = () => {
           <PreviewPanel generatedHTML={generatedHTML} ref={previewRef} />
         </div>
       </div>
-    </div>;
+    </div>
+  );
 };
+
 export default EditorPreview;

@@ -44,6 +44,23 @@ const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generat
         }
       });
       
+      // Fix sticky menu to ensure it's not cut off
+      const menuNav = iframeDoc.querySelector('.menu-nav');
+      if (menuNav) {
+        menuNav.style.position = 'sticky';
+        menuNav.style.top = '0';
+        menuNav.style.zIndex = '40';
+        menuNav.style.background = 'var(--background)';
+        menuNav.style.width = '100%';
+        
+        // Ensure menu items don't get cut off by adding padding
+        const menuNavContainer = iframeDoc.querySelector('.menu-nav-container');
+        if (menuNavContainer) {
+          menuNavContainer.style.paddingBottom = '4px';
+          menuNavContainer.style.paddingTop = '4px';
+        }
+      }
+      
       // Fix navigation menu category highlighting in the iframe
       const navLinks = iframeDoc.querySelectorAll('.nav-link');
       if (navLinks.length > 0) {
