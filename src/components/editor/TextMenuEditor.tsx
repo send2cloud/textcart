@@ -33,6 +33,7 @@ const TextMenuEditor: React.FC<TextMenuEditorProps> = ({ categories, onUpdateMen
     }
   }, [categories, menuText]);
 
+  // Detect if text contains markdown formatting
   const detectMarkdown = (text: string): boolean => {
     // Common markdown patterns to detect
     const markdownPatterns = [
@@ -52,26 +53,69 @@ const TextMenuEditor: React.FC<TextMenuEditorProps> = ({ categories, onUpdateMen
     return markdownPatterns.some(pattern => pattern.test(text));
   };
 
+  // Convert markdown to our format
+  const convertMarkdown = (text: string): string => {
+    let converted = text;
+    
+    // Replace markdown headers with category names
+    converted = converted.replace(/^(#+)\s+(.+)$/gm, (_, hashes, title) => {
+      return `${title}`;
+    });
+    
+    // Convert markdown list items to our format
+    converted = converted.replace(/^[*+-]\s+(.+?)(?:\s+-\s+|\s*:\s*)(.+?)(?:\s+\$(\d+(?:\.\d+)?))?$/gm, 
+      (_, name, description, price) => {
+        return `- ${name}: ${description} = ${price ? '$' + price : 'N/A'}`;
+      }
+    );
+    
+    // Handle numbered lists
+    converted = converted.replace(/^\d+\.\s+(.+?)(?:\s+-\s+|\s*:\s*)(.+?)(?:\s+\$(\d+(?:\.\d+)?))?$/gm, 
+      (_, name, description, price) => {
+        return `- ${name}: ${description} = ${price ? '$' + price : 'N/A'}`;
+      }
+    );
+    
+    return converted;
+  };
+
   const parseMenuText = (): { categories: MenuCategory[] | null, errors: ParsingError[] } => {
     const errors: ParsingError[] = [];
+    let processedText = menuText;
     
     // Check for markdown formatting
     if (detectMarkdown(menuText)) {
-      errors.push({
-        lineNumber: 0,
-        message: 
-          "It looks like you're using markdown formatting, but we need a specific format. Please use this format instead:\n\n" +
-          "Category Name\n" +
-          "- Item Name: Description = $Price\n" +
-          "- Another Item: Its description = $Price\n\n" +
-          "Another Category\n" +
-          "- Item Name: Description = $Price",
-        line: ""
-      });
-      return { categories: null, errors };
+      try {
+        processedText = convertMarkdown(menuText);
+        errors.push({
+          lineNumber: 0,
+          message: 
+            "We detected markdown formatting and tried to convert it to our format. " +
+            "Please check the results carefully and adjust if needed. The expected format is:\n\n" +
+            "Category Name\n" +
+            "- Item Name: Description = $Price\n" +
+            "- Another Item: Its description = $Price\n\n" +
+            "Another Category\n" +
+            "- Item Name: Description = $Price",
+          line: ""
+        });
+      } catch (error) {
+        errors.push({
+          lineNumber: 0,
+          message: 
+            "It looks like you're using markdown formatting, but we need a specific format. Please use this format instead:\n\n" +
+            "Category Name\n" +
+            "- Item Name: Description = $Price\n" +
+            "- Another Item: Its description = $Price\n\n" +
+            "Another Category\n" +
+            "- Item Name: Description = $Price",
+          line: ""
+        });
+        return { categories: null, errors };
+      }
     }
     
-    const lines = menuText.split('\n').map((line, idx) => ({ 
+    const lines = processedText.split('\n').map((line, idx) => ({ 
       text: line.trim(), 
       index: idx + 1
     })).filter(line => line.text.length > 0);
@@ -263,6 +307,9 @@ const TextMenuEditor: React.FC<TextMenuEditorProps> = ({ categories, onUpdateMen
           Enter your menu using the format: <br />
           <code className="bg-muted p-1 rounded">Category Name</code><br />
           <code className="bg-muted p-1 rounded">- Item Name: Description = $Price</code>
+        </p>
+        <p className="text-sm text-muted-foreground">
+          We also support markdown-style formats and will try to convert them.
         </p>
       </div>
 

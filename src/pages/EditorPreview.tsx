@@ -33,15 +33,41 @@ const EditorPreview: React.FC = () => {
     const iframe = previewRef.current;
     if (!iframe || !iframe.contentWindow || !iframe.contentDocument) return;
     
-    // First, ensure we have a reference to the preview iframe and properly cast it
+    // Get reference to the preview iframe
     const previewIframe = document.querySelector('iframe[title="Live Preview"]') as HTMLIFrameElement | null;
     if (!previewIframe || !previewIframe.contentDocument) return;
     
     // Try to find the category element by ID in the iframe document
-    const categoryElement = previewIframe.contentDocument.getElementById(`category-${categoryId}`);
+    // We'll look for both category-{id} and the actual ID
+    const categoryElement = 
+      previewIframe.contentDocument.getElementById(`category-${categoryId}`) || 
+      previewIframe.contentDocument.getElementById(categoryId);
+      
     if (categoryElement) {
       categoryElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    } else {
+      // If we can't find the element by ID, try to find it by the slug version of the name
+      const categoryData = restaurant?.categories.find(cat => cat.id === categoryId);
+      if (categoryData) {
+        const slugName = slugify(categoryData.name);
+        const elementBySlug = previewIframe.contentDocument.getElementById(slugName);
+        if (elementBySlug) {
+          elementBySlug.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
     }
+  };
+  
+  // Helper function to slugify text for ID matching
+  const slugify = (text: string): string => {
+    return text
+      .toString()
+      .toLowerCase()
+      .replace(/\s+/g, '-')
+      .replace(/[^\w-]+/g, '')
+      .replace(/--+/g, '-')
+      .replace(/^-+/, '')
+      .replace(/-+$/, '');
   };
 
   const handleUpdateMenu = (newCategories) => {
@@ -59,6 +85,14 @@ const EditorPreview: React.FC = () => {
           id: cat.id,
           name: cat.name
         })));
+        
+        // Small delay to ensure the HTML is regenerated before trying to scroll
+        setTimeout(() => {
+          // If we have categories and the first one has an ID, scroll to it to reset view
+          if (newCategories.length > 0 && newCategories[0].id) {
+            scrollToCategory(newCategories[0].id);
+          }
+        }, 300);
       } catch (error) {
         toast.error('Failed to update menu: ' + (error instanceof Error ? error.message : 'Unknown error'));
       }
