@@ -17,7 +17,10 @@ const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generat
 
   const handleOpenInNewWindow = () => {
     // Clean HTML before opening in new window
-    const cleanHTML = generatedHTML.replace(/###/g, '').replace(/\*\*/g, '');
+    const cleanHTML = generatedHTML
+      .replace(/###/g, '')
+      .replace(/\*\*/g, '')
+      .replace(/\*/g, '');
     
     const newWindow = window.open('', '_blank');
     if (newWindow) {
@@ -38,9 +41,9 @@ const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generat
       const cleanup = applyScrollBehavior(iframeDoc);
       
       // Add IDs to category elements for navigation
-      const categoryElements = iframeDoc.querySelectorAll('.menu-category');
+      const categoryElements = iframeDoc.querySelectorAll('.menu-category, .menu-section');
       categoryElements.forEach((el) => {
-        const categoryName = el.querySelector('h2, h3')?.textContent;
+        const categoryName = el.querySelector('h2, h3, .section-title')?.textContent;
         if (categoryName) {
           // Create a sanitized ID based on the category name
           const categoryId = categoryName.trim().toLowerCase().replace(/\s+/g, '-');
@@ -48,9 +51,13 @@ const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generat
         }
       });
       
-      // Clean markdown syntax from rendered elements
-      const menuItems = iframeDoc.querySelectorAll('.menu-item-name, .menu-category-title, .item-name, .item-description');
-      menuItems.forEach(item => {
+      // Clean markdown syntax from ALL rendered text elements
+      const textElements = iframeDoc.querySelectorAll(
+        '.menu-item-name, .menu-category-title, .item-name, .item-description, ' + 
+        '.section-title, h1, h2, h3, p, span, div.item-name, div.item-description'
+      );
+      
+      textElements.forEach(item => {
         if (item.textContent) {
           item.textContent = stripMarkdown(item.textContent);
         }
@@ -63,8 +70,12 @@ const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generat
     
     iframe.addEventListener('load', handleIframeLoad);
     
-    // Write cleaned HTML to iframe
-    const cleanHTML = generatedHTML.replace(/###/g, '').replace(/\*\*/g, '');
+    // Write cleaned HTML to iframe - strip all markdown syntax
+    const cleanHTML = generatedHTML
+      .replace(/###/g, '')
+      .replace(/\*\*/g, '')
+      .replace(/\*/g, '');
+      
     if (iframe.contentDocument) {
       iframe.contentDocument.open();
       iframe.contentDocument.write(cleanHTML);

@@ -32,5 +32,11 @@ export const stripMarkdown = (text: string): string => {
   result = result.replace(/^(?!\s*#)(.*)###(.*)$/gm, '$1$2');
   result = result.replace(/###/g, '');
   
+  // Remove any remaining Markdown syntax characters
+  result = result.replace(/\*\*/g, '');
+  result = result.replace(/\*/g, '');
+  result = result.replace(/__/g, '');
+  result = result.replace(/_/g, '');
+  
   return result;
 };

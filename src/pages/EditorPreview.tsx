@@ -67,6 +67,13 @@ const EditorPreview: React.FC = () => {
         const elementBySlug = previewIframe.contentDocument.getElementById(slugName);
         if (elementBySlug) {
           elementBySlug.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        } else {
+          console.log(`Could not find category element for ${categoryId} or ${slugName}`);
+          
+          // Debug category IDs in iframe
+          const allIds = Array.from(previewIframe.contentDocument.querySelectorAll('[id]'))
+            .map(el => el.id);
+          console.log('Available IDs in iframe:', allIds);
         }
       }
     }
