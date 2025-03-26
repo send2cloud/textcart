@@ -33,8 +33,8 @@ const EditorPreview: React.FC = () => {
     const iframe = previewRef.current;
     if (!iframe || !iframe.contentWindow || !iframe.contentDocument) return;
     
-    // First, ensure we have a reference to the preview iframe
-    const previewIframe = document.querySelector('iframe[title="Live Preview"]');
+    // First, ensure we have a reference to the preview iframe and properly cast it
+    const previewIframe = document.querySelector('iframe[title="Live Preview"]') as HTMLIFrameElement | null;
     if (!previewIframe || !previewIframe.contentDocument) return;
     
     // Try to find the category element by ID in the iframe document
