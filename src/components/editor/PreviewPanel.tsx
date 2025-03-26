@@ -2,7 +2,6 @@
 import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { Smartphone, Tablet, Monitor, ExternalLink } from 'lucide-react';
 import { applyScrollBehavior } from '../../utils/scrollHandler';
-import { stripMarkdown } from '../../utils/stripMarkdown';
 
 interface PreviewPanelProps {
   generatedHTML: string;
@@ -16,15 +15,9 @@ const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generat
   useImperativeHandle(ref, () => iframeRef.current as HTMLIFrameElement);
 
   const handleOpenInNewWindow = () => {
-    // Clean HTML before opening in new window
-    const cleanHTML = generatedHTML
-      .replace(/###/g, '')
-      .replace(/\*\*/g, '')
-      .replace(/\*/g, '');
-    
     const newWindow = window.open('', '_blank');
     if (newWindow) {
-      newWindow.document.write(cleanHTML);
+      newWindow.document.write(generatedHTML);
       newWindow.document.close();
     }
   };
@@ -41,25 +34,13 @@ const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generat
       const cleanup = applyScrollBehavior(iframeDoc);
       
       // Add IDs to category elements for navigation
-      const categoryElements = iframeDoc.querySelectorAll('.menu-category, .menu-section');
+      const categoryElements = iframeDoc.querySelectorAll('.menu-category');
       categoryElements.forEach((el) => {
-        const categoryName = el.querySelector('h2, h3, .section-title')?.textContent;
+        const categoryName = el.querySelector('h2, h3')?.textContent;
         if (categoryName) {
           // Create a sanitized ID based on the category name
           const categoryId = categoryName.trim().toLowerCase().replace(/\s+/g, '-');
           el.id = `category-${categoryId}`;
-        }
-      });
-      
-      // Clean markdown syntax from ALL rendered text elements
-      const textElements = iframeDoc.querySelectorAll(
-        '.menu-item-name, .menu-category-title, .item-name, .item-description, ' + 
-        '.section-title, h1, h2, h3, p, span, div.item-name, div.item-description'
-      );
-      
-      textElements.forEach(item => {
-        if (item.textContent) {
-          item.textContent = stripMarkdown(item.textContent);
         }
       });
       
@@ -69,18 +50,6 @@ const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generat
     };
     
     iframe.addEventListener('load', handleIframeLoad);
-    
-    // Write cleaned HTML to iframe - strip all markdown syntax
-    const cleanHTML = generatedHTML
-      .replace(/###/g, '')
-      .replace(/\*\*/g, '')
-      .replace(/\*/g, '');
-      
-    if (iframe.contentDocument) {
-      iframe.contentDocument.open();
-      iframe.contentDocument.write(cleanHTML);
-      iframe.contentDocument.close();
-    }
     
     return () => {
       iframe.removeEventListener('load', handleIframeLoad);
@@ -135,6 +104,7 @@ const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generat
           <iframe
             ref={iframeRef}
             title="Live Preview"
+            srcDoc={generatedHTML}
             className="w-full h-full border-0"
             sandbox="allow-same-origin allow-scripts"
           />
