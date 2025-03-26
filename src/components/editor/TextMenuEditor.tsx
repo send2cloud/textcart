@@ -33,8 +33,44 @@ const TextMenuEditor: React.FC<TextMenuEditorProps> = ({ categories, onUpdateMen
     }
   }, [categories, menuText]);
 
+  const detectMarkdown = (text: string): boolean => {
+    // Common markdown patterns to detect
+    const markdownPatterns = [
+      /^#+\s.+$/m,             // Headings (e.g., # Heading)
+      /^>\s.+$/m,              // Blockquotes
+      /^-{3,}$|^_{3,}$/m,      // Horizontal rules
+      /!\[.*?\]\(.*?\)/,       // Image links
+      /\[.*?\]\(.*?\)/,        // Links
+      /\*\*.+?\*\*/,           // Bold
+      /\*.+?\*/,               // Italic
+      /`[^`]+`/,               // Inline code
+      /^```[\s\S]*?```$/m,     // Code blocks
+      /^[0-9]+\.\s.+$/m,       // Numbered lists
+      /^[*+-]\s(?![^:]*?=)/m,  // Bullet points without our format pattern
+    ];
+
+    return markdownPatterns.some(pattern => pattern.test(text));
+  };
+
   const parseMenuText = (): { categories: MenuCategory[] | null, errors: ParsingError[] } => {
     const errors: ParsingError[] = [];
+    
+    // Check for markdown formatting
+    if (detectMarkdown(menuText)) {
+      errors.push({
+        lineNumber: 0,
+        message: 
+          "It looks like you're using markdown formatting, but we need a specific format. Please use this format instead:\n\n" +
+          "Category Name\n" +
+          "- Item Name: Description = $Price\n" +
+          "- Another Item: Its description = $Price\n\n" +
+          "Another Category\n" +
+          "- Item Name: Description = $Price",
+        line: ""
+      });
+      return { categories: null, errors };
+    }
+    
     const lines = menuText.split('\n').map((line, idx) => ({ 
       text: line.trim(), 
       index: idx + 1
@@ -96,7 +132,7 @@ const TextMenuEditor: React.FC<TextMenuEditorProps> = ({ categories, onUpdateMen
               
               errors.push({
                 lineNumber,
-                message: "Missing colon and equals sign. Item added with empty description and no price.",
+                message: "Missing format. Please use: '- Name: Description = Price'. Item added with empty description and no price.",
                 line
               });
             }
@@ -119,7 +155,7 @@ const TextMenuEditor: React.FC<TextMenuEditorProps> = ({ categories, onUpdateMen
             
             errors.push({
               lineNumber,
-              message: "Missing equals sign for price. Item added with 'N/A' as price.",
+              message: "Missing equals sign for price. Item added with 'N/A' as price. Format should be '- Name: Description = Price'.",
               line
             });
             continue;
@@ -143,7 +179,7 @@ const TextMenuEditor: React.FC<TextMenuEditorProps> = ({ categories, onUpdateMen
           // Item without a category
           errors.push({
             lineNumber,
-            message: "Item found before any category was defined.",
+            message: "Item found before any category was defined. Please add a category name (without a dash) before listing items.",
             line
           });
         }

@@ -1,5 +1,5 @@
 
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { Smartphone, Tablet, Monitor, ExternalLink } from 'lucide-react';
 import { applyScrollBehavior } from '../../utils/scrollHandler';
 
@@ -7,9 +7,12 @@ interface PreviewPanelProps {
   generatedHTML: string;
 }
 
-const PreviewPanel: React.FC<PreviewPanelProps> = ({ generatedHTML }) => {
+const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generatedHTML }, ref) => {
   const [viewMode, setViewMode] = useState<'mobile' | 'tablet' | 'desktop'>('desktop');
   const iframeRef = useRef<HTMLIFrameElement>(null);
+  
+  // Forward the iframe ref
+  useImperativeHandle(ref, () => iframeRef.current as HTMLIFrameElement);
 
   const handleOpenInNewWindow = () => {
     const newWindow = window.open('', '_blank');
@@ -29,6 +32,17 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ generatedHTML }) => {
       
       // Apply scroll behavior to the iframe document
       const cleanup = applyScrollBehavior(iframeDoc);
+      
+      // Add IDs to category elements for navigation
+      const categoryElements = iframeDoc.querySelectorAll('.menu-category');
+      categoryElements.forEach((el) => {
+        const categoryName = el.querySelector('h2, h3')?.textContent;
+        if (categoryName) {
+          // Create a sanitized ID based on the category name
+          const categoryId = categoryName.trim().toLowerCase().replace(/\s+/g, '-');
+          el.id = `category-${categoryId}`;
+        }
+      });
       
       return () => {
         if (cleanup) cleanup();
@@ -98,6 +112,8 @@ const PreviewPanel: React.FC<PreviewPanelProps> = ({ generatedHTML }) => {
       </div>
     </div>
   );
-};
+});
+
+PreviewPanel.displayName = 'PreviewPanel';
 
 export default PreviewPanel;
