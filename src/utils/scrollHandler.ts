@@ -16,39 +16,39 @@ export const applyScrollBehavior = (doc: Document) => {
       // Handle header visibility
       if (scrollTop > 50 && scrollTop > prevScrollTop) {
         // Scrolling down
-        header.style.transform = 'translateY(-100%)';
-        header.style.transition = 'transform 0.3s ease-in-out';
+        (header as HTMLElement).style.transform = 'translateY(-100%)';
+        (header as HTMLElement).style.transition = 'transform 0.3s ease-in-out';
         
         // Make nav sticky with proper spacing to avoid cut-off
-        nav.style.position = 'fixed';
-        nav.style.top = '0';
-        nav.style.left = '0';
-        nav.style.right = '0';
-        nav.style.width = '100%';
-        nav.style.zIndex = '1000';
-        nav.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
-        nav.style.padding = '4px 0';
+        (nav as HTMLElement).style.position = 'fixed';
+        (nav as HTMLElement).style.top = '0';
+        (nav as HTMLElement).style.left = '0';
+        (nav as HTMLElement).style.right = '0';
+        (nav as HTMLElement).style.width = '100%';
+        (nav as HTMLElement).style.zIndex = '1000';
+        (nav as HTMLElement).style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
+        (nav as HTMLElement).style.padding = '4px 0';
         
         // Ensure the nav container has proper padding
         const navContainer = nav.querySelector('.menu-nav-container');
         if (navContainer) {
-          navContainer.style.paddingBottom = '4px';
-          navContainer.style.paddingTop = '4px';
+          (navContainer as HTMLElement).style.paddingBottom = '4px';
+          (navContainer as HTMLElement).style.paddingTop = '4px';
         }
       } else if (scrollTop <= 50 || scrollTop < prevScrollTop) {
         // Scrolling up or at the top
-        header.style.transform = 'translateY(0)';
+        (header as HTMLElement).style.transform = 'translateY(0)';
         
         // If at the top, make nav static again
         if (scrollTop <= 50) {
-          nav.style.position = 'static';
-          nav.style.boxShadow = 'none';
+          (nav as HTMLElement).style.position = 'static';
+          (nav as HTMLElement).style.boxShadow = 'none';
           
           // Reset the nav padding
           const navContainer = nav.querySelector('.menu-nav-container');
           if (navContainer) {
-            navContainer.style.paddingBottom = '0';
-            navContainer.style.paddingTop = '0';
+            (navContainer as HTMLElement).style.paddingBottom = '0';
+            (navContainer as HTMLElement).style.paddingTop = '0';
           }
         }
       }

@@ -47,17 +47,17 @@ const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generat
       // Fix sticky menu to ensure it's not cut off
       const menuNav = iframeDoc.querySelector('.menu-nav');
       if (menuNav) {
-        menuNav.style.position = 'sticky';
-        menuNav.style.top = '0';
-        menuNav.style.zIndex = '40';
-        menuNav.style.background = 'var(--background)';
-        menuNav.style.width = '100%';
+        (menuNav as HTMLElement).style.position = 'sticky';
+        (menuNav as HTMLElement).style.top = '0';
+        (menuNav as HTMLElement).style.zIndex = '40';
+        (menuNav as HTMLElement).style.background = 'var(--background)';
+        (menuNav as HTMLElement).style.width = '100%';
         
         // Ensure menu items don't get cut off by adding padding
         const menuNavContainer = iframeDoc.querySelector('.menu-nav-container');
         if (menuNavContainer) {
-          menuNavContainer.style.paddingBottom = '4px';
-          menuNavContainer.style.paddingTop = '4px';
+          (menuNavContainer as HTMLElement).style.paddingBottom = '4px';
+          (menuNavContainer as HTMLElement).style.paddingTop = '4px';
         }
       }
       
