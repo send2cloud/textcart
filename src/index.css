@@ -194,4 +194,13 @@
   .theme-switch {
     @apply transition-colors duration-200;
   }
+  
+  /* Navigation active state */
+  .nav-link.active {
+    @apply font-bold border-b-2 border-primary;
+  }
+  
+  .nav-link {
+    @apply border-b-2 border-transparent;
+  }
 }
