@@ -28,13 +28,14 @@ export const applyScrollBehavior = (doc: Document) => {
         (nav as HTMLElement).style.width = '100%';
         (nav as HTMLElement).style.zIndex = '1000';
         (nav as HTMLElement).style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
-        (nav as HTMLElement).style.padding = '4px 0';
+        (nav as HTMLElement).style.padding = '12px 0'; // Increased padding to prevent cut-off
+        (nav as HTMLElement).style.background = 'var(--background, #fff)'; // Ensure background is set
         
         // Ensure the nav container has proper padding
         const navContainer = nav.querySelector('.menu-nav-container');
         if (navContainer) {
-          (navContainer as HTMLElement).style.paddingBottom = '4px';
-          (navContainer as HTMLElement).style.paddingTop = '4px';
+          (navContainer as HTMLElement).style.paddingBottom = '8px'; // Increase padding
+          (navContainer as HTMLElement).style.paddingTop = '8px';    // Increase padding
         }
       } else if (scrollTop <= 50 || scrollTop < prevScrollTop) {
         // Scrolling up or at the top
@@ -44,6 +45,7 @@ export const applyScrollBehavior = (doc: Document) => {
         if (scrollTop <= 50) {
           (nav as HTMLElement).style.position = 'static';
           (nav as HTMLElement).style.boxShadow = 'none';
+          (nav as HTMLElement).style.padding = '0';
           
           // Reset the nav padding
           const navContainer = nav.querySelector('.menu-nav-container');
@@ -77,33 +79,38 @@ export const applyScrollBehavior = (doc: Document) => {
         link.classList.remove('active');
       });
       
-      // Sort categories by their position from top to bottom
+      // Find the topmost completely visible category or one that's starting to scroll out
+      const viewportTop = window.scrollY;
+      const viewportBottom = viewportTop + window.innerHeight;
+      const viewportCenter = viewportTop + (window.innerHeight / 2);
+      
+      // Get all categories in viewport and their positions
       const visibleCategories = Array.from(categories)
         .map(category => {
           const rect = category.getBoundingClientRect();
-          return { category, rect };
+          const absoluteTop = viewportTop + rect.top;
+          return { 
+            category, 
+            rect,
+            absoluteTop,
+            distanceFromViewportTop: rect.top
+          };
         })
         .filter(item => {
           // Only include categories that are actually visible in the viewport
-          // Category is considered visible if:
-          // 1. Part of it is in the viewport (top is above viewport bottom AND bottom is below viewport top)
-          // 2. It's just at the top of the viewport or partially above
           return (item.rect.top < window.innerHeight && item.rect.bottom > 0);
         })
-        .sort((a, b) => a.rect.top - b.rect.top); // Sort by top position
+        .sort((a, b) => a.distanceFromViewportTop - b.distanceFromViewportTop);
       
-      // If there are visible categories
+      // If we have visible categories
       if (visibleCategories.length > 0) {
-        // Get the topmost visible category
-        const topCategory = visibleCategories[0];
+        // Get only the topmost visible category
+        const topmostCategory = visibleCategories[0];
         
-        // Only highlight if it's actually at the top of the viewport (with some tolerance)
-        // or if its top is above the viewport (meaning it's scrolled partially out of view)
-        const isAtTop = topCategory.rect.top <= 100; // Allow some tolerance (100px)
-        
-        // Only proceed with highlighting if the category is at/near the top
-        if (isAtTop) {
-          const categoryId = topCategory.category.id;
+        // Only highlight if it's near the top of the viewport (within 50px)
+        // This ensures only one category gets highlighted at a time
+        if (topmostCategory.distanceFromViewportTop <= 50) {
+          const categoryId = topmostCategory.category.id;
           
           // Find and highlight the corresponding nav link
           const correspondingLink = Array.from(navLinks).find(link => {

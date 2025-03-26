@@ -50,15 +50,36 @@ const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generat
         (menuNav as HTMLElement).style.position = 'sticky';
         (menuNav as HTMLElement).style.top = '0';
         (menuNav as HTMLElement).style.zIndex = '40';
-        (menuNav as HTMLElement).style.background = 'var(--background)';
+        (menuNav as HTMLElement).style.background = 'var(--background, #fff)';
         (menuNav as HTMLElement).style.width = '100%';
+        (menuNav as HTMLElement).style.paddingTop = '8px';
+        (menuNav as HTMLElement).style.paddingBottom = '8px';
+        (menuNav as HTMLElement).style.transition = 'all 0.3s ease';
+        (menuNav as HTMLElement).style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.1)';
         
         // Ensure menu items don't get cut off by adding padding
         const menuNavContainer = iframeDoc.querySelector('.menu-nav-container');
         if (menuNavContainer) {
-          (menuNavContainer as HTMLElement).style.paddingBottom = '4px';
-          (menuNavContainer as HTMLElement).style.paddingTop = '4px';
+          (menuNavContainer as HTMLElement).style.paddingBottom = '8px';
+          (menuNavContainer as HTMLElement).style.paddingTop = '8px';
         }
+        
+        // Add styles for the active navigation state
+        const style = iframeDoc.createElement('style');
+        style.textContent = `
+          .nav-link.active {
+            font-weight: bold;
+            border-bottom: 2px solid var(--primary, purple);
+          }
+          .nav-link {
+            border-bottom: 2px solid transparent;
+            transition: border-color 0.3s ease;
+          }
+          .nav-link:hover {
+            border-color: rgba(var(--primary, purple), 0.5);
+          }
+        `;
+        iframeDoc.head.appendChild(style);
       }
       
       return () => {
