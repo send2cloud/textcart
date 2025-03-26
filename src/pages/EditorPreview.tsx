@@ -2,10 +2,11 @@
 import React, { useEffect, useState } from 'react';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import PreviewPanel from '../components/editor/PreviewPanel';
+import TextMenuEditor from '../components/editor/TextMenuEditor';
 import { generateHTML } from '../utils/htmlGenerator';
 
 const EditorPreview: React.FC = () => {
-  const { restaurant, templates, activeTemplateId } = useRestaurant();
+  const { restaurant, templates, activeTemplateId, setRestaurant, saveRestaurant } = useRestaurant();
   const [generatedHTML, setGeneratedHTML] = useState<string>('');
 
   useEffect(() => {
@@ -18,10 +19,32 @@ const EditorPreview: React.FC = () => {
     }
   }, [restaurant, templates, activeTemplateId]);
 
+  const handleUpdateMenu = (newCategories) => {
+    if (restaurant) {
+      const updatedRestaurant = {
+        ...restaurant,
+        categories: newCategories
+      };
+      setRestaurant(updatedRestaurant);
+      saveRestaurant();
+    }
+  };
+
   return (
-    <div className="container mx-auto px-4 py-6">
-      <h1 className="text-2xl font-bold mb-6">Preview</h1>
-      <PreviewPanel generatedHTML={generatedHTML} />
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold mb-6">Editor + Preview</h1>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <div>
+          <TextMenuEditor 
+            categories={restaurant?.categories || []} 
+            onUpdateMenu={handleUpdateMenu} 
+          />
+        </div>
+        <div>
+          <PreviewPanel generatedHTML={generatedHTML} />
+        </div>
+      </div>
     </div>
   );
 };
