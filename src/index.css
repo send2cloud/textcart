@@ -201,6 +201,11 @@
   }
   
   .nav-link {
-    @apply border-b-2 border-transparent;
+    @apply border-b-2 border-transparent hover:border-primary/50 transition-colors;
+  }
+  
+  /* User-selected state for nav links */
+  .nav-link.user-selected {
+    @apply ring-2 ring-primary ring-opacity-50;
   }
 }

@@ -65,7 +65,6 @@ export const applyScrollBehavior = (doc: Document) => {
   const updateActiveCategory = (doc: Document) => {
     const categories = doc.querySelectorAll('.category');
     const navLinks = doc.querySelectorAll('.nav-link');
-    let activeCategory = null;
     
     // Check if user has manually clicked a category link
     const userClickedLink = Array.from(navLinks).find(link => 
@@ -73,32 +72,48 @@ export const applyScrollBehavior = (doc: Document) => {
     
     // If no category was manually selected, determine by visibility
     if (!userClickedLink) {
-      // Get the top-most visible category
-      for (const category of Array.from(categories)) {
-        const rect = category.getBoundingClientRect();
-        // Check if category is visible in the viewport
-        if (rect.top < window.innerHeight / 2 && rect.bottom > 0) {
-          activeCategory = category;
-          // We want the top-most category, so break once we find one
-          break;
-        }
-      }
-      
-      // Remove active class from all nav links
+      // First, remove active class from all nav links
       navLinks.forEach(link => {
         link.classList.remove('active');
       });
       
-      // If we found an active category, highlight its corresponding nav link
-      if (activeCategory) {
-        const categoryId = activeCategory.id;
-        const correspondingLink = Array.from(navLinks).find(link => {
-          const href = link.getAttribute('href');
-          return href && href.includes(categoryId);
-        });
+      // Sort categories by their position from top to bottom
+      const visibleCategories = Array.from(categories)
+        .map(category => {
+          const rect = category.getBoundingClientRect();
+          return { category, rect };
+        })
+        .filter(item => {
+          // Only include categories that are actually visible in the viewport
+          // Category is considered visible if:
+          // 1. Part of it is in the viewport (top is above viewport bottom AND bottom is below viewport top)
+          // 2. It's just at the top of the viewport or partially above
+          return (item.rect.top < window.innerHeight && item.rect.bottom > 0);
+        })
+        .sort((a, b) => a.rect.top - b.rect.top); // Sort by top position
+      
+      // If there are visible categories
+      if (visibleCategories.length > 0) {
+        // Get the topmost visible category
+        const topCategory = visibleCategories[0];
         
-        if (correspondingLink) {
-          correspondingLink.classList.add('active');
+        // Only highlight if it's actually at the top of the viewport (with some tolerance)
+        // or if its top is above the viewport (meaning it's scrolled partially out of view)
+        const isAtTop = topCategory.rect.top <= 100; // Allow some tolerance (100px)
+        
+        // Only proceed with highlighting if the category is at/near the top
+        if (isAtTop) {
+          const categoryId = topCategory.category.id;
+          
+          // Find and highlight the corresponding nav link
+          const correspondingLink = Array.from(navLinks).find(link => {
+            const href = link.getAttribute('href');
+            return href && href.includes(categoryId);
+          });
+          
+          if (correspondingLink) {
+            correspondingLink.classList.add('active');
+          }
         }
       }
     }
@@ -110,7 +125,7 @@ export const applyScrollBehavior = (doc: Document) => {
   // Add click event listeners to nav links
   const navLinks = doc.querySelectorAll('.nav-link');
   navLinks.forEach(link => {
-    link.addEventListener('click', (e) => {
+    link.addEventListener('click', () => {
       // Remove active and user-selected classes from all links
       navLinks.forEach(l => {
         l.classList.remove('active', 'user-selected');
