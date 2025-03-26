@@ -2,6 +2,7 @@
 import React, { useState, useEffect, useRef, forwardRef, useImperativeHandle } from 'react';
 import { Smartphone, Tablet, Monitor, ExternalLink } from 'lucide-react';
 import { applyScrollBehavior } from '../../utils/scrollHandler';
+import { stripMarkdown } from '../../utils/stripMarkdown';
 
 interface PreviewPanelProps {
   generatedHTML: string;
@@ -15,9 +16,12 @@ const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generat
   useImperativeHandle(ref, () => iframeRef.current as HTMLIFrameElement);
 
   const handleOpenInNewWindow = () => {
+    // Clean HTML before opening in new window
+    const cleanHTML = generatedHTML.replace(/###/g, '').replace(/\*\*/g, '');
+    
     const newWindow = window.open('', '_blank');
     if (newWindow) {
-      newWindow.document.write(generatedHTML);
+      newWindow.document.write(cleanHTML);
       newWindow.document.close();
     }
   };
@@ -44,12 +48,28 @@ const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generat
         }
       });
       
+      // Clean markdown syntax from rendered elements
+      const menuItems = iframeDoc.querySelectorAll('.menu-item-name, .menu-category-title');
+      menuItems.forEach(item => {
+        if (item.textContent) {
+          item.textContent = stripMarkdown(item.textContent);
+        }
+      });
+      
       return () => {
         if (cleanup) cleanup();
       };
     };
     
     iframe.addEventListener('load', handleIframeLoad);
+    
+    // Write cleaned HTML to iframe
+    const cleanHTML = generatedHTML.replace(/###/g, '').replace(/\*\*/g, '');
+    if (iframe.contentDocument) {
+      iframe.contentDocument.open();
+      iframe.contentDocument.write(cleanHTML);
+      iframe.contentDocument.close();
+    }
     
     return () => {
       iframe.removeEventListener('load', handleIframeLoad);
@@ -104,7 +124,6 @@ const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generat
           <iframe
             ref={iframeRef}
             title="Live Preview"
-            srcDoc={generatedHTML}
             className="w-full h-full border-0"
             sandbox="allow-same-origin allow-scripts"
           />

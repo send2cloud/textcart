@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { MenuCategory, MenuItem } from '../../contexts/RestaurantContext';
 import { toast } from 'sonner';
 import { AlertCircle } from 'lucide-react';
+import { stripMarkdown } from '../../utils/stripMarkdown';
 
 interface TextMenuEditorProps {
   categories: MenuCategory[];
@@ -90,28 +91,24 @@ const TextMenuEditor: React.FC<TextMenuEditorProps> = ({ categories, onUpdateMen
         errors.push({
           lineNumber: 0,
           message: 
-            "We detected markdown formatting and tried to convert it to our format. " +
-            "Please check the results carefully and adjust if needed. The expected format is:\n\n" +
+            "We detected Markdown formatting in your menu text. We've converted it to our standard format below:\n\n" +
             "Category Name\n" +
             "- Item Name: Description = $Price\n" +
             "- Another Item: Its description = $Price\n\n" +
-            "Another Category\n" +
-            "- Item Name: Description = $Price",
+            "Check your menu carefully to ensure everything converted properly.",
           line: ""
         });
       } catch (error) {
         errors.push({
           lineNumber: 0,
           message: 
-            "It looks like you're using markdown formatting, but we need a specific format. Please use this format instead:\n\n" +
+            "It appears you're using Markdown. For best results, please use this format instead:\n\n" +
             "Category Name\n" +
             "- Item Name: Description = $Price\n" +
             "- Another Item: Its description = $Price\n\n" +
-            "Another Category\n" +
-            "- Item Name: Description = $Price",
+            "We'll still try to process your menu, but some items may be incorrectly formatted.",
           line: ""
         });
-        return { categories: null, errors };
       }
     }
     
@@ -133,9 +130,12 @@ const TextMenuEditor: React.FC<TextMenuEditorProps> = ({ categories, onUpdateMen
             newCategories.push(currentCategory);
           }
           
+          // Strip markdown from category name
+          const cleanCategoryName = stripMarkdown(line);
+          
           currentCategory = {
             id: currentCategory?.id || Date.now().toString() + i,
-            name: line,
+            name: cleanCategoryName,
             items: []
           };
         } 
@@ -150,8 +150,11 @@ const TextMenuEditor: React.FC<TextMenuEditorProps> = ({ categories, onUpdateMen
             // No colon found, try to be lenient and just use the text before any equals sign as the name
             const equalsIndex = itemContent.indexOf('=');
             if (equalsIndex !== -1) {
-              const name = itemContent.substring(0, equalsIndex).trim();
+              let name = itemContent.substring(0, equalsIndex).trim();
               const price = itemContent.substring(equalsIndex + 1).trim();
+              
+              // Strip markdown from name
+              name = stripMarkdown(name);
               
               currentCategory.items.push({
                 id: Date.now().toString() + i,
@@ -167,9 +170,14 @@ const TextMenuEditor: React.FC<TextMenuEditorProps> = ({ categories, onUpdateMen
               });
             } else {
               // No equals sign either, just use the whole thing as a name
+              let name = itemContent;
+              
+              // Strip markdown from name
+              name = stripMarkdown(name);
+              
               currentCategory.items.push({
                 id: Date.now().toString() + i,
-                name: itemContent,
+                name,
                 description: '',
                 price: 'N/A'
               });
@@ -183,17 +191,25 @@ const TextMenuEditor: React.FC<TextMenuEditorProps> = ({ categories, onUpdateMen
             continue;
           }
           
-          const name = itemContent.substring(0, firstColonIndex).trim();
+          let name = itemContent.substring(0, firstColonIndex).trim();
           const afterColon = itemContent.substring(firstColonIndex + 1).trim();
+          
+          // Strip markdown from name
+          name = stripMarkdown(name);
           
           // Split by equals for description and price
           const equalsIndex = afterColon.lastIndexOf('=');
           if (equalsIndex === -1) {
             // No equals sign, use the whole thing as description
+            let description = afterColon;
+            
+            // Strip markdown from description
+            description = stripMarkdown(description);
+            
             currentCategory.items.push({
               id: Date.now().toString() + i,
               name,
-              description: afterColon,
+              description,
               price: 'N/A'
             });
             
@@ -205,8 +221,11 @@ const TextMenuEditor: React.FC<TextMenuEditorProps> = ({ categories, onUpdateMen
             continue;
           }
           
-          const description = afterColon.substring(0, equalsIndex).trim();
+          let description = afterColon.substring(0, equalsIndex).trim();
           let price = afterColon.substring(equalsIndex + 1).trim();
+          
+          // Strip markdown from description
+          description = stripMarkdown(description);
           
           // Add dollar sign if missing
           if (price && !price.includes('$') && !isNaN(parseFloat(price))) {

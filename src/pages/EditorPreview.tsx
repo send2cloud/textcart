@@ -10,6 +10,7 @@ const EditorPreview: React.FC = () => {
   const { restaurant, templates, activeTemplateId, setRestaurant, saveRestaurant } = useRestaurant();
   const [generatedHTML, setGeneratedHTML] = useState<string>('');
   const [categoryLinks, setCategoryLinks] = useState<{id: string, name: string}[]>([]);
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
   const previewRef = useRef<HTMLIFrameElement | null>(null);
   
   useEffect(() => {
@@ -24,14 +25,22 @@ const EditorPreview: React.FC = () => {
           id: cat.id,
           name: cat.name
         })));
+        
+        // Set first category as active by default if we have categories
+        if (restaurant.categories.length > 0 && !activeCategory) {
+          setActiveCategory(restaurant.categories[0].id);
+        }
       }
     }
   }, [restaurant, templates, activeTemplateId]);
   
   // Function to scroll to a specific category in the preview
   const scrollToCategory = (categoryId: string) => {
+    // Set the active category for highlighting
+    setActiveCategory(categoryId);
+    
     const iframe = previewRef.current;
-    if (!iframe || !iframe.contentWindow || !iframe.contentDocument) return;
+    if (!iframe || !iframe.contentWindow) return;
     
     // Get reference to the preview iframe
     const previewIframe = document.querySelector('iframe[title="Live Preview"]') as HTMLIFrameElement | null;
@@ -86,13 +95,18 @@ const EditorPreview: React.FC = () => {
           name: cat.name
         })));
         
-        // Small delay to ensure the HTML is regenerated before trying to scroll
-        setTimeout(() => {
-          // If we have categories and the first one has an ID, scroll to it to reset view
-          if (newCategories.length > 0 && newCategories[0].id) {
-            scrollToCategory(newCategories[0].id);
-          }
-        }, 300);
+        // Set first category as active by default
+        if (newCategories.length > 0) {
+          setActiveCategory(newCategories[0].id);
+          
+          // Small delay to ensure the HTML is regenerated before trying to scroll
+          setTimeout(() => {
+            // If we have categories and the first one has an ID, scroll to it to reset view
+            if (newCategories.length > 0 && newCategories[0].id) {
+              scrollToCategory(newCategories[0].id);
+            }
+          }, 300);
+        }
       } catch (error) {
         toast.error('Failed to update menu: ' + (error instanceof Error ? error.message : 'Unknown error'));
       }
@@ -110,7 +124,9 @@ const EditorPreview: React.FC = () => {
               <button
                 key={category.id}
                 onClick={() => scrollToCategory(category.id)}
-                className="px-3 py-2 text-sm font-medium rounded-md hover:bg-muted whitespace-nowrap"
+                className={`px-3 py-2 text-sm font-medium rounded-md hover:bg-muted whitespace-nowrap ${
+                  activeCategory === category.id ? 'bg-primary text-primary-foreground' : 'bg-card'
+                }`}
               >
                 {category.name}
               </button>
