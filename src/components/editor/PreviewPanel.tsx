@@ -34,7 +34,7 @@ const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generat
       const cleanup = applyScrollBehavior(iframeDoc);
       
       // Add IDs to category elements for navigation
-      const categoryElements = iframeDoc.querySelectorAll('.menu-category');
+      const categoryElements = iframeDoc.querySelectorAll('.category');
       categoryElements.forEach((el) => {
         const categoryName = el.querySelector('h2, h3')?.textContent;
         if (categoryName) {
@@ -43,6 +43,28 @@ const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generat
           el.id = `category-${categoryId}`;
         }
       });
+      
+      // Fix navigation menu category highlighting in the iframe
+      const navLinks = iframeDoc.querySelectorAll('.nav-link');
+      if (navLinks.length > 0) {
+        // Remove 'active' class from all nav links first
+        navLinks.forEach(link => {
+          link.classList.remove('active');
+        });
+        
+        // Set the first one as active by default
+        navLinks[0]?.classList.add('active');
+        
+        // Add event listeners to each nav link
+        navLinks.forEach(link => {
+          link.addEventListener('click', () => {
+            // Remove active class from all links
+            navLinks.forEach(l => l.classList.remove('active'));
+            // Add active class to the clicked link
+            link.classList.add('active');
+          });
+        });
+      }
       
       return () => {
         if (cleanup) cleanup();

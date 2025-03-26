@@ -22,7 +22,7 @@ const EditorPreview: React.FC = () => {
         // Update category links for the navigation
         setCategoryLinks(restaurant.categories.map(cat => ({
           id: cat.id,
-          name: cat.name
+          name: cat.name.split(' / ')[0] // Only use the first part of the name before slash
         })));
       }
     }
@@ -83,7 +83,7 @@ const EditorPreview: React.FC = () => {
         // Update category links after updating the menu
         setCategoryLinks(newCategories.map(cat => ({
           id: cat.id,
-          name: cat.name
+          name: cat.name.split(' / ')[0] // Only use the first part of the name before slash
         })));
         
         // Small delay to ensure the HTML is regenerated before trying to scroll
