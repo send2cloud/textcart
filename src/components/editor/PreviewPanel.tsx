@@ -49,7 +49,7 @@ const PreviewPanel = forwardRef<HTMLIFrameElement, PreviewPanelProps>(({ generat
       });
       
       // Clean markdown syntax from rendered elements
-      const menuItems = iframeDoc.querySelectorAll('.menu-item-name, .menu-category-title');
+      const menuItems = iframeDoc.querySelectorAll('.menu-item-name, .menu-category-title, .item-name, .item-description');
       menuItems.forEach(item => {
         if (item.textContent) {
           item.textContent = stripMarkdown(item.textContent);

@@ -5,6 +5,7 @@ import PreviewPanel from '../components/editor/PreviewPanel';
 import TextMenuEditor from '../components/editor/TextMenuEditor';
 import { generateHTML } from '../utils/htmlGenerator';
 import { toast } from 'sonner';
+import { sanitizeForHTML, slugify } from '../utils/htmlGeneratorHelper';
 
 const EditorPreview: React.FC = () => {
   const { restaurant, templates, activeTemplateId, setRestaurant, saveRestaurant } = useRestaurant();
@@ -20,11 +21,18 @@ const EditorPreview: React.FC = () => {
         const html = generateHTML(restaurant, activeTemplate);
         setGeneratedHTML(html);
         
-        // Update category links for the navigation
-        setCategoryLinks(restaurant.categories.map(cat => ({
-          id: cat.id,
-          name: cat.name
-        })));
+        // Update category links for the navigation and ensure unique IDs
+        const uniqueCategories = new Map();
+        restaurant.categories.forEach(cat => {
+          if (!uniqueCategories.has(cat.id)) {
+            uniqueCategories.set(cat.id, {
+              id: cat.id,
+              name: sanitizeForHTML(cat.name) // Use the sanitizeForHTML helper
+            });
+          }
+        });
+        
+        setCategoryLinks(Array.from(uniqueCategories.values()));
         
         // Set first category as active by default if we have categories
         if (restaurant.categories.length > 0 && !activeCategory) {
@@ -39,11 +47,8 @@ const EditorPreview: React.FC = () => {
     // Set the active category for highlighting
     setActiveCategory(categoryId);
     
-    const iframe = previewRef.current;
-    if (!iframe || !iframe.contentWindow) return;
-    
     // Get reference to the preview iframe
-    const previewIframe = document.querySelector('iframe[title="Live Preview"]') as HTMLIFrameElement | null;
+    const previewIframe = previewRef.current;
     if (!previewIframe || !previewIframe.contentDocument) return;
     
     // Try to find the category element by ID in the iframe document
@@ -66,18 +71,6 @@ const EditorPreview: React.FC = () => {
       }
     }
   };
-  
-  // Helper function to slugify text for ID matching
-  const slugify = (text: string): string => {
-    return text
-      .toString()
-      .toLowerCase()
-      .replace(/\s+/g, '-')
-      .replace(/[^\w-]+/g, '')
-      .replace(/--+/g, '-')
-      .replace(/^-+/, '')
-      .replace(/-+$/, '');
-  };
 
   const handleUpdateMenu = (newCategories) => {
     if (restaurant) {
@@ -90,10 +83,18 @@ const EditorPreview: React.FC = () => {
         saveRestaurant();
         
         // Update category links after updating the menu
-        setCategoryLinks(newCategories.map(cat => ({
-          id: cat.id,
-          name: cat.name
-        })));
+        // Use a Map to ensure unique category IDs
+        const uniqueCategories = new Map();
+        newCategories.forEach(cat => {
+          if (!uniqueCategories.has(cat.id)) {
+            uniqueCategories.set(cat.id, {
+              id: cat.id,
+              name: sanitizeForHTML(cat.name)
+            });
+          }
+        });
+        
+        setCategoryLinks(Array.from(uniqueCategories.values()));
         
         // Set first category as active by default
         if (newCategories.length > 0) {

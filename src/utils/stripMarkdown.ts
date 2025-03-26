@@ -28,5 +28,9 @@ export const stripMarkdown = (text: string): string => {
   // Handle horizontal rules
   result = result.replace(/^(?:---|\*\*\*|___)\s*$/gm, '');
   
+  // Handle hash symbols that aren't headers (like ###)
+  result = result.replace(/^(?!\s*#)(.*)###(.*)$/gm, '$1$2');
+  result = result.replace(/###/g, '');
+  
   return result;
 };
