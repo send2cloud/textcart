@@ -2,25 +2,7 @@
 import { RestaurantData } from "../contexts/RestaurantContext";
 import { VisualSettings } from "../services/VisualSettingsService";
 
-export const generateHTML = (restaurant: RestaurantData, settingsOrTemplate: VisualSettings | { id: string; name: string; preview: string }): string => {
-  // Extract visual settings from either input type
-  const visualSettings: VisualSettings = 'buttonRadius' in settingsOrTemplate 
-    ? settingsOrTemplate as VisualSettings
-    : {
-        // Default values when using template object
-        buttonRadius: '8px',
-        hoverEffects: true,
-        shadows: true,
-        toastPosition: 'top-right',
-        fontFamily: 'Montserrat, sans-serif',
-        primaryColor: restaurant.themeColors.primary,
-        secondaryColor: restaurant.themeColors.secondary,
-        accentColor: restaurant.themeColors.accent,
-        backgroundColor: restaurant.themeColors.background,
-        textColor: restaurant.themeColors.text,
-        darkMode: false
-      };
-  
+export const generateHTML = (restaurant: RestaurantData, visualSettings: VisualSettings): string => {
   // Apply color customizations based on visual settings
   const primaryColor = visualSettings.primaryColor;
   const secondaryColor = visualSettings.secondaryColor;
@@ -207,18 +189,12 @@ export const generateHTML = (restaurant: RestaurantData, settingsOrTemplate: Vis
       display: inline-block;
     }
     
-    /* Responsive grid for menu items */
-    .menu-items-container {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 12px;
-    }
-    
     .menu-item {
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
       padding: 16px;
+      margin-bottom: 12px;
       background-color: var(--card-bg);
       border-radius: var(--button-radius);
       box-shadow: ${visualSettings.shadows ? '0 3px 8px rgba(0, 0, 0, 0.06)' : 'none'};
@@ -561,19 +537,6 @@ export const generateHTML = (restaurant: RestaurantData, settingsOrTemplate: Vis
       color: var(--text);
     }
     
-    /* Media queries for responsive layout */
-    @media (min-width: 640px) {
-      .menu-items-container {
-        grid-template-columns: repeat(2, 1fr);
-      }
-    }
-    
-    @media (min-width: 1024px) {
-      .menu-items-container {
-        grid-template-columns: repeat(3, 1fr);
-      }
-    }
-    
     /* Media queries */
     @media (max-width: 480px) {
       .restaurant-name {
@@ -829,11 +792,6 @@ export const generateHTML = (restaurant: RestaurantData, settingsOrTemplate: Vis
         sectionTitle.textContent = section.name;
         sectionDiv.appendChild(sectionTitle);
         
-        // Add container for menu items with grid layout
-        const menuItemsContainer = document.createElement('div');
-        menuItemsContainer.className = 'menu-items-container';
-        sectionDiv.appendChild(menuItemsContainer);
-        
         section.items.forEach(item => {
           const menuItem = document.createElement('div');
           menuItem.className = 'menu-item';
@@ -871,7 +829,7 @@ export const generateHTML = (restaurant: RestaurantData, settingsOrTemplate: Vis
           menuItem.appendChild(itemInfo);
           menuItem.appendChild(addButton);
           
-          menuItemsContainer.appendChild(menuItem);
+          sectionDiv.appendChild(menuItem);
         });
         
         menuSections.appendChild(sectionDiv);
@@ -1117,11 +1075,6 @@ function slugify(text: string): string {
 
 // Helper function to adjust color brightness
 function adjustColor(color: string, amount: number): string {
-  // Safety check to handle undefined colors
-  if (!color || typeof color !== 'string') {
-    return '#000000';
-  }
-
   // Return the color if it's not a hex color
   if (!color.startsWith('#')) {
     return color;
@@ -1147,4 +1100,3 @@ function adjustColor(color: string, amount: number): string {
   // Convert back to hex
   return `#${Math.round(adjustR).toString(16).padStart(2, '0')}${Math.round(adjustG).toString(16).padStart(2, '0')}${Math.round(adjustB).toString(16).padStart(2, '0')}`;
 }
-
