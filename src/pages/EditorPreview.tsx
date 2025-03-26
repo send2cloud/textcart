@@ -4,6 +4,7 @@ import { useRestaurant } from '../contexts/RestaurantContext';
 import PreviewPanel from '../components/editor/PreviewPanel';
 import TextMenuEditor from '../components/editor/TextMenuEditor';
 import { generateHTML } from '../utils/htmlGenerator';
+import { toast } from 'sonner';
 
 const EditorPreview: React.FC = () => {
   const { restaurant, templates, activeTemplateId, setRestaurant, saveRestaurant } = useRestaurant();
@@ -21,12 +22,16 @@ const EditorPreview: React.FC = () => {
 
   const handleUpdateMenu = (newCategories) => {
     if (restaurant) {
-      const updatedRestaurant = {
-        ...restaurant,
-        categories: newCategories
-      };
-      setRestaurant(updatedRestaurant);
-      saveRestaurant();
+      try {
+        const updatedRestaurant = {
+          ...restaurant,
+          categories: newCategories
+        };
+        setRestaurant(updatedRestaurant);
+        saveRestaurant();
+      } catch (error) {
+        toast.error('Failed to update menu: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      }
     }
   };
 
