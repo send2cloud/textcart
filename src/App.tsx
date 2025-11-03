@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import TemplateEditor from './pages/TemplateEditor';
 import EditorPreview from './pages/EditorPreview';
 import Settings from './pages/Settings';
+import Preview from './pages/Preview';
 import DashboardLayout from './layouts/DashboardLayout';
 import { RestaurantProvider } from './contexts/RestaurantContext';
 import { Toaster } from 'sonner';
@@ -19,6 +20,7 @@ function App() {
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/preview/:restaurantId?" element={<Preview />} />
           <Route path="/" element={<DashboardLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="template-editor" element={<TemplateEditor />} />

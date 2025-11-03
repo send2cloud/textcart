@@ -2,7 +2,7 @@
 import React from 'react';
 import { useRestaurant } from '../contexts/RestaurantContext';
 import { toast } from 'sonner';
-import { Check, Palette } from 'lucide-react';
+import { Check, Palette, Code } from 'lucide-react';
 
 const TemplateEditor: React.FC = () => {
   const { templates, activeTemplateId, setActiveTemplateId, restaurant, setRestaurant, saveRestaurant } = useRestaurant();
@@ -50,7 +50,7 @@ const TemplateEditor: React.FC = () => {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <div className="bg-card shadow rounded-lg p-6">
-          <h2 className="text-lg font-medium mb-4">Choose Template</h2>
+          <h2 className="text-lg font-medium mb-4">Choose Alpine.js Template</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {templates.map((template) => (
               <div 
@@ -77,6 +77,17 @@ const TemplateEditor: React.FC = () => {
                 </div>
               </div>
             ))}
+          </div>
+          
+          <div className="mt-6 p-4 bg-muted rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <Code className="w-4 h-4" />
+              <h3 className="font-medium">Alpine.js Powered Templates</h3>
+            </div>
+            <p className="text-sm text-muted-foreground">
+              All templates now use Alpine.js for reactive UI and simplified maintenance. Each template includes the same 
+              functionality with different styling options.
+            </p>
           </div>
         </div>
 

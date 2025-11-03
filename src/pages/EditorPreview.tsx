@@ -1,297 +1,163 @@
-import React, { useEffect, useState } from 'react';
-import { useRestaurant, MenuItem } from '../contexts/RestaurantContext';
-import { toast } from 'sonner';
-import { Save, Download, Copy, ExternalLink } from 'lucide-react';
+
+import React, { useEffect, useState, useRef } from 'react';
+import { useRestaurant } from '../contexts/RestaurantContext';
+import PreviewPanel from '../components/editor/PreviewPanel';
+import TextMenuEditor from '../components/editor/TextMenuEditor';
 import { generateHTML } from '../utils/htmlGenerator';
+import { toast } from 'sonner';
+
+// Helper function to strip markdown from text
+const stripMarkdown = (text: string): string => {
+  if (!text) return '';
+  
+  // Remove markdown formatting
+  return text
+    .replace(/\*\*(.*?)\*\*/g, '$1') // Bold
+    .replace(/\*(.*?)\*/g, '$1')     // Italic
+    .replace(/__(.*?)__/g, '$1')     // Bold with underscore
+    .replace(/_(.*?)_/g, '$1')       // Italic with underscore
+    .replace(/~~(.*?)~~/g, '$1')     // Strikethrough
+    .replace(/^#+\s+(.*)/gm, '$1')   // Headers
+    .replace(/\[(.*?)\]\(.*?\)/g, '$1') // Links
+    .replace(/!\[(.*?)\]\(.*?\)/g, '$1') // Images
+    .replace(/`(.*?)`/g, '$1')       // Inline code
+    .replace(/```[^`]*```/g, '')     // Code blocks
+    .replace(/^\s*>\s*(.*)/gm, '$1') // Blockquotes
+    .replace(/^\s*[-*+]\s+/gm, '')   // Unordered lists
+    .replace(/^\s*\d+\.\s+/gm, '')   // Ordered lists
+    .replace(/\|.*\|/g, '')          // Tables
+    .replace(/^-{3,}$/gm, '')        // Horizontal rules with hyphens
+    .replace(/^_{3,}$/gm, '')        // Horizontal rules with underscores
+    .replace(/^\*{3,}$/gm, '');      // Horizontal rules with asterisks
+};
 
 const EditorPreview: React.FC = () => {
-  const { restaurant, setRestaurant, saveRestaurant } = useRestaurant();
+  const {
+    restaurant,
+    templates,
+    activeTemplateId,
+    setRestaurant,
+    saveRestaurant
+  } = useRestaurant();
   const [generatedHTML, setGeneratedHTML] = useState<string>('');
-  const [newCategoryName, setNewCategoryName] = useState('');
-  
+  const [categoryLinks, setCategoryLinks] = useState<{
+    id: string;
+    name: string;
+  }[]>([]);
+  const previewRef = useRef<HTMLIFrameElement | null>(null);
+
   useEffect(() => {
-    if (restaurant) {
-      // Generate HTML based on template and restaurant data
-      const html = generateHTML(restaurant);
-      setGeneratedHTML(html);
+    if (restaurant && templates.length > 0) {
+      const activeTemplate = templates.find(t => t.id === activeTemplateId);
+      if (activeTemplate) {
+        // Create a deep copy of the restaurant to clean markdown
+        const cleanedRestaurant = JSON.parse(JSON.stringify(restaurant));
+        
+        // Strip markdown from category names and item fields
+        if (cleanedRestaurant.categories) {
+          cleanedRestaurant.categories = cleanedRestaurant.categories.map(category => ({
+            ...category,
+            name: stripMarkdown(category.name),
+            items: category.items.map(item => ({
+              ...item,
+              name: stripMarkdown(item.name),
+              description: stripMarkdown(item.description),
+              price: stripMarkdown(item.price)
+            }))
+          }));
+        }
+        
+        const html = generateHTML(cleanedRestaurant, activeTemplate);
+        setGeneratedHTML(html);
+
+        // Update category links for the navigation
+        setCategoryLinks(cleanedRestaurant.categories.map(cat => ({
+          id: cat.id,
+          name: cat.name.split(' / ')[0] // Only use the first part of the name before slash
+        })));
+      }
     }
-  }, [restaurant]);
-  
-  if (!restaurant) {
-    return <div>Loading...</div>;
-  }
+  }, [restaurant, templates, activeTemplateId]);
 
-  const handleAddCategory = () => {
-    if (!newCategoryName.trim()) {
-      toast.error('Category name cannot be empty');
-      return;
-    }
+  // Function to scroll to a specific category in the preview
+  const scrollToCategory = (categoryId: string) => {
+    const iframe = previewRef.current;
+    if (!iframe || !iframe.contentWindow || !iframe.contentDocument) return;
+
+    // Get reference to the preview iframe
+    const previewIframe = document.querySelector('iframe[title="Live Preview"]') as HTMLIFrameElement | null;
+    if (!previewIframe || !previewIframe.contentDocument) return;
+
+    // Try to find the category element by ID in the iframe document
+    // We'll look for both category-{id} and the actual ID
+    const categoryElement = previewIframe.contentDocument.getElementById(`category-${categoryId}`) || 
+                            previewIframe.contentDocument.getElementById(categoryId);
     
-    const newCategory = {
-      id: Date.now().toString(),
-      name: newCategoryName,
-      items: []
-    };
-    
-    setRestaurant({
-      ...restaurant,
-      categories: [...restaurant.categories, newCategory]
-    });
-    
-    setNewCategoryName('');
-    toast.success('Category added');
-  };
-
-  const handleDeleteCategory = (categoryId: string) => {
-    setRestaurant({
-      ...restaurant,
-      categories: restaurant.categories.filter(cat => cat.id !== categoryId)
-    });
-    toast.success('Category deleted');
-  };
-
-  const handleAddMenuItem = (categoryId: string) => {
-    const newItem = {
-      id: Date.now().toString(),
-      name: 'New Item',
-      description: 'Description',
-      price: '$0.00'
-    };
-    
-    setRestaurant({
-      ...restaurant,
-      categories: restaurant.categories.map(cat => {
-        if (cat.id === categoryId) {
-          return {
-            ...cat,
-            items: [...cat.items, newItem]
-          };
-        }
-        return cat;
-      })
-    });
-  };
-
-  const handleDeleteMenuItem = (categoryId: string, itemId: string) => {
-    setRestaurant({
-      ...restaurant,
-      categories: restaurant.categories.map(cat => {
-        if (cat.id === categoryId) {
-          return {
-            ...cat,
-            items: cat.items.filter(item => item.id !== itemId)
-          };
-        }
-        return cat;
-      })
-    });
-  };
-
-  const handleUpdateMenuItem = (categoryId: string, itemId: string, field: keyof MenuItem, value: string) => {
-    setRestaurant({
-      ...restaurant,
-      categories: restaurant.categories.map(cat => {
-        if (cat.id === categoryId) {
-          return {
-            ...cat,
-            items: cat.items.map(item => {
-              if (item.id === itemId) {
-                return {
-                  ...item,
-                  [field]: value
-                };
-              }
-              return item;
-            })
-          };
-        }
-        return cat;
-      })
-    });
-  };
-
-  const handleSaveAll = () => {
-    saveRestaurant();
-    toast.success('Menu saved successfully');
-  };
-
-  const handleDownload = () => {
-    const element = document.createElement('a');
-    const file = new Blob([generatedHTML], {type: 'text/html'});
-    element.href = URL.createObjectURL(file);
-    element.download = `${restaurant?.info.name.toLowerCase().replace(/\s+/g, '-')}-menu.html`;
-    document.body.appendChild(element);
-    element.click();
-    document.body.removeChild(element);
-    
-    toast.success('HTML file downloaded successfully');
-  };
-  
-  const handleCopyHTML = () => {
-    navigator.clipboard.writeText(generatedHTML);
-    toast.success('HTML copied to clipboard');
-  };
-
-  const handleOpenInNewWindow = () => {
-    const newWindow = window.open('', '_blank');
-    if (newWindow) {
-      newWindow.document.write(generatedHTML);
-      newWindow.document.close();
+    if (categoryElement) {
+      categoryElement.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
     } else {
-      toast.error('Could not open new window. Please check your popup blocker settings.');
+      // If we can't find the element by ID, try to find it by the slug version of the name
+      const categoryData = restaurant?.categories.find(cat => cat.id === categoryId);
+      if (categoryData) {
+        const slugName = slugify(categoryData.name);
+        const elementBySlug = previewIframe.contentDocument.getElementById(slugName);
+        if (elementBySlug) {
+          elementBySlug.scrollIntoView({
+            behavior: 'smooth',
+            block: 'start'
+          });
+        }
+      }
+    }
+  };
+
+  // Helper function to slugify text for ID matching
+  const slugify = (text: string): string => {
+    return text.toString().toLowerCase().replace(/\s+/g, '-').replace(/[^\w-]+/g, '').replace(/--+/g, '-').replace(/^-+/, '').replace(/-+$/, '');
+  };
+
+  const handleUpdateMenu = (newCategories) => {
+    if (restaurant) {
+      try {
+        const updatedRestaurant = {
+          ...restaurant,
+          categories: newCategories
+        };
+        setRestaurant(updatedRestaurant);
+        saveRestaurant();
+
+        // Update category links after updating the menu
+        setCategoryLinks(newCategories.map(cat => ({
+          id: cat.id,
+          name: cat.name.split(' / ')[0] // Only use the first part of the name before slash
+        })));
+
+        // Small delay to ensure the HTML is regenerated before trying to scroll
+        setTimeout(() => {
+          // If we have categories and the first one has an ID, scroll to it to reset view
+          if (newCategories.length > 0 && newCategories[0].id) {
+            scrollToCategory(newCategories[0].id);
+          }
+        }, 300);
+      } catch (error) {
+        toast.error('Failed to update menu: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      }
     }
   };
 
   return (
-    <div>
-      <div className="flex items-center justify-between mb-6">
-        <h1 className="text-2xl font-bold">Menu Editor + Preview</h1>
-        <div className="flex gap-2">
-          <button 
-            onClick={handleSaveAll}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-md flex items-center gap-2 hover:bg-primary/90"
-          >
-            <Save className="w-4 h-4" />
-            Save Menu
-          </button>
-          <button
-            onClick={handleCopyHTML}
-            className="px-4 py-2 bg-secondary text-secondary-foreground rounded-md flex items-center gap-2 hover:bg-secondary/90"
-          >
-            <Copy className="w-4 h-4" />
-            Copy HTML
-          </button>
-          <button
-            onClick={handleDownload}
-            className="px-4 py-2 bg-primary text-primary-foreground rounded-md flex items-center gap-2 hover:bg-primary/90"
-          >
-            <Download className="w-4 h-4" />
-            Download HTML
-          </button>
-        </div>
-      </div>
-
+    <div className="space-y-6">
+      <h1 className="text-2xl font-bold mb-6">Editor + Preview</h1>
+      
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Editor Section */}
-        <div className="bg-card shadow rounded-lg p-6 h-[calc(100vh-200px)] overflow-y-auto">
-          <div className="flex items-center gap-2 mb-4">
-            <input
-              type="text"
-              value={newCategoryName}
-              onChange={(e) => setNewCategoryName(e.target.value)}
-              placeholder="New Category Name"
-              className="px-3 py-2 border rounded-md flex-1"
-            />
-            <button
-              onClick={handleAddCategory}
-              className="px-3 py-2 bg-primary text-primary-foreground rounded-md flex items-center gap-2 hover:bg-primary/90"
-            >
-              <span className="text-xl font-bold">+</span>
-              Add Category
-            </button>
-          </div>
-
-          <div className="space-y-6">
-            {restaurant.categories.map((category) => (
-              <div key={category.id} className="border rounded-md">
-                <div className="flex items-center justify-between border-b p-4">
-                  <div className="flex items-center gap-2">
-                    <span className="text-gray-400 cursor-move">≡</span>
-                    <h3 className="font-medium">{category.name}</h3>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <button
-                      onClick={() => handleAddMenuItem(category.id)}
-                      className="p-1 text-primary hover:text-primary/80"
-                    >
-                      <span className="text-xl font-bold">+</span>
-                    </button>
-                    <button
-                      onClick={() => handleDeleteCategory(category.id)}
-                      className="p-1 text-destructive hover:text-destructive/80"
-                    >
-                      <span className="text-xl">🗑️</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="p-4 space-y-4">
-                  {category.items.length === 0 ? (
-                    <p className="text-center text-muted-foreground py-4">No items in this category</p>
-                  ) : (
-                    category.items.map((item) => (
-                      <div key={item.id} className="border rounded-md p-4">
-                        <div className="flex items-center justify-between mb-2">
-                          <div className="flex items-center gap-2">
-                            <span className="text-gray-400 cursor-move">≡</span>
-                            <input
-                              type="text"
-                              value={item.name}
-                              onChange={(e) => handleUpdateMenuItem(category.id, item.id, 'name', e.target.value)}
-                              className="font-medium border-b border-transparent hover:border-primary focus:border-primary outline-none"
-                            />
-                          </div>
-                          <button
-                            onClick={() => handleDeleteMenuItem(category.id, item.id)}
-                            className="p-1 text-destructive hover:text-destructive/80"
-                          >
-                            <span className="text-xl">🗑️</span>
-                          </button>
-                        </div>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          <div className="col-span-2">
-                            <textarea
-                              value={item.description}
-                              onChange={(e) => handleUpdateMenuItem(category.id, item.id, 'description', e.target.value)}
-                              className="w-full p-2 border rounded-md min-h-[80px]"
-                            />
-                          </div>
-                          <div>
-                            <input
-                              type="text"
-                              value={item.price}
-                              onChange={(e) => handleUpdateMenuItem(category.id, item.id, 'price', e.target.value)}
-                              className="w-full p-2 border rounded-md"
-                              placeholder="Price"
-                            />
-                          </div>
-                        </div>
-                      </div>
-                    ))
-                  )}
-                  
-                  <button
-                    onClick={() => handleAddMenuItem(category.id)}
-                    className="w-full py-2 border-2 border-dashed border-gray-300 rounded-md text-gray-500 hover:border-primary hover:text-primary flex items-center justify-center gap-1"
-                  >
-                    <span className="text-xl font-bold">+</span> Add Item
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
+        <div>
+          <TextMenuEditor categories={restaurant?.categories || []} onUpdateMenu={handleUpdateMenu} />
         </div>
-
-        {/* Preview Section */}
-        <div className="bg-card shadow rounded-lg p-6 h-[calc(100vh-200px)] overflow-hidden">
-          <div className="flex justify-between items-center mb-3">
-            <h3 className="font-medium">Live Preview</h3>
-            <button
-              onClick={handleOpenInNewWindow}
-              className="px-3 py-1 bg-secondary text-secondary-foreground rounded-md flex items-center gap-2 hover:bg-secondary/90 text-sm"
-            >
-              <ExternalLink className="w-3 h-3" />
-              Open in New Window
-            </button>
-          </div>
-          <div className="border rounded-md h-[calc(100%-40px)] overflow-hidden">
-            <iframe
-              title="Live Preview"
-              srcDoc={generatedHTML}
-              className="w-full h-full border-0"
-              sandbox="allow-same-origin allow-scripts"
-            />
-          </div>
+        <div>
+          <PreviewPanel generatedHTML={generatedHTML} ref={previewRef} />
         </div>
       </div>
     </div>

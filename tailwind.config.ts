@@ -62,6 +62,42 @@ export default {
 					'accent-foreground': 'hsl(var(--sidebar-accent-foreground))',
 					border: 'hsl(var(--sidebar-border))',
 					ring: 'hsl(var(--sidebar-ring))'
+				},
+				// Theme-specific colors for different restaurant types
+				italian: {
+					primary: '#D73B4A',    // Rich Red
+					secondary: '#397D54',  // Deep Green
+					accent: '#F7B538',     // Golden Yellow
+				},
+				mexican: {
+					primary: '#D64123',    // Warm Red
+					secondary: '#006B3C',  // Forest Green
+					accent: '#F8D568',     // Sunshine Yellow
+				},
+				japanese: {
+					primary: '#BC002D',    // Deep Red
+					secondary: '#263238',  // Dark Slate
+					accent: '#F9F7F7',     // Soft White
+				},
+				chinese: {
+					primary: '#CB1D1D',    // Lucky Red
+					secondary: '#1A4D2E',  // Jade Green
+					accent: '#FFD700',     // Gold
+				},
+				indian: {
+					primary: '#FF7F00',    // Saffron Orange
+					secondary: '#138808',  // Deep Green
+					accent: '#6B3FA0',     // Royal Purple
+				},
+				thai: {
+					primary: '#F18F01',    // Golden Orange
+					secondary: '#006C67',  // Teal
+					accent: '#E63946',     // Spicy Red
+				},
+				burger: {
+					primary: '#F15025',    // Burger Red
+					secondary: '#233D4D',  // Navy Blue
+					accent: '#FCCA46',     // Mustard Yellow
 				}
 			},
 			borderRadius: {
